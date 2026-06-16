@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "name": "Route 1 (Small Demo)",
+  "width": 10,
+  "height": 6,
+
+  "tiles": [
+    "Grass","Grass","Grass","Grass","Grass","Sand","Grass","Grass","Grass","Grass",
+    "Grass","Water","Water","Grass","Grass","Sand","Grass","Grass","Water","Grass",
+    "Grass","Grass","Grass","Grass","Sand","Sand","Grass","Grass","Grass","Grass",
+    "Grass","Sand","Grass","Grass","Grass","Grass","Grass","Water","Grass","Grass",
+    "Grass","Grass","Grass","Sand","Sand","Grass","Grass","Grass","Grass","Grass",
+    "Grass","Grass","Grass","Grass","Grass","Grass","Sand","Grass","Grass","Grass"
+  ],
+
+  "map_objects": []
+}

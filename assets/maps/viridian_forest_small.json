@@ -1,0 +1,17 @@
+{
+  "id": 2,
+  "name": "Viridian Forest (Demo)",
+  "width": 8,
+  "height": 6,
+
+  "tiles": [
+    "Grass", "Grass", "Grass", "Grass", "Tree",  "Tree",  "Grass", "Grass",
+    "Grass", "Tree",  "Grass", "Grass", "Tree",  "Grass", "Grass", "Grass",
+    "Grass", "Grass", "Grass", "Tree",  "Tree",  "Grass", "Grass", "Grass",
+    "Tree",  "Grass", "Grass", "Grass", "Grass", "Tree",  "Grass", "Grass",
+    "Grass", "Grass", "Tree",  "Grass", "Grass", "Grass", "Tree",  "Grass",
+    "Grass", "Grass", "Grass", "Grass", "Tree",  "Grass", "Grass", "Grass"
+  ],
+
+  "map_objects": []
+}

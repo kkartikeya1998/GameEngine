@@ -1,0 +1,15 @@
+{
+  "id": 0,
+  "name": "Pallet Town (Small Demo)",
+  "width": 4,
+  "height": 4,
+
+  "tiles": [
+    "Grass", "Grass", "Sand",  "Grass",
+    "Grass", "Water", "Water", "Grass",
+    "Grass", "Grass", "Sand",  "Grass",
+    "Sand",  "Grass", "Grass", "Grass"
+  ],
+
+  "map_objects": []
+}
