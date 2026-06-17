@@ -1,5 +1,5 @@
 #pragma once
-#include "PokemonSpecies.h"
+#include "entities/pokemon/PokemonSpecies.h"
 
 // ---------------------------------------------------------------------------
 // Gen1Data — compile-time species table for Generation I.
