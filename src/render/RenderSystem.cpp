@@ -1,9 +1,5 @@
 #include "render/RenderSystem.h"
-#include "render/IRenderer.h"
-#include "system/GameController.h"
-#include "world/World.h"
-#include "world/Map.h"
-#include "entities/player/Player.h"
+
 
 RenderSystem::RenderSystem(std::unique_ptr<IRenderer> renderer)
     : renderer_(std::move(renderer)) {
@@ -32,7 +28,7 @@ void RenderSystem::render(GameController& controller) {
     
     // TODO: Add getActiveMap() to World class to access current map
     // For now, we'll render what we can through the World interface
-    world->render();
+    // world->render();
 
     // Draw the player on top of the map
     renderer_->drawPlayer(player->getX(), player->getY(), player->getDirection());

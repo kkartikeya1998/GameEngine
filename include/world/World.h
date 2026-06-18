@@ -24,5 +24,5 @@ public:
         
     void load_metadata(const std::string& world_file);
     void load_map(int map_id);
-    void render() const;
+    // void render() const;
 };

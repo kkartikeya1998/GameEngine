@@ -38,6 +38,8 @@ add_executable(PokemonProject
     src/system/GameController.cpp
     src/render/RenderSystem.cpp
     src/render/SFMLRenderer.cpp
+
+    src/Game.cpp
     )
 
 target_include_directories(PokemonProject PRIVATE

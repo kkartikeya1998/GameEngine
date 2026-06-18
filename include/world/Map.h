@@ -22,7 +22,7 @@ public:
     explicit Map(const std::string& path);
 
     void load_from_file(const std::string& path);
-    void render() const;
+    // void render() const;
 
     int getHeight() const { return height; }
     int getWidth() const { return width; }

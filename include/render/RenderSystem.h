@@ -2,12 +2,17 @@
 
 #include <memory>
 
-// Forward declarations
-class IRenderer;
-class GameController;
-class World;
-class Map;
-class Player;
+#include "render/IRenderer.h"
+#include "system/GameController.h"
+#include "world/World.h"
+#include "world/Map.h"
+#include "entities/player/Player.h"
+
+// // Forward declarations
+// class GameController;
+// class World;
+// class Map;
+// class Player;
 
 // ---------------------------------------------------------------------------
 // RenderSystem — orchestrates the rendering of the game state.

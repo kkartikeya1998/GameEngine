@@ -55,11 +55,11 @@ void World::load_map(int map_id)
     active_map.reset();
 }
 
-void World::render() const {
-    if (active_map) {
-        active_map->render();
-    }
-}
+// void World::render() const {
+//     if (active_map) {
+//         active_map->render();
+//     }
+// }
 
 Map* World::getActiveMap() const {
 return active_map.get();

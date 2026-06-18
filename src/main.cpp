@@ -1,65 +1,25 @@
-#include "entities/pokemon/Pokemon.h"
-#include "entities/pokemon/WildPokemon.h"
-#include "entities/pokemon/CapturedPokemon.h"
+// #include "entities/pokemon/Pokemon.h"
+// #include "entities/pokemon/WildPokemon.h"
+// #include "entities/pokemon/CapturedPokemon.h"
 
-#include "entities/pokemon/PokemonFactory.h"
-#include "entities/pokemon/PokemonSpeciesRepository.h"
-#include "entities/pokemon/ISpeciesRepository.h"
+// #include "entities/pokemon/PokemonFactory.h"
+// #include "entities/pokemon/PokemonSpeciesRepository.h"
+// #include "entities/pokemon/ISpeciesRepository.h"
 
-#include "system/GameController.h"
-#include "render/RenderSystem.h"
-#include "render/SFMLRenderer.h"
+// #include "system/GameController.h"
+// #include "render/RenderSystem.h"
+// #include "render/SFMLRenderer.h"
+
+#include "Game.h"
 
 #include <iostream>
 #include <memory>
 #include <stdexcept>
 
 int main() {
-    try {
-        GameController gameController(2, 1, 1);
-        std::unique_ptr<IRenderer> renderer =
-            std::make_unique<SFMLRenderer>(800, 600);
-
-        while (renderer->isOpen()) {
-
-            // 1. input/events
-            if (!renderer->handleEvents())
-                break;
-
-            // 2. clear screen
-            renderer->clear();
-
-            // 3. get world + map
-            Map* map = gameController.getWorld()->getActiveMap();
-            if (!map) continue;
-
-            // 4. draw map
-            for (int y = 0; y < map->getHeight(); y++) {
-                for (int x = 0; x < map->getWidth(); x++) {
-                    renderer->drawTile(
-                        x,
-                        y,
-                        map->tile_at(x, y).terrain()
-                    );
-                }
-            }
-
-            // 5. draw player
-            Player* player = gameController.getPlayer();
-            renderer->drawPlayer(
-                player->getX(),
-                player->getY(),
-                player->getDirection()
-            );
-
-            // 6. present frame
-            renderer->present();
-        }
-
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << "\n";
-        return 1;
-    }
+    Game game;
+    game.run();
+    return 0;
 }
 // ---------------------------------------------------------------------------------------------------------------------------------------------
 // int main() {

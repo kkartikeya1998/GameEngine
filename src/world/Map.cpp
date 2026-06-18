@@ -69,11 +69,11 @@ void Map::load_from_file(const std::string& path) {
     }
 }
 
-void Map::render() const {
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            std::cout << tile_at(x, y).render_char();
-        }
-        std::cout << '\n';
-    }
-}
+// void Map::render() const {
+//     for (int y = 0; y < height; ++y) {
+//         for (int x = 0; x < width; ++x) {
+//             std::cout << tile_at(x, y).render_char();
+//         }
+//         std::cout << '\n';
+//     }
+// }
