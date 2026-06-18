@@ -1,8 +1,9 @@
 #pragma once
 
+#include <memory>
+
 #include "world/World.h"
 #include "entities/player/Player.h"
-#include <memory>
 
 // ---------------------------------------------------------------------------
 // GameController — manages World and Player lifecycle.
@@ -32,6 +33,8 @@ public:
     
 
 private:
+    //  If I want to enable world switching at runtime, or enable save states, or multiplayer 
+    //  I might want to make these unique_ptrs and manage their lifecycles more carefully.
     World  world_;
     Player player_;
 };

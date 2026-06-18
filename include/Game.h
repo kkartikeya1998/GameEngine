@@ -1,7 +1,6 @@
 #pragma once
 
 #include "system/GameController.h"
-// #include "render/IRenderer.h"
 #include "render/SFMLRenderer.h"
 
 class Game {

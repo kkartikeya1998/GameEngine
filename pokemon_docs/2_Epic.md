@@ -26,3 +26,4 @@ NOTE on the ownership of CapturedPokemon: should be given to the PokemonReposito
 ### Renderer System
 - decoupled from core classes
 - each drawable entity should have render functionality
+![[2_Design.svg]]

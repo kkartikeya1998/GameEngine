@@ -8,7 +8,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "a467892521c7a848",
+            "id": "b001a6227757fdcd",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -19,18 +19,6 @@
               },
               "icon": "lucide-file",
               "title": "2_Epic"
-            }
-          },
-          {
-            "id": "b001a6227757fdcd",
-            "type": "leaf",
-            "state": {
-              "type": "diagram-edit",
-              "state": {
-                "file": "Untitled Diagram.svg"
-              },
-              "icon": "lucide-file",
-              "title": "Untitled Diagram.svg"
             }
           }
         ]
@@ -195,12 +183,13 @@
       "bases:Create new base": false
     }
   },
-  "active": "a467892521c7a848",
+  "active": "b001a6227757fdcd",
   "lastOpenFiles": [
-    "1_Draft.md",
+    "2_Design.svg",
     "2_Epic.md",
-    "FirstDesign.svg",
     "1_Design.svg",
+    "1_Draft.md",
+    "FirstDesign.svg",
     "SecondSprint.md",
     "FirstDraft.md"
   ]

@@ -4,9 +4,6 @@
 
 #include "render/IRenderer.h"
 #include "system/GameController.h"
-#include "world/World.h"
-#include "world/Map.h"
-#include "entities/player/Player.h"
 
 // // Forward declarations
 // class GameController;
