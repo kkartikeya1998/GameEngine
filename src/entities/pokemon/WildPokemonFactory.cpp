@@ -20,12 +20,11 @@ Pokemon* WildPokemonFactory::create(int pokedexId, int level) {
         );
     }
 
-    // const PokemonSpecies* species = repository_.findById(pokedexId);
-    // if (!species) {
-    //     throw std::invalid_argument(
-    //         "Invalid Pokemon species ID: " + std::to_string(pokedexId)
-    //     );
-    // }
+    if (!repository_.findById(pokedexId)) {
+        throw std::invalid_argument(
+            "Invalid Pokemon species ID: " + std::to_string(pokedexId)
+        );
+    }
 
     return new WildPokemon(pokedexId, level);
 }

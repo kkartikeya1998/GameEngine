@@ -11,12 +11,14 @@
             "id": "a467892521c7a848",
             "type": "leaf",
             "state": {
-              "type": "diagram-edit",
+              "type": "markdown",
               "state": {
-                "file": "FirstDesign.svg"
+                "file": "2_Epic.md",
+                "mode": "source",
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "FirstDesign.svg"
+              "title": "2_Epic"
             }
           },
           {
@@ -193,9 +195,13 @@
       "bases:Create new base": false
     }
   },
-  "active": "a3d8d57934be9b5b",
+  "active": "a467892521c7a848",
   "lastOpenFiles": [
-    "FirstDraft.md",
-    "FirstDesign.svg"
+    "1_Draft.md",
+    "2_Epic.md",
+    "FirstDesign.svg",
+    "1_Design.svg",
+    "SecondSprint.md",
+    "FirstDraft.md"
   ]
 }

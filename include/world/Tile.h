@@ -4,7 +4,7 @@
 
 class Tile {
 private:
-    Terrain::Type terrain_type{Terrain::Type::Grass};
+    Terrain::Type terrain_type;
 
 public:
     explicit Tile(Terrain::Type type = Terrain::Type::Grass)

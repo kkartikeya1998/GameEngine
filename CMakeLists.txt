@@ -5,8 +5,23 @@ project(PokemonProject LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include(FetchContent)
+
+# Fetch SFML 3.1 from GitHub
+FetchContent_Declare(
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG        3.1.0
+    GIT_SHALLOW    ON
+    EXCLUDE_FROM_ALL
+    SYSTEM
+)
+
+FetchContent_MakeAvailable(SFML)
+
 add_executable(PokemonProject
     src/main.cpp
+
     src/world/Map.cpp
     src/world/World.cpp
     
@@ -17,11 +32,22 @@ add_executable(PokemonProject
     src/entities/pokemon/CapturedPokemon.cpp
     src/entities/pokemon/CapturedPokemonFactory.cpp
     src/entities/pokemon/PokemonSpeciesRepository.cpp
-)
+    
+    src/entities/player/Player.cpp
+
+    src/system/GameController.cpp
+    src/render/RenderSystem.cpp
+    src/render/SFMLRenderer.cpp
+    )
 
 target_include_directories(PokemonProject PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/assets
 )
+
+target_compile_definitions(PokemonProject PRIVATE
+    PROJECT_ROOT="${CMAKE_SOURCE_DIR}"
+)
+target_link_libraries(PokemonProject PRIVATE SFML::Graphics SFML::Window SFML::System)
 
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})

@@ -27,14 +27,12 @@ Pokemon* CapturedPokemonFactory::create(int pokedexId, int level) {
         );
     }
 
-    const PokemonSpecies* species = repository_.findById(pokedexId);
-    if (!species) {
+    if (!repository_.findById(pokedexId)) {
         throw std::invalid_argument(
             "Invalid Pokemon species ID: " + std::to_string(pokedexId)
         );
     }
 
-    const std::string name = species->name;
     const std::string& nickname = get_nickname_for(pokedexId, level);
 
     return new CapturedPokemon(pokedexId, level, nickname);

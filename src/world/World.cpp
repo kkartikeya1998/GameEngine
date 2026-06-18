@@ -60,3 +60,7 @@ void World::render() const {
         active_map->render();
     }
 }
+
+Map* World::getActiveMap() const {
+return active_map.get();
+}

@@ -24,6 +24,9 @@ public:
     void load_from_file(const std::string& path);
     void render() const;
 
+    int getHeight() const { return height; }
+    int getWidth() const { return width; }
+
     Tile& tile_at(int x, int y);
     const Tile& tile_at(int x, int y) const;
     void set_tile(int x, int y, Terrain::Type terrain);

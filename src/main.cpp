@@ -6,67 +6,122 @@
 #include "entities/pokemon/PokemonSpeciesRepository.h"
 #include "entities/pokemon/ISpeciesRepository.h"
 
+#include "system/GameController.h"
+#include "render/RenderSystem.h"
+#include "render/SFMLRenderer.h"
+
 #include <iostream>
 #include <memory>
 #include <stdexcept>
 
 int main() {
     try {
-        ISpeciesRepository& repository = PokemonSpeciesRepository::instance();
+        GameController gameController(2, 1, 1);
+        std::unique_ptr<IRenderer> renderer =
+            std::make_unique<SFMLRenderer>(800, 600);
 
-        WildPokemonFactory wild_factory(repository);
-        CapturedPokemonFactory captured_factory(repository);
+        while (renderer->isOpen()) {
 
-        // Create a wild Pokémon (Bulbasaur, level 5)
-        std::cout << "Creating wild Bulbasaur...\n";
-        std::unique_ptr<Pokemon> pokemon = std::unique_ptr<Pokemon>(
-            wild_factory.create(3, 5)
-        );
+            // 1. input/events
+            if (!renderer->handleEvents())
+                break;
 
-        // Try to capture it
-        WildPokemon* wild = dynamic_cast<WildPokemon*>(pokemon.get());
-        if (!wild) {
-            std::cerr << "Failed: pokemon is not a WildPokemon.\n";
-            return 1;
+            // 2. clear screen
+            renderer->clear();
+
+            // 3. get world + map
+            Map* map = gameController.getWorld()->getActiveMap();
+            if (!map) continue;
+
+            // 4. draw map
+            for (int y = 0; y < map->getHeight(); y++) {
+                for (int x = 0; x < map->getWidth(); x++) {
+                    renderer->drawTile(
+                        x,
+                        y,
+                        map->tile_at(x, y).terrain()
+                    );
+                }
+            }
+
+            // 5. draw player
+            Player* player = gameController.getPlayer();
+            renderer->drawPlayer(
+                player->getX(),
+                player->getY(),
+                player->getDirection()
+            );
+
+            // 6. present frame
+            renderer->present();
         }
 
-        std::cout << "Attempting to capture " << repository.findById(wild->species_id())->name << "...\n";
-        if (!wild->capture()) {
-            std::cerr << "Capture failed!\n";
-            return 1;
-        }
-
-        std::cout << "Capture successful! Creating CapturedPokemon...\n";
-
-        auto captured = std::unique_ptr<CapturedPokemon>(
-            new CapturedPokemon(
-                wild->species_id(),
-                wild->level(),
-                "Bulby"
-            )
-        );
-
-        pokemon = std::unique_ptr<Pokemon>(captured.release());
-
-        CapturedPokemon* captured_pkmn = dynamic_cast<CapturedPokemon*>(pokemon.get());
-        if (!captured_pkmn) {
-            std::cerr << "Failed: pokemon is not a CapturedPokemon after capture.\n";
-            return 1;
-        }
-
-        std::cout << "Successfully captured " << repository.findById(captured_pkmn->species_id())->name
-                  << " (ID: " << captured_pkmn->species_id()
-                  << ", Level: " << captured_pkmn->level()
-                  << ", Nickname: " << captured_pkmn->nickname()
-                  << ").\n";
-
-        return 0;
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
         return 1;
     }
 }
+// ---------------------------------------------------------------------------------------------------------------------------------------------
+// int main() {
+//     try {
+//         ISpeciesRepository& repository = PokemonSpeciesRepository::instance();
 
+//         WildPokemonFactory wild_factory(repository);
+//         CapturedPokemonFactory captured_factory(repository);
+
+//         // Create a wild Pokémon (Bulbasaur, level 5)
+//         std::cout << "Creating wild Bulbasaur...\n";
+//         std::unique_ptr<Pokemon> pokemon = std::unique_ptr<Pokemon>(
+//             wild_factory.create(3, 5)
+//         );
+
+//         // Try to capture it
+//         WildPokemon* wild = dynamic_cast<WildPokemon*>(pokemon.get());
+//         if (!wild) {
+//             std::cerr << "Failed: pokemon is not a WildPokemon.\n";
+//             return 1;
+//         }
+
+//         std::cout << "Attempting to capture " << repository.findById(wild->species_id())->name << "...\n";
+//         if (!wild->capture()) {
+//             std::cerr << "Capture failed!\n";
+//             return 1;
+//         }
+
+//         std::cout << "Capture successful! Creating CapturedPokemon...\n";
+
+//         auto captured = std::unique_ptr<CapturedPokemon>(
+//             new CapturedPokemon(
+//                 wild->species_id(),
+//                 wild->level(),
+//                 "Bulby"
+//             )
+//         );
+
+//         pokemon = std::unique_ptr<Pokemon>(captured.release());
+
+//         CapturedPokemon* captured_pkmn = dynamic_cast<CapturedPokemon*>(pokemon.get());
+//         if (!captured_pkmn) {
+//             std::cerr << "Failed: pokemon is not a CapturedPokemon after capture.\n";
+//             return 1;
+//         }
+
+//         std::cout << "Successfully captured " << repository.findById(captured_pkmn->species_id())->name
+//                   << " (ID: " << captured_pkmn->species_id()
+//                   << ", Level: " << captured_pkmn->level()
+//                   << ", Nickname: " << captured_pkmn->nickname()
+//                   << ").\n";
+
+//         return 0;
+//     } catch (const std::exception& e) {
+//         std::cerr << "Error: " << e.what() << "\n";
+//         return 1;
+//     }
+// }
+// ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+// ---------------------------------------------------------------------------------------------------------------------------------------------
 // int main() {
 //     const std::string world_file = "assets/maps";
 
@@ -88,3 +143,4 @@ int main() {
 
 //     return 0;
 // }
+// ---------------------------------------------------------------------------------------------------------------------------------------------

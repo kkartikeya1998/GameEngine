@@ -20,6 +20,8 @@ public:
     World() = delete;
     explicit World(const std::string& world_file);
 
+    Map* getActiveMap() const;
+        
     void load_metadata(const std::string& world_file);
     void load_map(int map_id);
     void render() const;
