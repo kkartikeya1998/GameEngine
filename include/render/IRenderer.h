@@ -1,5 +1,9 @@
-#include "utils/Direction.h"
+#pragma once
+
+#include <optional>
+#include <SFML/Window/Event.hpp>
 #include "world/Terrain.h"
+#include "entities/movement/Position.h"
 
 // ---------------------------------------------------------------------------
 // IRenderer — abstract interface for rendering.
@@ -33,5 +37,5 @@ public:
 
     // Handle input events (keyboard, window close, etc.)
     // Returns true if a quit event was triggered
-    virtual bool handleEvents() = 0;
+    virtual std::optional<sf::Event> pollEvent() = 0;
 };

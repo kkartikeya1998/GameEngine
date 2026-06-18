@@ -1,29 +1,24 @@
 #include "entities/player/Player.h"
 
-Player::Player(int startX, int startY, Direction facing)
-    : x_(startX)
-    , y_(startY)
-    , direction_(facing)
-{}
+Player::Player(std::unique_ptr<IMovementMechanics> movement)
+    : movement_(std::move(movement)) {}
 
-void Player::changeDirection(Direction newDir) {
-    direction_ = newDir;
+void Player::move(Direction dir) {
+    movement_->move(dir);
 }
 
-void Player::moveTo(int x, int y) {
-    x_ = x;
-    y_ = y;
+int Player::getX() const {
+    return movement_->getPosition().x;
 }
 
-void Player::getNextPosition(int& outX, int& outY) const {
-    outX = x_;
-    outY = y_;
+int Player::getY() const {
+    return movement_->getPosition().y;
+}
 
-    switch (direction_) {
-        case Direction::UP:    --outY; break;
-        case Direction::DOWN:  ++outY; break;
-        case Direction::LEFT:  --outX; break;
-        case Direction::RIGHT: ++outX; break;
-        case Direction::NONE:  break;
-    }
+Direction Player::getDirection() const {
+    return movement_->getDirection();
+}
+
+IMovementMechanics& Player::movement() {
+    return *movement_;
 }

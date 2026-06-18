@@ -1,8 +1,9 @@
 #pragma once
 
-#include "render/IRenderer.h"
 #include <memory>
 #include <map>
+
+#include "render/IRenderer.h"
 
 namespace sf {
     class RenderWindow;
@@ -32,7 +33,8 @@ public:
     void drawPlayer(int gridX, int gridY, Direction facing) override;
     void present() override;
     bool isOpen() const override;
-    bool handleEvents() override;
+
+    std::optional<sf::Event> pollEvent() override;
 
 private:
     static constexpr int TILE_SIZE = 32;

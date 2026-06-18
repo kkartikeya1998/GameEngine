@@ -26,6 +26,9 @@ public:
     Player* getPlayer()      { return &player_; }
     Map*   getActiveMap()   { return world_.getActiveMap(); }
 
+    // Movement on the map or state updates
+    void movePlayer(Direction dir);
+
     // Switch to a new map (called when Player steps on a TeleportPoint).
     // Repositions player on the new map.
     void changeMap(int mapId, int newX, int newY);

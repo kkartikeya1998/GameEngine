@@ -27,6 +27,19 @@ void SFMLRenderer::clear() {
     window_->clear(sf::Color::Black);
 }
 
+void SFMLRenderer::present() {
+    window_->display();
+}
+
+bool SFMLRenderer::isOpen() const {
+    return window_ && window_->isOpen();
+}
+
+std::optional<sf::Event> SFMLRenderer::pollEvent()
+{
+    return window_->pollEvent();
+}
+
 void SFMLRenderer::drawTile(int gridX, int gridY, Terrain::Type terrain) {
     auto it = terrainColors_.find(terrain);
     if (it == terrainColors_.end()) {
@@ -92,39 +105,4 @@ void SFMLRenderer::drawDirectionIndicator(int screenX, int screenY, Direction fa
     }
 
     window_->draw(arrow);
-}
-
-void SFMLRenderer::present() {
-    window_->display();
-}
-
-bool SFMLRenderer::isOpen() const {
-    return window_ && window_->isOpen();
-}
-
-bool SFMLRenderer::handleEvents()
-{
-    while (const auto eventOpt = window_->pollEvent())
-    {
-        const sf::Event& event = *eventOpt;
-
-        // Close window: exit
-        if (event.is<sf::Event::Closed>())
-        {
-            window_->close();
-            return false; // signal that we should quit
-        }
-
-        // Escape pressed: exit
-        if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>())
-        {
-            if (keyPressed->code == sf::Keyboard::Key::Escape)
-            {
-                window_->close();
-                return false; // signal that we should quit
-            }
-        }
-    }
-
-    return true; // window still open, continue
 }

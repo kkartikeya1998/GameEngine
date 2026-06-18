@@ -1,7 +1,7 @@
 #pragma once
 
 // ---------------------------------------------------------------------------
-// Direction — the four cardinal directions for any entity on the map.
+// Direction and position 
 //
 // Used by:
 //   - Player (facing direction)
@@ -16,4 +16,11 @@ enum class Direction {
     LEFT,
     RIGHT,
     NONE
+};
+
+
+struct Position {
+    int x;
+    int y;
+    Direction dir = Direction::NONE;
 };

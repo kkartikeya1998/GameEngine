@@ -1,39 +1,25 @@
 #pragma once
 
-#include "utils/Direction.h"
+#include "entities/movement/IMovementMechanics.h"
 
 // ---------------------------------------------------------------------------
-// Player — minimal position and facing state.
-//
-// Stores only position (x, y) and facing direction. The current map is
-// maintained by World, not stored here. MovementSystem queries World for
-// the active map and updates Player position.
+// Player — minimal state holder for the player character.
 //
 // Ownership:
 //   Player owns nothing. It's a pure data holder.
 // ---------------------------------------------------------------------------
 class Player {
 public:
-    Player(int startX, int startY, Direction facing = Direction::DOWN);
+    Player(std::unique_ptr<IMovementMechanics> movement);
 
-    // Position accessors
-    int getX() const { return x_; }
-    int getY() const { return y_; }
+    void move(Direction dir);
 
-    // Direction accessors
-    Direction getDirection() const { return direction_; }
-    void changeDirection(Direction newDir);
-
-    // Position mutators — called by MovementSystem
-    void moveTo(int x, int y);
-
-    // Returns the next tile position if moving in current direction.
-    // Does NOT move the player — just computes the target.
-    // Caller (MovementSystem) checks walkability and calls moveTo() if valid.
-    void getNextPosition(int& outX, int& outY) const;
+    int getX() const;
+    int getY() const;
+    Direction getDirection() const;
+    
+    IMovementMechanics& movement();
 
 private:
-    int       x_;
-    int       y_;
-    Direction direction_;
+    std::unique_ptr<IMovementMechanics> movement_;
 };

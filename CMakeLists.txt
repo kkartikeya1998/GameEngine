@@ -34,6 +34,7 @@ add_executable(PokemonProject
     src/entities/pokemon/PokemonSpeciesRepository.cpp
     
     src/entities/player/Player.cpp
+    src/entities/movement/GridMovementMechanics.cpp
 
     src/system/GameController.cpp
     src/render/RenderSystem.cpp
@@ -48,8 +49,10 @@ target_include_directories(PokemonProject PRIVATE
 )
 
 target_compile_definitions(PokemonProject PRIVATE
-    PROJECT_ROOT="${CMAKE_SOURCE_DIR}"
+    PROJECT_ROOT=\"${CMAKE_SOURCE_DIR}\"
 )
+
 target_link_libraries(PokemonProject PRIVATE SFML::Graphics SFML::Window SFML::System)
 
-file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+set(ASSETS_DIR ${CMAKE_SOURCE_DIR}/assets)
+file(COPY ${ASSETS_DIR} DESTINATION ${CMAKE_BINARY_DIR})
