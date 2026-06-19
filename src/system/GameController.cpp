@@ -1,5 +1,6 @@
 #include "system/GameController.h"
 #include "entities/movement/GridMovementMechanics.h"
+#include <iostream>
 
 GameController::GameController(int startMapId, int playerX, int playerY)
     : world_(std::string(PROJECT_ROOT) + "/assets/maps/"),
@@ -25,16 +26,17 @@ void GameController::movePlayer(Direction dir) {
     Position next = player_.movement().nextPos(dir);
 
     // world validation (collision check placeholder)
-    bool canMove = true;
+    bool inBounds = (next.x >= 0 && next.y >= 0 &&
+        next.x < activeMap->getWidth() &&
+        next.y < activeMap->getHeight());
 
-    if (next.x < 0 || next.y < 0 ||
-        next.x >= activeMap->getWidth() ||
-        next.y >= activeMap->getHeight()) {
-        canMove = false;
+    if (!inBounds) {
+        std::cout << "Player cannot move to (" << next.x << ", " << next.y << ")\n";
+        return;
     }
-
+    
     // optional: terrain blocking logic
-    canMove &= activeMap->tile_at(next.x, next.y).isWalkable();
+    bool canMove = activeMap->tile_at(next.x, next.y).isWalkable();
 
     if (canMove) {
         player_.movement().move(dir);

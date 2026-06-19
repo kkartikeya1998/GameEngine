@@ -16,7 +16,7 @@ class MapLoader {
 public:
     MapLoader(const std::string& mapsFolder, MapObjectRepository& repository);
 
-    std::unique_ptr<Map> load(int mapId) const;
+    std::unique_ptr<Map> loadMapById(int mapId) const;
 
 private:
     void loadObjectMetadata();

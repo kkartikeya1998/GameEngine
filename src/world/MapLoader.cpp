@@ -96,7 +96,7 @@ void MapLoader::loadMetadata(const std::string& mapsFolder)
     }
 }
 
-std::unique_ptr<Map> MapLoader::load(int mapId) const
+std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
 {
     std::string mapPath;
 
@@ -124,6 +124,11 @@ std::unique_ptr<Map> MapLoader::load(int mapId) const
 
     // tiles
     const auto& tiles_json = j["tiles"];
+    
+    std::cout << tiles_json.size() << " tiles, expected " << (width * height) << '\n';
+    if (tiles_json.size() != static_cast<std::size_t>(width * height)) {
+        throw std::runtime_error("Tile count does not match width * height");
+    }
 
     for (int y = 0; y < height; y++)
     {
@@ -161,14 +166,14 @@ std::unique_ptr<Map> MapLoader::load(int mapId) const
             int teleportX = 0;
             int teleportY = 0;
 
-            if (entry.contains("teleport_target"))
-            {
-                auto tt = entry["teleport_target"];
+            // if (entry.contains("teleport_target"))
+            // {
+            //     auto tt = entry["teleport_target"];
 
-                teleportMapId = tt["map_id"];
-                teleportX = tt["x"];
-                teleportY = tt["y"];
-            }
+            //     teleportMapId = tt["map_id"];
+            //     teleportX = tt["x"];
+            //     teleportY = tt["y"];
+            // }
 
             map->addMapObject(
                 std::make_unique<MapObject>(

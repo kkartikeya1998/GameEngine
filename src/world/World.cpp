@@ -8,7 +8,7 @@ World::World(const std::string& mapsFolder)
 
 void World::loadMap(int mapId)
 {
-    active_map_ = loader_.load(mapId);
+    active_map_ = loader_.loadMapById(mapId);
 }
 
 Map* World::getActiveMap() const
