@@ -21,6 +21,7 @@ void SFMLRenderer::initTerrainColors() {
     terrainColors_[Terrain::Type::Ice]      = {173, 216, 230};    // Light blue
     terrainColors_[Terrain::Type::Cave]     = {105, 105, 105};    // Dim gray
     terrainColors_[Terrain::Type::Building] = {128, 128, 128};    // Gray
+    terrainColors_[Terrain::Type::Tree]     = {0, 100, 0};        // Dark green
 }
 
 void SFMLRenderer::clear() {

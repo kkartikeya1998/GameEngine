@@ -5,11 +5,11 @@ GameController::GameController(int startMapId, int playerX, int playerY)
     : world_(std::string(PROJECT_ROOT) + "/assets/maps/"),
     player_(std::make_unique<GridMovementMechanics>(playerX, playerY))
 {
-    world_.load_map(startMapId);
+    world_.loadMap(startMapId);
 }
 
 void GameController::changeMap(int mapId, int newX, int newY) {
-    world_.load_map(mapId);
+    world_.loadMap(mapId);
 
     // movement system handles position
     player_.movement().setPosition(newX, newY);
@@ -34,7 +34,7 @@ void GameController::movePlayer(Direction dir) {
     }
 
     // optional: terrain blocking logic
-    // canMove &= activeMap->tile_at(next.x, next.y).isWalkable();
+    canMove &= activeMap->tile_at(next.x, next.y).isWalkable();
 
     if (canMove) {
         player_.movement().move(dir);

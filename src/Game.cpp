@@ -3,7 +3,7 @@
 #include "Game.h"
 
 Game::Game()
-    : controller_(2, 1, 1),
+    : controller_(1, 0, 0),
       renderer_(std::make_unique<SFMLRenderer>(800, 600))
 {
 }

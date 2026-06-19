@@ -13,5 +13,12 @@
     "Grass","Grass","Grass","Grass","Grass","Grass","Sand","Grass","Grass","Grass"
   ],
 
-  "map_objects": []
+  "map_objects": [
+    { "type": "Tree", "origin": { "x": 4, "y": 2 } },
+    {
+      "type": "House",
+      "origin": { "x": 7, "y": 1 },
+      "teleport_target": { "map_id": 5, "x": 3, "y": 8 }
+    }
+  ]
 }

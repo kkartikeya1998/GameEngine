@@ -1,0 +1,25 @@
+{
+  "object_types": {
+    "Tree": {
+      "texture": "assets/objects/tree.png",
+      "footprint": [
+        { "dx": 0, "dy": -1, "blocking": false },
+        { "dx": 0, "dy": 0,  "blocking": true }
+      ]
+    },
+    "House": {
+      "texture": "assets/objects/house.png",
+      "footprint": [
+        { "dx": -1, "dy": 0, "blocking": true },
+        { "dx": 0,  "dy": 0, "blocking": false, "teleport": true },
+        { "dx": 1,  "dy": 0, "blocking": true }
+      ]
+    },
+    "Boulder": {
+      "texture": "assets/objects/boulder.png",
+      "footprint": [
+        { "dx": 0, "dy": 0, "blocking": true }
+      ]
+    }
+  }
+}
