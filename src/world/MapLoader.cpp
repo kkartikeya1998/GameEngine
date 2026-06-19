@@ -27,7 +27,6 @@ void MapLoader::loadObjectMetadata()
 {
     namespace fs = std::filesystem;
 
-    // Expect object_metadata.json in the maps folder
     fs::path objectMetaPath = fs::path(maps_folder_) / "object_metadata.json";
 
     if (!fs::exists(objectMetaPath)) {
@@ -125,7 +124,7 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
     // tiles
     const auto& tiles_json = j["tiles"];
     
-    std::cout << tiles_json.size() << " tiles, expected " << (width * height) << '\n';
+    std::cerr << tiles_json.size() << " tiles, expected " << (width * height) << '\n';
     if (tiles_json.size() != static_cast<std::size_t>(width * height)) {
         throw std::runtime_error("Tile count does not match width * height");
     }
@@ -146,16 +145,14 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
         }
     }
 
-    // objects
+    // Apply footprint masking for map objects
     if (j.contains("map_objects"))
     {
         for (const auto& entry : j["map_objects"])
         {
             std::string type = entry["type"];
 
-            const ObjectTypeMetadata* meta =
-                repository_.find(type);
-
+            const ObjectTypeMetadata* meta = repository_.find(type);
             if (!meta)
                 continue;
 
@@ -166,15 +163,42 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
             int teleportX = 0;
             int teleportY = 0;
 
-            // if (entry.contains("teleport_target"))
-            // {
-            //     auto tt = entry["teleport_target"];
+            if (entry.contains("teleport_target"))
+            {
+                auto tt = entry["teleport_target"];
+                teleportMapId = tt["map_id"];
+                teleportX = tt["x"];
+                teleportY = tt["y"];
+            }
 
-            //     teleportMapId = tt["map_id"];
-            //     teleportX = tt["x"];
-            //     teleportY = tt["y"];
-            // }
+            // Apply footprint traits to tiles
+            for (const auto& fc : meta->footprint)
+            {
+                int tileX = originX + fc.dx;
+                int tileY = originY + fc.dy;
 
+                // Skip out-of-bounds footprint cells
+                if (tileX < 0 || tileX >= width || tileY < 0 || tileY >= height)
+                    continue;
+
+                // Walkability
+                if (fc.blocking)
+                {
+                    // Blocking: make tile not walkable
+                    map->tile_at(tileX, tileY).setWalkable(
+                        std::make_unique<NoWalkable>()
+                    );
+                }
+                else
+                {
+                    // Non-blocking: ensure walkable (or clear trait if you prefer)
+                    // If you have a concrete Walkable class:
+                    // map->tile_at(tileX, tileY).setWalkable(std::make_unique<Walkable>(true));
+                }
+
+            }
+
+            // Optionally still add the map object for rendering / metadata
             map->addMapObject(
                 std::make_unique<MapObject>(
                     meta,

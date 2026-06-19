@@ -39,6 +39,9 @@ void GameController::movePlayer(Direction dir) {
     bool canMove = activeMap->tile_at(next.x, next.y).isWalkable();
 
     if (canMove) {
+        std::cout << "Player moved to (" << next.x << ", " << next.y << ")\n";
         player_.movement().move(dir);
+    } else {
+        std::cout << "Player cannot move to (" << next.x << ", " << next.y << ") - blocked by terrain/object\n";
     }
 }

@@ -27,9 +27,8 @@ add_executable(PokemonProject
     src/world/MapLoader.cpp
     src/world/MapObject.cpp
     src/world/MapObjectRepository.cpp
-    src/world/NoWalkable.cpp
     
-    
+
     src/entities/pokemon/Pokemon.cpp
     src/entities/pokemon/Stats.cpp
     src/entities/pokemon/WildPokemon.cpp
