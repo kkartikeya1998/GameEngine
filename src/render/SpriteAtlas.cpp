@@ -7,7 +7,7 @@ SpriteAtlas::SpriteAtlas(const std::string& spritesheet_path)
 {
     const int frameW = 32;
     const int frameH = 48;
-    const int playerRowY = frameH * 0;
+    const int playerRowY = frameH * 1;
 
     loadRegion("player_down_0",    0 * frameW, playerRowY, frameW, frameH);
     loadRegion("player_down_1",    1 * frameW, playerRowY, frameW, frameH);
