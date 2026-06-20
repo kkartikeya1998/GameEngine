@@ -70,3 +70,8 @@ bool Entity::isAnimating() const
 {
     return animation_.isAnimating();
 }
+
+float Entity::getAnimationProgress() const
+{
+    return animation_.getProgress();
+}

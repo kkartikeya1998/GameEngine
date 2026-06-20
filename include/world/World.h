@@ -5,6 +5,7 @@
 #include "world/Map.h"
 #include "world/MapLoader.h"
 #include "world/MapObjectRepository.h"
+#include "world/TileRepository.h"
 
 class World {
 public:
@@ -16,7 +17,8 @@ public:
 
 private:
     MapObjectRepository repository_;
-    MapLoader loader_;
+    TileRepository      tileRepository_;
+    MapLoader           loader_;
 
     std::unique_ptr<Map> active_map_;
 };

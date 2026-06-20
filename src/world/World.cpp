@@ -1,8 +1,9 @@
 #include "world/World.h"
 
 World::World(const std::string& mapsFolder)
-    : repository_(mapsFolder + "/object_metadata.json"),
-      loader_(mapsFolder, repository_)
+    : repository_(),
+      tileRepository_(mapsFolder + "/tileset_metadata.json"),
+      loader_(mapsFolder, repository_, tileRepository_)
 {
 }
 

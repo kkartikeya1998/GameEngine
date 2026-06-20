@@ -1,0 +1,28 @@
+{
+  "tile_types": {
+    "Grass": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 0,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "terrain": "Grass"
+    },
+    "Sand": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 32,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "terrain": "Sand"
+    },
+    "Water": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 64,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "terrain": "Water"
+    }
+  }
+}

@@ -1,15 +1,10 @@
-#include "world/MapObjectRepository.h"
-
 #include <fstream>
 #include <iostream>
-
 #include "external/json.hpp"
 
-using json = nlohmann::json;
+#include "world/MapObjectRepository.h"
 
-MapObjectRepository::MapObjectRepository(const std::string& metadataFilePath) {
-    load_from_file(metadataFilePath);
-}
+using json = nlohmann::json;
 
 void MapObjectRepository::load_from_file(const std::string& path) {
     std::ifstream file(path);
@@ -42,11 +37,11 @@ void MapObjectRepository::load_from_file(const std::string& path) {
     }
 }
 
+void MapObjectRepository::register_type(const std::string& typeName, ObjectTypeMetadata meta) {
+    types_.emplace(typeName, std::move(meta));
+}
+
 const ObjectTypeMetadata* MapObjectRepository::find(const std::string& type) const {
     auto it = types_.find(type);
     return it == types_.end() ? nullptr : &it->second;
-}
-
-void MapObjectRepository::register_type(const std::string& name, ObjectTypeMetadata meta) {
-    types_.emplace(name, std::move(meta));
 }

@@ -27,7 +27,7 @@ public:
     virtual void drawTile(int gridX, int gridY, Terrain::Type terrain) = 0;
 
     // Entities can be drawn at fractional grid positions for smooth animation
-    virtual void drawPlayer(float gridX, float gridY, Direction facing) = 0;
+    virtual void drawPlayer(float gridX, float gridY, Direction facing, float animProgress) = 0;
 
     // Present the rendered frame to the screen
     virtual void present() = 0;

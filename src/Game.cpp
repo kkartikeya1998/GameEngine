@@ -5,13 +5,17 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 
-sf::Clock gameClock;
-sf::Time elapsed = gameClock.restart();
-
 Game::Game()
     : controller_(1, 0, 0),
-      atlas_(std::make_unique<SpriteAtlas>("C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\sprites\\npc.png")),
-      renderSystem_(std::make_unique<RenderSystem>(std::make_unique<SFMLRenderer>(800, 600, *atlas_)))
+      renderSystem_(std::make_unique<RenderSystem>(
+          std::make_unique<SFMLRenderer>(
+              800, 600,
+              "C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\maps\\tileset_metadata.json",
+              "C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\maps\\path_tileset.png",
+              "C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\maps\\object_metadata.json",
+              "C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\sprites\\player_spritesheet.png"
+          )
+      ))
 {
 }
 
@@ -20,7 +24,7 @@ void Game::run()
     try {
         while (renderSystem_->isOpen())
         {
-            float dt = gameClock.restart().asSeconds();
+            float dt = gameClock_.restart().asSeconds();
 
             // INPUT
             Direction dir = Direction::NONE;

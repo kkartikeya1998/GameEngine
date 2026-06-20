@@ -2,9 +2,14 @@
 
 #include <memory>
 #include <map>
+#include <string>
 
 #include "render/IRenderer.h"
+#include "render/TileAtlas.h"
 #include "render/SpriteAtlas.h"
+#include "render/MapObjectAtlas.h"
+#include "world/TileRepository.h"
+#include "world/MapObjectRepository.h"
 
 namespace sf {
     class RenderWindow;
@@ -15,50 +20,58 @@ namespace sf {
 // ---------------------------------------------------------------------------
 // SFMLRenderer — SFML-based concrete implementation of IRenderer.
 //
-// Renders the game using SFML's 2D graphics API.
-// Handles window management, texture loading, and sprite drawing.
+// Owns every repository and atlas it needs by value. This keeps Game's
+// constructor free of texture/JSON wiring — Game only passes in file paths.
 //
-// Design:
-//   - Tiles are rendered as colored rectangles (placeholder)
-//   - Player is rendered as a colored square with direction indicator
-//   - All tile sizes are 32×32 pixels
-//   - All assets are dummy paths (replace with real asset paths)
+// Construction order matters: repositories must be fully constructed before
+// the atlases that reference them, since TileAtlas/MapObjectAtlas hold
+// const references into tileRepo_/objectRepo_ respectively. Declaration
+// order below is also construction order — do not reorder these members.
 // ---------------------------------------------------------------------------
 class SFMLRenderer : public IRenderer {
 public:
-    SFMLRenderer(int windowWidth, int windowHeight, SpriteAtlas& atlas);
+    SFMLRenderer(int windowWidth, int windowHeight,
+                 const std::string& tileMetadataPath,
+                 const std::string& tileSpritesheetPath,
+                 const std::string& objectMetadataPath,
+                 const std::string& playerSpritesheetPath);
     ~SFMLRenderer() override;
 
     void clear() override;
     void drawTile(int gridX, int gridY, Terrain::Type terrain) override;
-    // float since player position can be animated (interpolated between tiles)
-    void drawPlayer(float gridX, float gridY, Direction facing) override;
+    void drawPlayer(float gridX, float gridY, Direction facing, float animProgress) override;
     void present() override;
     bool isOpen() const override;
 
     std::optional<sf::Event> pollEvent() override;
 
 private:
-    static constexpr int TILE_SIZE = 32;
+    static constexpr int TILE_SIZE = 64;
     static constexpr int WINDOW_WIDTH = 1024;
     static constexpr int WINDOW_HEIGHT = 768;
 
+    // Repositories first — atlases below hold references into these.
+    TileRepository tileRepo_;
+    MapObjectRepository objectRepo_;
+
+    // Atlases second — each one's constructor consumes a repository above.
+    TileAtlas tileAtlas_;
+    SpriteAtlas spriteAtlas_;
+    MapObjectAtlas mapObjAtlas_;
+
+    // SFML resources last.
     std::unique_ptr<sf::RenderWindow> window_;
-    SpriteAtlas& atlas_;
 
-
-    // Color map for terrain types
     struct TerrainColor {
         unsigned char r, g, b;
     };
     std::map<Terrain::Type, TerrainColor> terrainColors_;
-    // Helper methods
+
     void initTerrainColors();
     int screenX(int gridX) const { return gridX * TILE_SIZE; }
     int screenY(int gridY) const { return gridY * TILE_SIZE; }
     float screenX(float gridX) const { return gridX * TILE_SIZE; }
     float screenY(float gridY) const { return gridY * TILE_SIZE; }
 
-    // Direction indicator (arrow pointing in facing direction)
-    void drawDirectionIndicator(int screenX, int screenY, Direction facing);
+    void drawDirectionIndicator(float screenX, float screenY, Direction facing);
 };

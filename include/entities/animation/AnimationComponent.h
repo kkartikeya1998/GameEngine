@@ -11,9 +11,11 @@ public:
     void update(float dt);
 
     bool isAnimating() const;
-
+    float getProgress() const;
+    
     float getRenderX() const;
     float getRenderY() const;
+    
 
 private:
     float startX_;

@@ -48,6 +48,11 @@ bool AnimationComponent::isAnimating() const
     return progress_ < 1.f;
 }
 
+float AnimationComponent::getProgress() const
+{
+    return progress_;
+}
+
 float AnimationComponent::getRenderX() const
 {
     return currentX_;

@@ -32,6 +32,7 @@ public:
 
     // animation state
     bool isAnimating() const;
+    float getAnimationProgress() const;
 protected:
     std::unique_ptr<IMovementMechanics> movement_;
     AnimationComponent animation_;

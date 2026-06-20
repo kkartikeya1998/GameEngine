@@ -44,7 +44,8 @@ void RenderSystem::render(GameController& controller) {
     renderer_->drawPlayer(
         player->getRenderX(),
         player->getRenderY(),
-        player->getDirection()
+        player->getDirection(),
+        player->getAnimationProgress()
     );
 
     // Present the frame

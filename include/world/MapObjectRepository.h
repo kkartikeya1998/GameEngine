@@ -7,27 +7,21 @@
 #include "world/MapObject.h"
 
 // ---------------------------------------------------------------------------
-// MapObjectRepository — owns all object type metadata, loaded once from
-// object_metadata.json at game startup.
+// MapObjectRepository — owns all object type metadata.
 //
-// MapLoader looks up each placed instance's "type" string here to get the
-// footprint/texture, rather than duplicating that data in every map file.
-//
-// Ownership:
-//   Repository owns all ObjectTypeMetadata. Returned pointers are non-owning
-//   and valid for the repository's lifetime — load it once and keep it alive
-//   for as long as any Map built from it is in use.
+// Loading is now triggered explicitly via load_from_file(), called once by
+// MapLoader's constructor. This keeps the parsing logic in one place
+// (it used to be duplicated in MapLoader::loadObjectMetadata — removed).
 // ---------------------------------------------------------------------------
 class MapObjectRepository {
 public:
-    explicit MapObjectRepository(const std::string& metadataFilePath);
+    MapObjectRepository() = default;
 
-    // Returns nullptr if the type name isn't in the catalog.
+    void load_from_file(const std::string& path);
+    void register_type(const std::string& typeName, ObjectTypeMetadata meta);
+
     const ObjectTypeMetadata* find(const std::string& type) const;
-    void register_type(const std::string& name, ObjectTypeMetadata meta);
 
 private:
     std::unordered_map<std::string, ObjectTypeMetadata> types_;
-
-    void load_from_file(const std::string& path);
 };

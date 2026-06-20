@@ -27,3 +27,6 @@ NOTE on the ownership of CapturedPokemon: should be given to the PokemonReposito
 - decoupled from core classes
 - each drawable entity should have render functionality
 ![[2_Design.svg]]
+
+### Resources:
+- https://www.deviantart.com/lolw3e932/art/Npc-26b-760698758

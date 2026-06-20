@@ -27,6 +27,7 @@ add_executable(PokemonProject
     src/world/MapLoader.cpp
     src/world/MapObject.cpp
     src/world/MapObjectRepository.cpp
+    src/world/TileRepository.cpp
     
 
     src/entities/pokemon/Pokemon.cpp
@@ -43,9 +44,13 @@ add_executable(PokemonProject
     src/entities/animation/AnimationComponent.cpp
 
     src/system/GameController.cpp
+    
     src/render/RenderSystem.cpp
     src/render/SFMLRenderer.cpp
+    src/render/Atlas.cpp
+    src/render/TileAtlas.cpp
     src/render/SpriteAtlas.cpp
+    src/render/MapObjectAtlas.cpp
 
     src/Game.cpp
     )
