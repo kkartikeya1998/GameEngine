@@ -1,7 +1,7 @@
 #pragma once
 
 #include "system/GameController.h"
-#include "render/SFMLRenderer.h"
+#include "render/RenderSystem.h"
 
 class Game {
     public:
@@ -9,6 +9,6 @@ class Game {
         void run();
     private:
         GameController controller_;
-        std::unique_ptr<IRenderer> renderer_;
+        std::unique_ptr<RenderSystem> renderSystem_;
         
 };

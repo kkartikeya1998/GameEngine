@@ -33,7 +33,8 @@ Direction GridMovementMechanics::getDirection() const
 Position GridMovementMechanics::nextPos(Direction dir) const
 {
     Position next = position_;
-
+    // Returns out of bounds positions if moving off the grid
+    // Caller should validate against map boundaries
     switch (dir)
     {
     case Direction::UP:

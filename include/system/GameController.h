@@ -23,7 +23,7 @@ public:
 
     // Read-only accessors for the game state
     World*  getWorld()       { return &world_;  }
-    Player* getPlayer()      { return &player_; }
+    Entity* getPlayer()      { return &player_; }
     Map*   getActiveMap()   { return world_.getActiveMap(); }
 
     // Movement on the map or state updates
@@ -33,11 +33,15 @@ public:
     // Repositions player on the new map.
     void changeMap(int mapId, int newX, int newY);
 
+    void update(float dt) {
+        player_.update(dt);
+    }
+
     
 
 private:
     //  If I want to enable world switching at runtime, or enable save states, or multiplayer 
     //  I might want to make these unique_ptrs and manage their lifecycles more carefully.
     World  world_;
-    Player player_;
+    Entity player_;
 };

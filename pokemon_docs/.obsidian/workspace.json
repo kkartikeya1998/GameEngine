@@ -11,14 +11,12 @@
             "id": "b001a6227757fdcd",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "diagram-edit",
               "state": {
-                "file": "2_Epic.md",
-                "mode": "source",
-                "source": false
+                "file": "2_Design.svg"
               },
               "icon": "lucide-file",
-              "title": "2_Epic"
+              "title": "2_Design.svg"
             }
           }
         ]
@@ -185,9 +183,9 @@
   },
   "active": "b001a6227757fdcd",
   "lastOpenFiles": [
-    "2_Design.svg",
     "2_Epic.md",
     "1_Design.svg",
+    "2_Design.svg",
     "1_Draft.md",
     "FirstDesign.svg",
     "SecondSprint.md",

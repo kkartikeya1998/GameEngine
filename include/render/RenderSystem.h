@@ -29,6 +29,11 @@ public:
     // Render the complete game state from GameController
     void render(GameController& controller);
 
+    bool isOpen() const;
+    std::optional<sf::Event> pollEvent();
+
+    
+
 private:
     std::unique_ptr<IRenderer> renderer_;
 

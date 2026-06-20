@@ -37,8 +37,10 @@ add_executable(PokemonProject
     src/entities/pokemon/CapturedPokemonFactory.cpp
     src/entities/pokemon/PokemonSpeciesRepository.cpp
     
+    src/entities/Entity.cpp
     src/entities/player/Player.cpp
     src/entities/movement/GridMovementMechanics.cpp
+    src/entities/animation/AnimationComponent.cpp
 
     src/system/GameController.cpp
     src/render/RenderSystem.cpp

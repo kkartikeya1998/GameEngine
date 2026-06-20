@@ -14,25 +14,46 @@ void RenderSystem::render(GameController& controller) {
 
     // Get references to world and player
     World* world = controller.getWorld();
-    Player* player = controller.getPlayer();
+    Entity* player = controller.getPlayer();
 
     if (!world || !player) {
         renderer_->present();
         return;
     }
 
-    // Render the active map and player
-    // NOTE: World needs a getActiveMap() method for this to work.
-    // For now, this assumes Map is accessible from World.
-    // Adjust based on your actual World interface.
-    
-    // TODO: Add getActiveMap() to World class to access current map
-    // For now, we'll render what we can through the World interface
-    // world->render();
+    // -------------------------
+    // Draw map
+    // -------------------------
+    Map* map = world->getActiveMap();
 
-    // Draw the player on top of the map
-    renderer_->drawPlayer(player->getX(), player->getY(), player->getDirection());
+    if (map) {
+        for (int y = 0; y < map->getHeight(); y++) {
+            for (int x = 0; x < map->getWidth(); x++) {
+                renderer_->drawTile(
+                    x,
+                    y,
+                    map->tile_at(x, y).terrain()
+                );
+            }
+        }
+    }
+
+    // -------------------------
+    // Draw player (animated position)
+    // -------------------------
+    renderer_->drawPlayer(
+        player->getRenderX(),
+        player->getRenderY(),
+        player->getDirection()
+    );
 
     // Present the frame
     renderer_->present();
+}
+
+bool RenderSystem::isOpen() const {
+    return renderer_->isOpen();
+}
+std::optional<sf::Event> RenderSystem::pollEvent(){
+    return renderer_->pollEvent();
 }

@@ -57,7 +57,7 @@ void SFMLRenderer::drawTile(int gridX, int gridY, Terrain::Type terrain) {
     window_->draw(tile);
 }
 
-void SFMLRenderer::drawPlayer(int gridX, int gridY, Direction facing) {
+void SFMLRenderer::drawPlayer(float gridX, float gridY, Direction facing) {
     // Draw player as a colored square with a direction indicator
     sf::RectangleShape player(sf::Vector2f(TILE_SIZE - 4, TILE_SIZE - 4));
     player.setPosition(sf::Vector2f(screenX(gridX) + 2, screenY(gridY) + 2));

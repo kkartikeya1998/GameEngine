@@ -30,7 +30,8 @@ public:
 
     void clear() override;
     void drawTile(int gridX, int gridY, Terrain::Type terrain) override;
-    void drawPlayer(int gridX, int gridY, Direction facing) override;
+    // float since player position can be animated (interpolated between tiles)
+    void drawPlayer(float gridX, float gridY, Direction facing) override;
     void present() override;
     bool isOpen() const override;
 
@@ -53,6 +54,8 @@ private:
     void initTerrainColors();
     int screenX(int gridX) const { return gridX * TILE_SIZE; }
     int screenY(int gridY) const { return gridY * TILE_SIZE; }
+    float screenX(float gridX) const { return gridX * TILE_SIZE; }
+    float screenY(float gridY) const { return gridY * TILE_SIZE; }
 
     // Direction indicator (arrow pointing in facing direction)
     void drawDirectionIndicator(int screenX, int screenY, Direction facing);

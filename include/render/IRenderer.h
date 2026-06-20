@@ -26,8 +26,8 @@ public:
     // Draw a single tile at grid position (x, y)
     virtual void drawTile(int gridX, int gridY, Terrain::Type terrain) = 0;
 
-    // Draw the player at grid position (x, y) facing a direction
-    virtual void drawPlayer(int gridX, int gridY, Direction facing) = 0;
+    // Entities can be drawn at fractional grid positions for smooth animation
+    virtual void drawPlayer(float gridX, float gridY, Direction facing) = 0;
 
     // Present the rendered frame to the screen
     virtual void present() = 0;
