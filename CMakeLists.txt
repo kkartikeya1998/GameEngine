@@ -45,6 +45,7 @@ add_executable(PokemonProject
     src/system/GameController.cpp
     src/render/RenderSystem.cpp
     src/render/SFMLRenderer.cpp
+    src/render/SpriteAtlas.cpp
 
     src/Game.cpp
     )

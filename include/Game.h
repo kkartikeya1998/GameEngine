@@ -2,6 +2,7 @@
 
 #include "system/GameController.h"
 #include "render/RenderSystem.h"
+#include "render/SpriteAtlas.h"
 
 class Game {
     public:
@@ -9,6 +10,7 @@ class Game {
         void run();
     private:
         GameController controller_;
+        std::unique_ptr<SpriteAtlas> atlas_;
         std::unique_ptr<RenderSystem> renderSystem_;
         
 };

@@ -4,6 +4,7 @@
 #include <map>
 
 #include "render/IRenderer.h"
+#include "render/SpriteAtlas.h"
 
 namespace sf {
     class RenderWindow;
@@ -25,7 +26,7 @@ namespace sf {
 // ---------------------------------------------------------------------------
 class SFMLRenderer : public IRenderer {
 public:
-    SFMLRenderer(int windowWidth = 1024, int windowHeight = 768);
+    SFMLRenderer(int windowWidth, int windowHeight, SpriteAtlas& atlas);
     ~SFMLRenderer() override;
 
     void clear() override;
@@ -43,13 +44,14 @@ private:
     static constexpr int WINDOW_HEIGHT = 768;
 
     std::unique_ptr<sf::RenderWindow> window_;
+    SpriteAtlas& atlas_;
+
 
     // Color map for terrain types
     struct TerrainColor {
         unsigned char r, g, b;
     };
     std::map<Terrain::Type, TerrainColor> terrainColors_;
-
     // Helper methods
     void initTerrainColors();
     int screenX(int gridX) const { return gridX * TILE_SIZE; }

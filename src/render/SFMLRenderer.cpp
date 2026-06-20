@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
 
-SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight) {
+SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight, SpriteAtlas& atlas)  : atlas_(atlas) {
     window_ = std::make_unique<sf::RenderWindow>(
         sf::VideoMode(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT), 32),
         "Pokemon Game"
@@ -41,6 +41,7 @@ std::optional<sf::Event> SFMLRenderer::pollEvent()
     return window_->pollEvent();
 }
 
+// Box for a tile based on terrain type
 void SFMLRenderer::drawTile(int gridX, int gridY, Terrain::Type terrain) {
     auto it = terrainColors_.find(terrain);
     if (it == terrainColors_.end()) {
@@ -57,17 +58,60 @@ void SFMLRenderer::drawTile(int gridX, int gridY, Terrain::Type terrain) {
     window_->draw(tile);
 }
 
+// void SFMLRenderer::drawTile(int gridX, int gridY, Terrain::Type terrain) {
+//     SpriteRegion region = atlas_.getTerrainSprite(terrain);
+//     const sf::Texture& tex = atlas_.terrainTexture();
+
+//     sf::Sprite sprite(tex);
+//     sprite.setTextureRect(region.subrect);  // SFML 3: setTextureRect, not setTextureRegion
+
+//     sprite.setScale(sf::Vector2f(
+//         TILE_SIZE / region.tile_size.x,
+//         TILE_SIZE / region.tile_size.y
+//     ));
+
+//     sprite.setPosition(sf::Vector2f(
+//         screenX(gridX),
+//         screenY(gridY)
+//     ));
+
+//     window_->draw(sprite);
+// }
+
+
+// void SFMLRenderer::drawPlayer(float gridX, float gridY, Direction facing) {
+//     // Draw player as a colored square with a direction indicator
+//     sf::RectangleShape player(sf::Vector2f(TILE_SIZE - 4, TILE_SIZE - 4));
+//     player.setPosition(sf::Vector2f(screenX(gridX) + 2, screenY(gridY) + 2));
+//     player.setFillColor(sf::Color::Yellow);
+//     player.setOutlineColor(sf::Color::White);
+//     player.setOutlineThickness(2.f);
+
+//     window_->draw(player);
+
+//     // Draw direction indicator (arrow)
+//     drawDirectionIndicator(screenX(gridX), screenY(gridY), facing);
+// }
+
 void SFMLRenderer::drawPlayer(float gridX, float gridY, Direction facing) {
-    // Draw player as a colored square with a direction indicator
-    sf::RectangleShape player(sf::Vector2f(TILE_SIZE - 4, TILE_SIZE - 4));
-    player.setPosition(sf::Vector2f(screenX(gridX) + 2, screenY(gridY) + 2));
-    player.setFillColor(sf::Color::Yellow);
-    player.setOutlineColor(sf::Color::White);
-    player.setOutlineThickness(2.f);
+    SpriteRegion region = atlas_.getPlayerSprite(facing);
+    const sf::Texture& tex = atlas_.playerTexture();
 
-    window_->draw(player);
+    sf::Sprite sprite(tex);
+    sprite.setTextureRect(region.subrect);
 
-    // Draw direction indicator (arrow)
+    sprite.setScale(sf::Vector2f(
+        TILE_SIZE / region.tile_size.x,
+        TILE_SIZE / region.tile_size.y
+    ));
+
+    sprite.setPosition(sf::Vector2f(
+        screenX(gridX) + 2,
+        screenY(gridY) + 2
+    ));
+
+    window_->draw(sprite);
+
     drawDirectionIndicator(screenX(gridX), screenY(gridY), facing);
 }
 

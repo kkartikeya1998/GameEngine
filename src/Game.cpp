@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "Game.h"
-#include "render/RenderSystem.h"
 #include "render/SFMLRenderer.h"
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
@@ -11,7 +10,8 @@ sf::Time elapsed = gameClock.restart();
 
 Game::Game()
     : controller_(1, 0, 0),
-      renderSystem_(std::make_unique<RenderSystem>(std::make_unique<SFMLRenderer>(800, 600)))
+      atlas_(std::make_unique<SpriteAtlas>("C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\sprites\\npc.png")),
+      renderSystem_(std::make_unique<RenderSystem>(std::make_unique<SFMLRenderer>(800, 600, *atlas_)))
 {
 }
 
