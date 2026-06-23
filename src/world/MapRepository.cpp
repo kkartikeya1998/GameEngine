@@ -1,4 +1,4 @@
-#include "world/TileRepository.h"
+#include "world/MapRepository.h"
 
 #include <fstream>
 #include <iostream>
@@ -8,11 +8,11 @@
 
 using json = nlohmann::json;
 
-TileRepository::TileRepository(const std::string& metadataFilePath) {
+MapRepository::MapRepository(const std::string& metadataFilePath) {
     load_from_file(metadataFilePath);
 }
 
-void TileRepository::load_from_file(const std::string& path) {
+void MapRepository::load_from_file(const std::string& path) {
     std::ifstream file(path);
     if (!file) {
         std::cerr << "Failed to open tile metadata file: " << path << '\n';
@@ -47,7 +47,7 @@ void TileRepository::load_from_file(const std::string& path) {
     }
 }
 
-const TileTypeMetadata* TileRepository::find(const std::string& type) const {
+const TileTypeMetadata* MapRepository::find(const std::string& type) const {
     auto it = types_.find(type);
     return it == types_.end() ? nullptr : &it->second;
 }

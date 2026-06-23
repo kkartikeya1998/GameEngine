@@ -2,8 +2,9 @@
 #include "entities/movement/GridMovementMechanics.h"
 #include <iostream>
 
-GameController::GameController(int startMapId, int playerX, int playerY)
-    : world_(std::string(PROJECT_ROOT) + "/assets/maps/"),
+GameController::GameController(int startMapId, int playerX, int playerY,
+                                MapObjectRepository& objectRepository)
+    : world_(std::string(PROJECT_ROOT) + "/assets/maps/", objectRepository),
     player_(std::make_unique<GridMovementMechanics>(playerX, playerY))
 {
     world_.loadMap(startMapId);
@@ -33,12 +34,12 @@ void GameController::movePlayer(Direction dir) {
         next.y < activeMap->getHeight());
 
     if (!inBounds) return;
-    
-    
+
+
     // terrain and map object footprint cell blocking logic
     bool canMove = activeMap->tile_at(next.x, next.y).isWalkable();
 
     if (!canMove) return;
-    
+
     player_.move(dir);
 }

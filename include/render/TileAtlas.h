@@ -2,24 +2,25 @@
 
 #include "render/Atlas.h"
 #include "world/Terrain.h"
-#include "world/TileRepository.h"
+#include "world/MapRepository.h"
 #include <unordered_map>
 #include <string>
 
 // ---------------------------------------------------------------------------
 // TileAtlas — terrain tile sprite lookup.
 //
-// Owns the spritesheet for terrain tiles and maps each Terrain::Type to its
-// SpriteRegion. No animation, no direction — terrain tiles are static.
+// Every texture rect comes fromMapRepository, which loads it from a tile 
+// metadata JSON file. This class only converts a Terrain::Type into the 
+// matching SpriteRegion.
 // ---------------------------------------------------------------------------
 class TileAtlas : public Atlas {
 public:
-    TileAtlas(const std::string& spritesheet_path, const TileRepository& tileRepository);
+    TileAtlas(const std::string& spritesheet_path, const MapRepository& mapRepository);
 
     const sf::Texture& terrainTexture() const { return texture(); }
     SpriteRegion getTerrainSprite(Terrain::Type terrain) const;
 
 private:
-    const TileRepository& tileRepository_; // non-owning, repo outlives atlas
+    const MapRepository& mapRepository_; // non-owning, repo outlives atlas
     std::unordered_map<Terrain::Type, std::string> terrain_region_;
 };

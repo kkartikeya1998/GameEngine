@@ -2,8 +2,6 @@
 #include "world/Terrain.h"
 #include "world/Map.h"
 #include "world/MapObject.h"
-// #include "world/NoWalkable.h"
-// #include "world/StaticTeleport.h"
 
 #include <filesystem>
 #include <fstream>
@@ -16,11 +14,9 @@ using json = nlohmann::json;
 
 MapLoader::MapLoader(
     const std::string& mapsFolder,
-    MapObjectRepository& repository,
-    TileRepository& tileRepository
+    MapObjectRepository& repository
 )
     : repository_(repository),
-    tileRepo_(tileRepository),
     maps_folder_(mapsFolder)
 {
     namespace fs = std::filesystem;

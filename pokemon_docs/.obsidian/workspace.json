@@ -11,15 +11,30 @@
             "id": "b001a6227757fdcd",
             "type": "leaf",
             "state": {
-              "type": "diagram-edit",
+              "type": "markdown",
               "state": {
-                "file": "2_Design.svg"
+                "file": "3_RenderComponent.md",
+                "mode": "source",
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "2_Design.svg"
+              "title": "3_RenderComponent"
+            }
+          },
+          {
+            "id": "c9e512d78b8f1665",
+            "type": "leaf",
+            "state": {
+              "type": "diagram-edit",
+              "state": {
+                "file": "3_RenderComponent.svg"
+              },
+              "icon": "lucide-file",
+              "title": "3_RenderComponent.svg"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -181,11 +196,13 @@
       "bases:Create new base": false
     }
   },
-  "active": "b001a6227757fdcd",
+  "active": "c9e512d78b8f1665",
   "lastOpenFiles": [
+    "3_RenderComponent.md",
+    "2_Design.svg",
     "2_Epic.md",
     "1_Design.svg",
-    "2_Design.svg",
+    "3_RenderComponent.svg",
     "1_Draft.md",
     "FirstDesign.svg",
     "SecondSprint.md",

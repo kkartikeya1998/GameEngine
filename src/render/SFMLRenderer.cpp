@@ -3,20 +3,17 @@
 #include <stdexcept>
 
 SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight,
-                            const std::string& tileMetadataPath,
+                            const MapRepository& tileRepository,
+                            const MapObjectRepository& objectRepository,
+                            const SpriteRepository& spriteRepository,
                             const std::string& tileSpritesheetPath,
-                            const std::string& objectMetadataPath,
                             const std::string& playerSpritesheetPath)
-    : tileRepo_(tileMetadataPath)
-    , objectRepo_()
-    , tileAtlas_(tileSpritesheetPath, tileRepo_)
-    , spriteAtlas_(playerSpritesheetPath)
-    , mapObjAtlas_(objectRepo_)
+    : tileAtlas_(tileSpritesheetPath, tileRepository)
+    , spriteAtlas_(playerSpritesheetPath, spriteRepository)
+    , mapObjAtlas_(objectRepository)
 {
     (void)windowWidth;
     (void)windowHeight;
-
-    objectRepo_.load_from_file(objectMetadataPath);
 
     window_ = std::make_unique<sf::RenderWindow>(
         sf::VideoMode(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT), 32),

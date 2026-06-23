@@ -6,13 +6,17 @@
 #include <SFML/System/Time.hpp>
 
 Game::Game()
-    : controller_(1, 0, 0),
-      renderSystem_(std::make_unique<RenderSystem>(
+    : tileRepo_("C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\maps\\tileset_metadata.json")
+    , objectRepo_()
+    , spriteRepo_("C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\sprites\\sprite_metadata.json")
+    , controller_(1, 0, 0, objectRepo_)
+    , renderSystem_(std::make_unique<RenderSystem>(
           std::make_unique<SFMLRenderer>(
               800, 600,
-              "C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\maps\\tileset_metadata.json",
+              tileRepo_,
+              objectRepo_,
+              spriteRepo_,
               "C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\maps\\path_tileset.png",
-              "C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\maps\\object_metadata.json",
               "C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\sprites\\player_spritesheet.png"
           )
       ))

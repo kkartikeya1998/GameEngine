@@ -23,6 +23,38 @@
       "w": 32,
       "h": 32,
       "terrain": "Water"
+    },
+    "Ice": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 96,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "terrain": "Ice"
+    },
+    "Cave": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 128,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "terrain": "Cave"
+    },
+    "Building": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 160,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "terrain": "Building"
+    },
+    "Tree": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 192,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "terrain": "Tree"
     }
   }
 }

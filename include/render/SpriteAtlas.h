@@ -2,13 +2,11 @@
 
 #include "render/Atlas.h"
 #include "entities/movement/Position.h" // for Direction
+#include "world/SpriteRepository.h"
 
 // ---------------------------------------------------------------------------
 // SpriteAtlas — player walk-cycle sprite lookup.
 //
-// Owns the spritesheet for the player and maps (Direction, WalkFrame) to
-// its SpriteRegion. frameFromProgress() converts a continuous animation
-// progress [0,1] into a discrete walk-cycle frame.
 // ---------------------------------------------------------------------------
 enum class WalkFrame {
     Standing,
@@ -18,7 +16,7 @@ enum class WalkFrame {
 
 class SpriteAtlas : public Atlas {
 public:
-    explicit SpriteAtlas(const std::string& spritesheet_path);
+    SpriteAtlas(const std::string& spritesheet_path, const SpriteRepository& spriteRepository);
 
     const sf::Texture& playerTexture() const { return texture(); }
     SpriteRegion getPlayerSprite(Direction facing, WalkFrame frame) const;
@@ -31,4 +29,7 @@ public:
         if (p < 1.00f) return WalkFrame::StepB;
         return WalkFrame::Standing;
     }
+
+private:
+    const SpriteRepository& spriteRepository_; // non-owning, repo outlives atlas
 };

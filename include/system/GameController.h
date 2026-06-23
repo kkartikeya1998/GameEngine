@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "world/World.h"
+#include "world/MapObjectRepository.h"
 #include "entities/player/Player.h"
 
 // ---------------------------------------------------------------------------
@@ -11,20 +12,20 @@
 // Responsibilities:
 //   - Owns World and Player instances
 //   - Places Player on the active map of World
-//   - Provides read-only access 
-//CA
-// The controller is the central state holder that ties the game together for now.
+//   - Provides read-only access
+//
 // ---------------------------------------------------------------------------
 class GameController {
 public:
-    // Initialize with a starting map ID. Loads that map into World
-    // and places the Player at the given tile coordinates.
-    GameController(int startMapId, int playerX, int playerY);
+    // Initialize with a starting map ID, player position, and a reference
+    // to the single shared MapObjectRepository (owned by Game).
+    GameController(int startMapId, int playerX, int playerY,
+                    MapObjectRepository& objectRepository);
 
     // Read-only accessors for the game state
     World*  getWorld()       { return &world_;  }
     Entity* getPlayer()      { return &player_; }
-    Map*   getActiveMap()   { return world_.getActiveMap(); }
+    Map*    getActiveMap()   { return world_.getActiveMap(); }
 
     // Movement on the map or state updates
     void movePlayer(Direction dir);
@@ -37,11 +38,7 @@ public:
         player_.update(dt);
     }
 
-    
-
 private:
-    //  If I want to enable world switching at runtime, or enable save states, or multiplayer 
-    //  I might want to make these unique_ptrs and manage their lifecycles more carefully.
     World  world_;
     Entity player_;
 };

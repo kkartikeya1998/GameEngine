@@ -27,7 +27,8 @@ add_executable(PokemonProject
     src/world/MapLoader.cpp
     src/world/MapObject.cpp
     src/world/MapObjectRepository.cpp
-    src/world/TileRepository.cpp
+    src/world/MapRepository.cpp
+    src/world/SpriteRepository.cpp
     
 
     src/entities/pokemon/Pokemon.cpp

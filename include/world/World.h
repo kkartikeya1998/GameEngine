@@ -5,20 +5,20 @@
 #include "world/Map.h"
 #include "world/MapLoader.h"
 #include "world/MapObjectRepository.h"
-#include "world/TileRepository.h"
 
+// ---------------------------------------------------------------------------
+// World — owns the active Map and the MapLoader that builds it.
+// ---------------------------------------------------------------------------
 class World {
 public:
-    explicit World(const std::string& mapsFolder);
+    World(const std::string& mapsFolder, MapObjectRepository& objectRepository);
 
     Map* getActiveMap() const;
 
     void loadMap(int mapId);
 
 private:
-    MapObjectRepository repository_;
-    TileRepository      tileRepository_;
-    MapLoader           loader_;
+    MapLoader loader_;
 
     std::unique_ptr<Map> active_map_;
 };

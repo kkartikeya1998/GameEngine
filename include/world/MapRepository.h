@@ -13,9 +13,9 @@ struct TileTypeMetadata {
     Terrain::Type terrainType;
 };
 
-class TileRepository {
+class MapRepository {
 public:
-    TileRepository(const std::string& metadataFilePath);
+    MapRepository(const std::string& metadataFilePath);
 
     const TileTypeMetadata* find(const std::string& type) const;
 

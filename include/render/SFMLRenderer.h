@@ -8,8 +8,9 @@
 #include "render/TileAtlas.h"
 #include "render/SpriteAtlas.h"
 #include "render/MapObjectAtlas.h"
-#include "world/TileRepository.h"
+#include "world/MapRepository.h"
 #include "world/MapObjectRepository.h"
+#include "world/SpriteRepository.h"
 
 namespace sf {
     class RenderWindow;
@@ -20,20 +21,24 @@ namespace sf {
 // ---------------------------------------------------------------------------
 // SFMLRenderer — SFML-based concrete implementation of IRenderer.
 //
-// Owns every repository and atlas it needs by value. This keeps Game's
-// constructor free of texture/JSON wiring — Game only passes in file paths.
+// CHANGED: no longer owns repositories by value. MapRepository,
+// MapObjectRepository, and SpriteRepository are now single shared instances
+// owned by Game and passed in here by reference. This removes the
+// duplication that existed when SFMLRenderer parsed the same JSON files
+// into its own private copies, separate from World's.
 //
-// Construction order matters: repositories must be fully constructed before
-// the atlases that reference them, since TileAtlas/MapObjectAtlas hold
-// const references into tileRepo_/objectRepo_ respectively. Declaration
-// order below is also construction order — do not reorder these members.
+// SFMLRenderer still owns its three atlases by value — atlases are
+// rendering-only concerns (texture + region lookup), genuinely private to
+// this renderer, unlike the metadata repositories which are shared facts
+// used by both gameplay (MapLoader) and rendering (the atlases).
 // ---------------------------------------------------------------------------
 class SFMLRenderer : public IRenderer {
 public:
     SFMLRenderer(int windowWidth, int windowHeight,
-                 const std::string& tileMetadataPath,
+                 const MapRepository& tileRepository,
+                 const MapObjectRepository& objectRepository,
+                 const SpriteRepository& spriteRepository,
                  const std::string& tileSpritesheetPath,
-                 const std::string& objectMetadataPath,
                  const std::string& playerSpritesheetPath);
     ~SFMLRenderer() override;
 
@@ -50,16 +55,13 @@ private:
     static constexpr int WINDOW_WIDTH = 1024;
     static constexpr int WINDOW_HEIGHT = 768;
 
-    // Repositories first — atlases below hold references into these.
-    TileRepository tileRepo_;
-    MapObjectRepository objectRepo_;
-
-    // Atlases second — each one's constructor consumes a repository above.
+    // Atlases — genuinely owned here, each references a repository that
+    // Game owns and passed in via the constructor above.
     TileAtlas tileAtlas_;
     SpriteAtlas spriteAtlas_;
     MapObjectAtlas mapObjAtlas_;
 
-    // SFML resources last.
+    // SFML resources.
     std::unique_ptr<sf::RenderWindow> window_;
 
     struct TerrainColor {
