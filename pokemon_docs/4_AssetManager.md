@@ -1,0 +1,5 @@
+Until recently, all the assets were being loaded as metadata in the repositories and the rendering component used atlases to get sprites for rendering. That is fine but the repositories kept on increasing (tiles, map objects, pokemon, players, ....) and since they were owned by the game and passed around as references for different tasks. Not nice. Also, the order of construction down the game intialization tree was getting complicated.
+
+Now, a single asset manger holds all the repositories. An artifact (?) can be added as an asset by extending the appropriate repository class from IAssetRepository. AssetManager supports heterogenous repositories by using template functions for lookup and insertion on pointers of IAssetRepositories.
+
+Atlases are still owned by the SFMLRenderer though and still hold references to the type of repository they need. So basically offloaded Game with the assets responsibilities.

@@ -1,0 +1,2 @@
+
+Okay everything looks nice for now, with the grid movement. I did struggle with assets a bit but i think an alternate option with free motion on the map would take this to the next level. So an alternate branch - freeMotion. Instead of using the Position with integer values, we have new Position2D with float values to represent continuity of the position across the map.

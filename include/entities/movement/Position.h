@@ -9,6 +9,11 @@
 //   - NPCs and other map entities
 //
 // This is a fundamental game concept, shared across all directional entities.
+// 
+// [Update] Added Position2D.h: Position (int x, y) stays exactly as-is and keeps meaning "which grid
+// cell" — Map, MapLoader, footprints, and GridMovementMechanics all
+// legitimately want integer tile coordinates and aren't touched by this.
+//
 // ---------------------------------------------------------------------------
 enum class Direction {
     UP,
