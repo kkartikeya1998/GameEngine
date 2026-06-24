@@ -1,28 +1,257 @@
 {
   "object_types": {
-    "Tree": {
-      "texture": "assets/objects/objects_spritesheet.png",
-      "x": 0, "y": 160, "w": 32, "h": 64,
-      "footprint": [
-        { "dx": 0, "dy": -1, "blocking": false },
-        { "dx": 0, "dy": 0,  "blocking": true }
+    "SS_Object_Campfire": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1085,"y":1,"w":200,"h":160,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_Flag": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1249,"y":887,"w":100,"h":160,
+      "tile_size":256,
+      "footprint":[]
+    },
+
+    "SS_Object_RedBanner": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":967,"y":1789,"w":160,"h":240,
+      "tile_size":256,
+      "footprint":[]
+    },
+
+    "SS_Object_BlueBanner": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1129,"y":1789,"w":160,"h":240,
+      "tile_size":256,
+      "footprint":[]
+    },
+
+    "SS_Object_Tent": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":723,"y":403,"w":300,"h":280,
+      "tile_size":256,
+      "footprint":[
+        {"dx":0,"dy":0,"blocking":true},
+        {"dx":1,"dy":0,"blocking":true}
       ]
     },
-    "House": {
-      "texture": "assets/objects/objects_spritesheet.png",
-      "x": 0, "y": 288, "w": 96, "h": 32,
-      "footprint": [
-        { "dx": -1, "dy": 0, "blocking": true },
-        { "dx": 0,  "dy": 0, "blocking": false, "teleport": true },
-        { "dx": 1,  "dy": 0, "blocking": true }
+
+    "SS_Object_House": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1,"y":723,"w":480,"h":640,
+      "tile_size":256,
+      "footprint":[
+        {"dx":0,"dy":0,"blocking":true},
+        {"dx":1,"dy":0,"blocking":true}
       ]
     },
-    "Boulder": {
-      "texture": "assets/objects/objects_spritesheet.png",
-      "x": 224, "y": 128, "w": 32, "h": 64,
-      "footprint": [
-        { "dx": 0, "dy": 0, "blocking": true }
+
+    "SS_Object_Windmill": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1,"y":1,"w":720,"h":720,
+      "tile_size":256,
+      "footprint":[
+        {"dx":0,"dy":0,"blocking":true},
+        {"dx":1,"dy":0,"blocking":true},
+        {"dx":2,"dy":0,"blocking":true}
       ]
+    },
+
+    "SS_Object_CastleRound": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":403,"y":1365,"w":320,"h":480,
+      "tile_size":256,
+      "footprint":[
+        {"dx":0,"dy":0,"blocking":true},
+        {"dx":1,"dy":0,"blocking":true}
+      ]
+    },
+
+    "SS_Object_CastleSquare": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":723,"y":1,"w":360,"h":400,
+      "tile_size":256,
+      "footprint":[
+        {"dx":0,"dy":0,"blocking":true},
+        {"dx":1,"dy":0,"blocking":true}
+      ]
+    },
+
+    "SS_Object_TreeLarge": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1,"y":1365,"w":400,"h":480,
+      "tile_size":256,
+      "footprint":[
+        {"dx":0,"dy":0,"blocking":true},
+        {"dx":1,"dy":0,"blocking":true}
+      ]
+    },
+
+    "SS_Object_TreeMedium": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":725,"y":1045,"w":360,"h":400,
+      "tile_size":256,
+      "footprint":[
+        {"dx":0,"dy":0,"blocking":true}
+      ]
+    },
+
+    "SS_Object_TreeSmall": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":483,"y":1045,"w":240,"h":280,
+      "tile_size":256,
+      "footprint":[
+        {"dx":0,"dy":0,"blocking":true}
+      ]
+    },
+
+    "SS_Object_TreeStumpTall": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1087,"y":1007,"w":160,"h":140,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_TreeStumpShort": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1267,"y":325,"w":120,"h":100,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_MagicStoneTower": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":725,"y":1447,"w":240,"h":400,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_WatchtowerTall": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":967,"y":1447,"w":260,"h":340,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_WatchtowerShort": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1025,"y":403,"w":240,"h":260,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_Well": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":323,"y":1847,"w":200,"h":200,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_BushesLarge": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":525,"y":1849,"w":240,"h":140,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_BushesMedium": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":767,"y":1849,"w":180,"h":140,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_BushesSmall": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1209,"y":1231,"w":140,"h":120,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_WoodenBridgeHorizontal": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":483,"y":723,"w":480,"h":320,
+      "tile_size":256,
+      "footprint":[]
+    },
+
+    "SS_Object_WoodenBridgeVertical": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":965,"y":685,"w":240,"h":320,
+      "tile_size":256,
+      "footprint":[]
+    },
+
+    "SS_Object_WoodenFenceHorizontal": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1087,"y":1149,"w":220,"h":80,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_WoodenFenceVertical": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1207,"y":665,"w":80,"h":220,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_WoodenCart": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1,"y":1849,"w":320,"h":160,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_WoodenBarrel": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1087,"y":1231,"w":120,"h":140,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_TreasureChest": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1085,"y":163,"w":200,"h":160,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_Rock01": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1309,"y":1049,"w":120,"h":100,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_Rock02": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1087,"y":1373,"w":100,"h":60,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_Rock03": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1189,"y":1373,"w":100,"h":60,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_Rock04": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1085,"y":325,"w":60,"h":60,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+    },
+
+    "SS_Object_Rock05": {
+      "texture":"assets/objects/SimpleSummer_Objects.png",
+      "x":1147,"y":325,"w":60,"h":60,
+      "tile_size":256,
+      "footprint":[{"dx":0,"dy":0,"blocking":true}]
     }
   }
 }

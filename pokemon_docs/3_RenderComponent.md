@@ -6,3 +6,7 @@ Each unique resource should be loaded into the memory once (Repository). Further
 2. Tiles: The background of each  tile 
 3. MapObjects: The overlay objects with features
 ![[3_RenderComponent.svg]]
+
+### Resources
+Assets are very important!
+- Pokemon Mystery Dungeon sprites: https://sprites.pmdcollab.org/

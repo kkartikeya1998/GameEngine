@@ -36,7 +36,7 @@ public:
 
     Tile& tile_at(int x, int y);
     const Tile& tile_at(int x, int y) const;
-    void set_tile(int x, int y, Terrain::Type terrain);
+    void set_tile(int x, int y, Terrain::Type terrain, std::string typeName);
 
     // Takes ownership of a fully-constructed MapObject (built by MapLoader).
     void addMapObject(std::unique_ptr<MapObject> obj);

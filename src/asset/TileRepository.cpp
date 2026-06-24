@@ -43,6 +43,12 @@ void TileRepository::load_from_file(const std::string& path) {
 
         meta.terrainType = def.value("terrain", "Grass");
 
+        // Defaults to w (the region's own width) if not explicitly given —
+        // for a tile, "pixels per tile" and "this region's width" are the
+        // same thing unless you say otherwise. Falls back further to 32
+        // only if w itself was never set (malformed/legacy entry).
+        meta.sourceTileSize = def.value("tile_size", w > 0 ? w : 32);
+
         types_.emplace(typeName, std::move(meta));
     }
 }

@@ -124,13 +124,13 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
         for (int x = 0; x < width; x++)
         {
             int flat = y * width + x;
+            std::string typeName = tiles_json[flat].get<std::string>();
 
             map->set_tile(
                 x,
                 y,
-                Terrain::terrain_from_string(
-                    tiles_json[flat].get<std::string>()
-                )
+                Terrain::terrain_from_string(typeName),
+                typeName
             );
         }
     }

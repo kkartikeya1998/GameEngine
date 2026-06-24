@@ -19,6 +19,7 @@ SpriteRegion MapObjectAtlas::getObjectSprite(const std::string& typeName) const
         static_cast<float>(meta->textureRect.size.x),
         static_cast<float>(meta->textureRect.size.y)
     );
+    region.sourceTileSize = meta->sourceTileSize;
     region.texture = &getOrLoadTexture(meta->texturePath);
     return region;
 }

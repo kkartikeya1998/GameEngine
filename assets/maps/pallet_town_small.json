@@ -5,11 +5,14 @@
   "height": 4,
 
   "tiles": [
-    "Grass", "Grass", "Sand",  "Grass",
-    "Grass", "Water", "Water", "Grass",
-    "Grass", "Grass", "Sand",  "Grass",
-    "Sand",  "Grass", "Grass", "Grass"
+    "Grass", "Grass", "Grass",  "Grass",
+    "Grass", "Grass", "Grass", "Grass",
+    "Grass", "Grass", "Grass",  "Grass",
+    "Grass",  "Grass", "Grass", "Grass"
   ],
 
-  "map_objects": []
+  "map_objects": [
+    { "type": "Tree", "origin": { "x": 2, "y": 2 } }
+  ]
+
 }

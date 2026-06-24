@@ -22,9 +22,9 @@ Game::Game()
               assets_.get<TileRepository>(),
               assets_.get<MapObjectRepository>(),
               assets_.get<SpriteRepository>(),
-              assetsRoot_ + "/maps/path_tileset.png",
+              assetsRoot_ + "/objects/SimpleSummer_Tiles.png",
               assetsRoot_ + "/sprites/player_spritesheet.png",
-              assetsRoot_ + "/maps/openworld.png"
+              assetsRoot_ + "/objects/SimpleSummer_Objects.png"
           )
       ))
 {

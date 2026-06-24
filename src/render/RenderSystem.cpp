@@ -32,7 +32,7 @@ void RenderSystem::render(GameController& controller) {
                 renderer_->drawTile(
                     x,
                     y,
-                    map->tile_at(x, y).terrain()
+                    map->tile_at(x, y).typeName()
                 );
             }
         }

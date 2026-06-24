@@ -1,36 +1,114 @@
 {
   "tile_types": {
-    "Grass": {
-      "texture": "assets/maps/path_tileset.png",
+    "SS_CSS_TL": {      
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
       "x": 0,
-      "y": 32,
-      "w": 32,
-      "h": 32,
+      "y": 0,
+      "w": 256,
+      "h": 256,
+      "terrain": "Grass1"
+    },
+    "SS_CSS_TC": {      
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 256,
+      "y": 0,
+      "w": 256,
+      "h": 256,
+      "terrain": "Grass1"
+    },
+    "SS_CSS_TR": {      
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 512,
+      "y": 0,
+      "w": 256,
+      "h": 256,
+      "terrain": "Grass1"
+    },
+
+    
+    "SS_CSS_ML": {      
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 0,
+      "y": 256,
+      "w": 256,
+      "h": 256,
+      "terrain": "Grass1"
+    },
+    "SS_CSS_MC": {      
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 256,
+      "y": 256,
+      "w": 256,
+      "h": 256,
+      "terrain": "Grass1"
+    },
+    "SS_CSS_MR": {      
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 512,
+      "y": 256,
+      "w": 256,
+      "h": 256,
+      "terrain": "Grass1"
+    },
+
+    
+    "SS_CSS_BL": {      
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 0,
+      "y": 512,
+      "w": 256,
+      "h": 256,
+      "terrain": "Grass1"
+    },
+    "SS_CSS_BC": {      
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 256,
+      "y": 512,
+      "w": 256,
+      "h": 256,
+      "terrain": "Grass1"
+    },
+    "SS_CSS_BR": {      
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 512,
+      "y": 512,
+      "w": 256,
+      "h": 256,
+      "terrain": "Grass1"
+    },
+
+
+    "Grass": {
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 812,
+      "y": 464,
+      "w": 116,
+      "h": 116,
       "terrain": "Grass1"
     },
     "Grass1": {
-      "texture": "assets/maps/path_tileset.png",
-      "x": 0,
-      "y": 32,
-      "w": 32,
-      "h": 32,
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 2,
+      "y": 2,
+      "w": 114,
+      "h": 114,
       "terrain": "Grass1"
     },
     "Grass2": {
-      "texture": "assets/maps/path_tileset.png",
-      "x": 32,
-      "y": 32,
-      "w": 32,
-      "h": 32,
-      "terrain": "Grass2"
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 2,
+      "y": 2,
+      "w": 114,
+      "h": 114,
+      "terrain": "Grass1"
     },
     "Grass3": {
-      "texture": "assets/maps/path_tileset.png",
-      "x": 0,
-      "y": 64,
-      "w": 32,
-      "h": 32,
-      "terrain": "Grass3"
+      "texture": "assets/objects/SimpleSummer_Tiles.png",
+      "x": 2,
+      "y": 2,
+      "w": 114,
+      "h": 114,
+      "terrain": "Grass1"
     },
     "Grass4": {
       "texture": "assets/maps/path_tileset.png",

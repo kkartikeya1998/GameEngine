@@ -53,8 +53,8 @@ std::optional<sf::Event> SFMLRenderer::pollEvent()
     return window_->pollEvent();
 }
 
-void SFMLRenderer::drawTile(int gridX, int gridY, Terrain::Type terrain) {
-    SpriteRegion region = tileAtlas_.getTerrainSprite(terrain);
+void SFMLRenderer::drawTile(int gridX, int gridY, const std::string& typeName) {
+    SpriteRegion region = tileAtlas_.getTerrainSprite(typeName);
     const sf::Texture& tex = tileAtlas_.terrainTexture();
 
     sf::Sprite sprite(tex);
@@ -73,7 +73,6 @@ void SFMLRenderer::drawTile(int gridX, int gridY, Terrain::Type terrain) {
     window_->draw(sprite);
 }
 
-
 void SFMLRenderer::drawMapObject(int gridX, int gridY, const std::string& typeName) {
     SpriteRegion region = mapObjAtlas_.getObjectSprite(typeName);
 
@@ -86,23 +85,18 @@ void SFMLRenderer::drawMapObject(int gridX, int gridY, const std::string& typeNa
     sf::Sprite sprite(tex);
     sprite.setTextureRect(region.subrect);
 
-    // Scale BOTH axes independently so the sprite renders at its true
-    // size in tiles, derived from its actual pixel dimensions relative to
-    // TILE_SIZE — not forced into a single 1x1 tile box. A 96x32 House
-    // (3 tiles wide, 1 tile tall) renders 3 tiles wide; a 32x64 Tree
-    // (1 tile wide, 2 tiles tall) renders 1 tile wide, 2 tiles tall. Each
-    // axis scales independently because source art width and height
-    // aren't proportional to each other in general.
-    //
-    // NOTE: this assumes source sprites are authored at a consistent
-    // pixels-per-tile unit across the spritesheet (w/h here are
-    // multiples of 32, while TILE_SIZE is 64 — source art is at half
-    // TILE_SIZE's resolution). If that ratio isn't constant across your
-    // spritesheet, this would need to come from metadata instead of
-    // being inferred as a single constant.
-    constexpr float SOURCE_PIXELS_PER_TILE = 32.f;
-    float scaleX = TILE_SIZE / SOURCE_PIXELS_PER_TILE;
-    float scaleY = TILE_SIZE / SOURCE_PIXELS_PER_TILE;
+    // Scale BOTH axes independently using this object's own
+    // sourceTileSize (pixels-per-tile in ITS source art), read from
+    // metadata rather than assumed as a fixed constant. This makes the
+    // scale factor resolution-independent: a tileset re-exported at
+    // 128px/tile, or an object sheet at some other density, just needs
+    // its JSON's "tile_size" updated — no renderer code change. A 96x32
+    // House at sourceTileSize 32 renders 3 tiles wide; the same House
+    // re-exported at 96x96px with sourceTileSize 32 would still render
+    // 3 tiles wide, just with 3x the source detail per tile.
+    float sourceTileSize = static_cast<float>(region.sourceTileSize);
+    float scaleX = TILE_SIZE / sourceTileSize;
+    float scaleY = TILE_SIZE / sourceTileSize;
 
     sprite.setScale(sf::Vector2f(scaleX, scaleY));
 
@@ -123,8 +117,6 @@ void SFMLRenderer::drawMapObject(int gridX, int gridY, const std::string& typeNa
 
     window_->draw(sprite);
 }
-
-
 
 void SFMLRenderer::drawPlayer(float gridX, float gridY, Direction facing, float animProgress) {
     WalkFrame frame = SpriteAtlas::frameFromProgress(animProgress);

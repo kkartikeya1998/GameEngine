@@ -28,11 +28,23 @@ struct FootprintCell {
 // same addition to TileTypeMetadata and SpriteFrameMetadata — lets an
 // ObjectTypeMetadata be passed around standalone without losing track of
 // which catalog entry it came from.
+//
+// ADDED: sourceTileSize. Pixels-per-tile in this entry's source art —
+// NOT the same as textureRect's width/height for objects, since an object
+// can span multiple tiles (House is 96x32px at sourceTileSize 32, meaning
+// 3 tiles wide x 1 tile tall). This is what lets the renderer compute an
+// object's true size in tiles (textureRect.size / sourceTileSize, per
+// axis) without any hardcoded pixels-per-tile assumption baked into
+// SFMLRenderer — see drawMapObject.
+//
+// Defaults to 32 to match the project's existing JSON without requiring
+// every object_metadata.json entry to be updated immediately.
 struct ObjectTypeMetadata {
     std::string name;
     std::string texturePath;
     sf::IntRect textureRect;
     std::vector<FootprintCell> footprint;
+    int sourceTileSize = 32;
 };
 
 // ---------------------------------------------------------------------------

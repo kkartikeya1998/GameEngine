@@ -47,7 +47,7 @@ public:
  
 
     void clear() override;
-    void drawTile(int gridX, int gridY, Terrain::Type terrain) override;
+    void drawTile(int gridX, int gridY, const std::string& typeName) override;
     void drawPlayer(float gridX, float gridY, Direction facing, float animProgress) override;
     void drawMapObject(int gridX, int gridY, const std::string& typeName) override;
     void present() override;
@@ -56,7 +56,7 @@ public:
     std::optional<sf::Event> pollEvent() override;
 
 private:
-    static constexpr int TILE_SIZE = 64;
+    static constexpr int TILE_SIZE = 128;
     static constexpr int WINDOW_WIDTH = 1024;
     static constexpr int WINDOW_HEIGHT = 768;
 

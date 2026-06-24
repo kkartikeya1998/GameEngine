@@ -26,8 +26,8 @@ const Tile& Map::tile_at(int x, int y) const {
     return tiles[index(x, y)];
 }
 
-void Map::set_tile(int x, int y, Terrain::Type terrain) {
-    tiles[index(x, y)] = Tile(terrain);
+void Map::set_tile(int x, int y, Terrain::Type terrain, std::string typeName) {
+    tiles[index(x, y)] = Tile(terrain, std::move(typeName));
 }
 
 void Map::addMapObject(std::unique_ptr<MapObject> obj) {

@@ -38,6 +38,12 @@ void MapObjectRepository::load_from_file(const std::string& path) {
             sf::Vector2<int>(w, h)
         );
 
+        // Unlike tiles, an object's w/h legitimately differ from one tile's
+        // worth of pixels (that's the whole point — House is 3 tiles wide).
+        // So this can't default to w the way TileRepository does; it needs
+        // its own explicit value, falling back to 32 to match existing data.
+        meta.sourceTileSize = def.value("tile_size", 32);
+
         for (const auto& cell : def.at("footprint")) {
             FootprintCell fc;
             fc.dx = cell.value("dx", 0);
