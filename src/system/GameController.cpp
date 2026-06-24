@@ -3,8 +3,9 @@
 #include <iostream>
 
 GameController::GameController(int startMapId, int playerX, int playerY,
+                                const std::string& assetsRoot,
                                 MapObjectRepository& objectRepository)
-    : world_(std::string(PROJECT_ROOT) + "/assets/maps/", objectRepository),
+    : world_(assetsRoot + "/maps/", objectRepository),
     player_(std::make_unique<GridMovementMechanics>(playerX, playerY))
 {
     world_.loadMap(startMapId);

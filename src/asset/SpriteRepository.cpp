@@ -1,4 +1,4 @@
-#include "world/SpriteRepository.h"
+#include "asset/SpriteRepository.h"
 
 #include <fstream>
 #include <iostream>
@@ -26,6 +26,9 @@ void SpriteRepository::load_from_file(const std::string& path) {
         const json& def = it.value();
 
         SpriteFrameMetadata meta;
+        meta.spriteName = frameName;
+        meta.texturePath = def.value("texture", "");
+
         int x = def.value("x", 0);
         int y = def.value("y", 0);
         int w = def.value("w", 0);

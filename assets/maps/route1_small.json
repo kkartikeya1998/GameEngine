@@ -5,12 +5,12 @@
   "height": 6,
 
   "tiles": [
-    "Grass","Grass","Grass","Grass","Grass","Sand","Grass","Grass","Grass","Grass",
-    "Grass","Water","Water","Grass","Grass","Sand","Grass","Grass","Water","Grass",
-    "Grass","Grass","Grass","Grass","Sand","Sand","Grass","Grass","Grass","Grass",
-    "Grass","Sand","Grass","Grass","Grass","Grass","Grass","Water","Grass","Grass",
-    "Grass","Grass","Grass","Sand","Sand","Grass","Grass","Grass","Grass","Grass",
-    "Grass","Grass","Grass","Grass","Grass","Grass","Sand","Grass","Grass","Grass"
+    "Grass1","Grass2","Grass1","Grass2","Grass1","Sand","Grass1","Grass2","Grass1","Grass2",
+    "Grass3","Water","Water","Grass4","Grass3","Sand","Grass3","Grass4","Water","Grass4",
+    "Grass1","Grass2","Grass1","Grass2","Sand","Sand","Grass1","Grass2","Grass1","Grass2",
+    "Grass3","Sand","Grass3","Grass4","Grass3","Grass4","Grass3","Water","Grass3","Grass4",
+    "Grass1","Grass2","Grass1","Sand","Sand","Grass2","Grass1","Grass2","Grass1","Grass2",
+    "Grass3","Grass4","Grass3","Grass4","Grass3","Grass4","Sand","Grass4","Grass3","Grass4"
   ],
 
   "map_objects": [

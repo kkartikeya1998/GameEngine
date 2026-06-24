@@ -1,4 +1,4 @@
-#include "world/MapRepository.h"
+#include "asset/TileRepository.h"
 
 #include <fstream>
 #include <iostream>
@@ -8,11 +8,11 @@
 
 using json = nlohmann::json;
 
-MapRepository::MapRepository(const std::string& metadataFilePath) {
+TileRepository::TileRepository(const std::string& metadataFilePath) {
     load_from_file(metadataFilePath);
 }
 
-void MapRepository::load_from_file(const std::string& path) {
+void TileRepository::load_from_file(const std::string& path) {
     std::ifstream file(path);
     if (!file) {
         std::cerr << "Failed to open tile metadata file: " << path << '\n';
@@ -28,6 +28,7 @@ void MapRepository::load_from_file(const std::string& path) {
         const json& def = it.value();
 
         TileTypeMetadata meta;
+        meta.name = typeName;
         meta.texturePath = def.value("texture", "");
 
         int x = def.value("x", 0);
@@ -40,14 +41,13 @@ void MapRepository::load_from_file(const std::string& path) {
             sf::Vector2<int>(w, h)
         );
 
-        std::string terrainName = def.value("terrain", "Grass");
-        meta.terrainType = Terrain::terrain_from_string(terrainName);
+        meta.terrainType = def.value("terrain", "Grass");
 
         types_.emplace(typeName, std::move(meta));
     }
 }
 
-const TileTypeMetadata* MapRepository::find(const std::string& type) const {
+const TileTypeMetadata* TileRepository::find(const std::string& type) const {
     auto it = types_.find(type);
     return it == types_.end() ? nullptr : &it->second;
 }

@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "asset/IAssetRepository.h"
+
 // ---------------------------------------------------------------------------
 // SpriteFrameMetadata — where one named animation frame lives on the
 // player's spritesheet.
@@ -12,18 +14,22 @@
 // how TileTypeMetadata is keyed by tile type name in MapRepository.
 // ---------------------------------------------------------------------------
 struct SpriteFrameMetadata {
+    std::string texturePath;
     sf::IntRect textureRect;
+    std::string spriteName;
 };
 
 // ---------------------------------------------------------------------------
 // SpriteRepository — owns all player animation frame metadata, loaded once
-// from a sprite metadata JSON file.
+// from a sprite metadata JSON file. Derives from IAssetRepository so
+// AssetManager can own and serve it alongside the other metadata
+// repositories.
 //
 // SpriteAtlas looks up each (direction, walk frame) combination's rect here
 // by name rather than hardcoding coordinates — see
 // SpriteAtlas::getPlayerSprite.
 // ---------------------------------------------------------------------------
-class SpriteRepository {
+class SpriteRepository : public IAssetRepository {
 public:
     explicit SpriteRepository(const std::string& metadataFilePath);
 

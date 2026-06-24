@@ -8,9 +8,9 @@
 #include "render/TileAtlas.h"
 #include "render/SpriteAtlas.h"
 #include "render/MapObjectAtlas.h"
-#include "world/MapRepository.h"
-#include "world/MapObjectRepository.h"
-#include "world/SpriteRepository.h"
+#include "asset/TileRepository.h"
+#include "asset/MapObjectRepository.h"
+#include "asset/SpriteRepository.h"
 
 namespace sf {
     class RenderWindow;
@@ -21,11 +21,13 @@ namespace sf {
 // ---------------------------------------------------------------------------
 // SFMLRenderer — SFML-based concrete implementation of IRenderer.
 //
-// CHANGED: no longer owns repositories by value. MapRepository,
+// CHANGED: no longer owns repositories by value. TileRepository,
 // MapObjectRepository, and SpriteRepository are now single shared instances
-// owned by Game and passed in here by reference. This removes the
-// duplication that existed when SFMLRenderer parsed the same JSON files
-// into its own private copies, separate from World's.
+// owned by Game (via AssetManager) and passed in here by reference. This
+// removes the duplication that existed when SFMLRenderer parsed the same
+// JSON files into its own private copies, separate from World's.
+//
+// TileRepository was renamed from MapRepository — same class, name only.
 //
 // SFMLRenderer still owns its three atlases by value — atlases are
 // rendering-only concerns (texture + region lookup), genuinely private to
@@ -35,16 +37,19 @@ namespace sf {
 class SFMLRenderer : public IRenderer {
 public:
     SFMLRenderer(int windowWidth, int windowHeight,
-                 const MapRepository& tileRepository,
+                 const TileRepository& tileRepository,
                  const MapObjectRepository& objectRepository,
                  const SpriteRepository& spriteRepository,
                  const std::string& tileSpritesheetPath,
-                 const std::string& playerSpritesheetPath);
+                 const std::string& playerSpritesheetPath,
+                 const std::string& objectSpritesheetPath);
     ~SFMLRenderer() override;
+ 
 
     void clear() override;
     void drawTile(int gridX, int gridY, Terrain::Type terrain) override;
     void drawPlayer(float gridX, float gridY, Direction facing, float animProgress) override;
+    void drawMapObject(int gridX, int gridY, const std::string& typeName) override;
     void present() override;
     bool isOpen() const override;
 

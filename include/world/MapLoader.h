@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "world/Map.h"
-#include "world/MapObjectRepository.h"
+#include "asset/MapObjectRepository.h"
 
 struct MapMetadata {
     int id;

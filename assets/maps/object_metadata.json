@@ -1,14 +1,16 @@
 {
   "object_types": {
     "Tree": {
-      "texture": "assets/objects/tree.png",
+      "texture": "assets/objects/objects_spritesheet.png",
+      "x": 0, "y": 160, "w": 32, "h": 64,
       "footprint": [
         { "dx": 0, "dy": -1, "blocking": false },
         { "dx": 0, "dy": 0,  "blocking": true }
       ]
     },
     "House": {
-      "texture": "assets/objects/house.png",
+      "texture": "assets/objects/objects_spritesheet.png",
+      "x": 0, "y": 288, "w": 96, "h": 32,
       "footprint": [
         { "dx": -1, "dy": 0, "blocking": true },
         { "dx": 0,  "dy": 0, "blocking": false, "teleport": true },
@@ -16,7 +18,8 @@
       ]
     },
     "Boulder": {
-      "texture": "assets/objects/boulder.png",
+      "texture": "assets/objects/objects_spritesheet.png",
+      "x": 224, "y": 128, "w": 32, "h": 64,
       "footprint": [
         { "dx": 0, "dy": 0, "blocking": true }
       ]

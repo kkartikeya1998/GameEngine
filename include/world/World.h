@@ -4,7 +4,7 @@
 
 #include "world/Map.h"
 #include "world/MapLoader.h"
-#include "world/MapObjectRepository.h"
+#include "asset/MapObjectRepository.h"
 
 // ---------------------------------------------------------------------------
 // World — owns the active Map and the MapLoader that builds it.

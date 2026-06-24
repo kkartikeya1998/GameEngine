@@ -36,6 +36,17 @@ void RenderSystem::render(GameController& controller) {
                 );
             }
         }
+
+        // -------------------------
+        // Draw map objects (trees, houses, signs, ...)
+        // -------------------------
+        for (const auto& obj : map->getMapObjects()) {
+            renderer_->drawMapObject(
+                obj->getOriginX(),
+                obj->getOriginY(),
+                obj->getTypeName()
+            );
+        }
     }
 
     // -------------------------

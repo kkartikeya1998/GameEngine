@@ -1,10 +1,14 @@
+#include "asset/MapObjectRepository.h"
+
 #include <fstream>
 #include <iostream>
 #include "external/json.hpp"
 
-#include "world/MapObjectRepository.h"
-
 using json = nlohmann::json;
+
+MapObjectRepository::MapObjectRepository(const std::string& metadataFilePath) {
+    load_from_file(metadataFilePath);
+}
 
 void MapObjectRepository::load_from_file(const std::string& path) {
     std::ifstream file(path);
@@ -22,7 +26,17 @@ void MapObjectRepository::load_from_file(const std::string& path) {
         const json& def = it.value();
 
         ObjectTypeMetadata meta;
+        meta.name = typeName;
         meta.texturePath = def.value("texture", "");
+
+        int x = def.value("x", 0);
+        int y = def.value("y", 0);
+        int w = def.value("w", 0);
+        int h = def.value("h", 0);
+        meta.textureRect = sf::IntRect(
+            sf::Vector2<int>(x, y),
+            sf::Vector2<int>(w, h)
+        );
 
         for (const auto& cell : def.at("footprint")) {
             FootprintCell fc;

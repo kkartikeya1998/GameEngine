@@ -1,38 +1,47 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include "render/Atlas.h"
+#include "asset/MapObjectRepository.h"
 #include <string>
 #include <unordered_map>
-#include <memory>
-
-#include "world/MapObjectRepository.h"
 
 // ---------------------------------------------------------------------------
-// MapObjectAtlas — texture lookup for placed map objects (trees, houses, ...).
+// MapObjectAtlas — sprite lookup for placed map objects (trees, houses, ...).
 //
-// Unlike TileAtlas (one shared spritesheet, many sub-rects) or SpriteAtlas
-// (one shared spritesheet, many animation frames), each MapObject TYPE has
-// its own full-image texture — ObjectTypeMetadata::texturePath already
-// carries this per type. So this atlas owns a small cache of textures,
-// lazily loaded on first use, keyed by type name.
+// CHANGED: object types are no longer assumed to share one spritesheet.
+// Each ObjectTypeMetadata carries its own texturePath, which can be the
+// same file as another type (e.g. several objects packed into one sheet)
+// or a completely separate image (e.g. tree.png, house.png). getObjectSprite
+// resolves and returns a SpriteRegion with its texture field set to
+// whichever texture that type's metadata points at.
 //
-// Still follows the same external contract as TileAtlas/SpriteAtlas: ask
-// it for a drawable thing given a domain type, and it asks its paired
-// repository for the metadata.
+// Atlas::regionFromRepository isn't used here — that helper assumes a
+// single shared texture, which no longer holds for this atlas. The lookup
+// (find by type name, null-check, build SpriteRegion) is inlined in
+// getObjectSprite instead, with texture resolution added on top.
+//
+// Atlas's own constructor still runs with spritesheet_path as a fallback
+// texture (objectTexture()) — kept for any caller that wants "the" object
+// texture without going through a specific type lookup. Most real lookups
+// go through getObjectSprite and get a per-type texture instead.
+//
+// Textures are cached by path, so placing 50 trees on a map loads
+// tree.png's texture exactly once, not once per placed instance.
 // ---------------------------------------------------------------------------
-class MapObjectAtlas {
+class MapObjectAtlas : public Atlas {
 public:
-    explicit MapObjectAtlas(const MapObjectRepository& objectRepository);
+    MapObjectAtlas(const std::string& spritesheet_path, const MapObjectRepository& objectRepository);
 
-    // Returns the full texture for this object type. Throws if the type
-    // isn't in the repository, or if its texture file fails to load.
-    const sf::Texture& getObjectTexture(const std::string& typeName);
+    const sf::Texture& objectTexture() const { return texture(); }
+    SpriteRegion getObjectSprite(const std::string& typeName) const;
 
 private:
-    const MapObjectRepository& objectRepository_; // non-owning, repo outlives atlas
+    const MapObjectRepository& objectRepository_;
 
-    // Lazily-loaded texture cache, keyed by type name. Loaded on first
-    // request rather than eagerly, since the full set of placed object
-    // types on a given map is usually a small subset of the catalog.
-    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures_;
+    // Keyed by texture path. mutable: getObjectSprite is logically const
+    // (it's a lookup), but populates the cache lazily on first use of
+    // each distinct texture path.
+    mutable std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textureCache_;
+
+    const sf::Texture& getOrLoadTexture(const std::string& path) const;
 };

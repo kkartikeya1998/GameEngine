@@ -1,5 +1,4 @@
 #include "render/SpriteAtlas.h"
-
 #include <stdexcept>
 
 SpriteAtlas::SpriteAtlas(const std::string& spritesheet_path, const SpriteRepository& spriteRepository)
@@ -31,16 +30,5 @@ SpriteRegion SpriteAtlas::getPlayerSprite(Direction facing, WalkFrame frame) con
 
     std::string key = "player_" + dir + "_" + std::to_string(idx);
 
-    const SpriteFrameMetadata* meta = spriteRepository_.find(key);
-    if (!meta) {
-        throw std::runtime_error("SpriteRepository has no metadata for frame: " + key);
-    }
-
-    SpriteRegion region;
-    region.subrect = meta->textureRect;
-    region.tile_size = sf::Vector2f(
-        static_cast<float>(meta->textureRect.size.x),
-        static_cast<float>(meta->textureRect.size.y)
-    );
-    return region;
+    return regionFromRepository(spriteRepository_, key, key);
 }

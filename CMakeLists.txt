@@ -26,10 +26,6 @@ add_executable(PokemonProject
     src/world/World.cpp
     src/world/MapLoader.cpp
     src/world/MapObject.cpp
-    src/world/MapObjectRepository.cpp
-    src/world/MapRepository.cpp
-    src/world/SpriteRepository.cpp
-    
 
     src/entities/pokemon/Pokemon.cpp
     src/entities/pokemon/Stats.cpp
@@ -53,6 +49,11 @@ add_executable(PokemonProject
     src/render/SpriteAtlas.cpp
     src/render/MapObjectAtlas.cpp
 
+    src/asset/AssetManager.cpp
+    src/asset/MapObjectRepository.cpp
+    src/asset/TileRepository.cpp
+    src/asset/SpriteRepository.cpp
+    
     src/Game.cpp
     )
 

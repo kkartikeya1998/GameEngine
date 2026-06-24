@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "world/World.h"
-#include "world/MapObjectRepository.h"
+#include "asset/MapObjectRepository.h"
 #include "entities/player/Player.h"
 
 // ---------------------------------------------------------------------------
@@ -14,12 +15,18 @@
 //   - Places Player on the active map of World
 //   - Provides read-only access
 //
+// CHANGED: constructor now takes assetsRoot explicitly instead of building
+// its own path from PROJECT_ROOT internally. Game is the single source of
+// truth for where assets live on disk (see Game.h) — GameController should
+// not independently know or guess that path.
 // ---------------------------------------------------------------------------
 class GameController {
 public:
-    // Initialize with a starting map ID, player position, and a reference
-    // to the single shared MapObjectRepository (owned by Game).
+    // Initialize with a starting map ID, player position, the assets root
+    // path (used to locate maps/), and a reference to the single shared
+    // MapObjectRepository (owned by Game via AssetManager).
     GameController(int startMapId, int playerX, int playerY,
+                    const std::string& assetsRoot,
                     MapObjectRepository& objectRepository);
 
     // Read-only accessors for the game state

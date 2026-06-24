@@ -2,11 +2,14 @@
 
 #include "render/Atlas.h"
 #include "entities/movement/Position.h" // for Direction
-#include "world/SpriteRepository.h"
+#include "asset/SpriteRepository.h"
 
 // ---------------------------------------------------------------------------
 // SpriteAtlas — player walk-cycle sprite lookup.
 //
+// getPlayerSprite's only job now is building the frame-name key. The
+// repository lookup, null-check, and SpriteRegion construction live in
+// Atlas::regionFromRepository — see Atlas.h.
 // ---------------------------------------------------------------------------
 enum class WalkFrame {
     Standing,
@@ -31,5 +34,5 @@ public:
     }
 
 private:
-    const SpriteRepository& spriteRepository_; // non-owning, repo outlives atlas
+    const SpriteRepository& spriteRepository_;
 };

@@ -23,6 +23,11 @@ MapObject::MapObject(
 // -------------------------
 // Metadata access
 // -------------------------
+const std::string& MapObject::getTypeName() const
+{
+    return metadata_->name;
+}
+
 const std::string& MapObject::getTexturePath() const
 {
     return metadata_->texturePath;

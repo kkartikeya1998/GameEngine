@@ -5,19 +5,26 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 
+// NOTE: assetsRoot_ should point at the "assets" folder itself (the same
+// folder that directly contains maps/ and sprites/). AssetManager builds
+// its paths as assetsRoot_ + "/maps/...", "/sprites/...", and
+// GameController forwards the same assetsRoot_ to World as
+// assetsRoot_ + "/maps/". If PROJECT_ROOT previously pointed one level
+// above assets/ (the project root, not the assets folder), append
+// "/assets" here once instead of in every downstream consumer.
 Game::Game()
-    : tileRepo_("C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\maps\\tileset_metadata.json")
-    , objectRepo_()
-    , spriteRepo_("C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\sprites\\sprite_metadata.json")
-    , controller_(1, 0, 0, objectRepo_)
+    : assetsRoot_(std::string(PROJECT_ROOT) + "/assets")
+    , assets_(assetsRoot_)
+    , controller_(1, 0, 0, assetsRoot_, assets_.get<MapObjectRepository>())
     , renderSystem_(std::make_unique<RenderSystem>(
           std::make_unique<SFMLRenderer>(
               800, 600,
-              tileRepo_,
-              objectRepo_,
-              spriteRepo_,
-              "C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\maps\\path_tileset.png",
-              "C:\\Users\\kkart\\OneDrive\\Documents\\PokemonProject\\assets\\sprites\\player_spritesheet.png"
+              assets_.get<TileRepository>(),
+              assets_.get<MapObjectRepository>(),
+              assets_.get<SpriteRepository>(),
+              assetsRoot_ + "/maps/path_tileset.png",
+              assetsRoot_ + "/sprites/player_spritesheet.png",
+              assetsRoot_ + "/maps/openworld.png"
           )
       ))
 {

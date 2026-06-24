@@ -1,5 +1,4 @@
 #include "render/Atlas.h"
-#include <stdexcept>
 
 Atlas::Atlas(const std::string& spritesheet_path)
 {

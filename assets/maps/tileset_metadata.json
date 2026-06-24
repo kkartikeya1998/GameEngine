@@ -3,10 +3,42 @@
     "Grass": {
       "texture": "assets/maps/path_tileset.png",
       "x": 0,
-      "y": 0,
+      "y": 32,
       "w": 32,
       "h": 32,
-      "terrain": "Grass"
+      "terrain": "Grass1"
+    },
+    "Grass1": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 0,
+      "y": 32,
+      "w": 32,
+      "h": 32,
+      "terrain": "Grass1"
+    },
+    "Grass2": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 32,
+      "y": 32,
+      "w": 32,
+      "h": 32,
+      "terrain": "Grass2"
+    },
+    "Grass3": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 0,
+      "y": 64,
+      "w": 32,
+      "h": 32,
+      "terrain": "Grass3"
+    },
+    "Grass4": {
+      "texture": "assets/maps/path_tileset.png",
+      "x": 32,
+      "y": 64,
+      "w": 32,
+      "h": 32,
+      "terrain": "Grass4"
     },
     "Sand": {
       "texture": "assets/maps/path_tileset.png",

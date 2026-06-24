@@ -12,15 +12,20 @@
 
 using json = nlohmann::json;
 
+// CHANGED: MapLoader no longer triggers MapObjectRepository's load. The
+// repository now loads itself in its own constructor (called once by
+// AssetManager at startup) — MapLoader receives it already populated and
+// only ever reads from it via find(). This removes a responsibility
+// MapLoader never should have had: deciding when object metadata loads.
+// The old call here (repository_.load_from_file(...)) would no longer even
+// compile, since load_from_file is now a private implementation detail of
+// MapObjectRepository's constructor.
 MapLoader::MapLoader(
     const std::string& mapsFolder,
     MapObjectRepository& repository
-)
-    : repository_(repository),
+) : repository_(repository),
     maps_folder_(mapsFolder)
 {
-    namespace fs = std::filesystem;
-    repository_.load_from_file((fs::path(maps_folder_) / "object_metadata.json").string());
     loadMetadata(mapsFolder);
 }
 

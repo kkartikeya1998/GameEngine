@@ -9,7 +9,7 @@
 // Doesn't need a separate definition file, but could be split into a .cpp if it grows too large.
 class Tile {
 public:
-    explicit Tile(Terrain::Type type = Terrain::Type::Grass)
+    explicit Tile(Terrain::Type type = Terrain::Type::Grass1)
         : terrain_type(type) {}
 
     Terrain::Type terrain() const {
