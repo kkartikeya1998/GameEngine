@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 
@@ -36,20 +37,7 @@ void Map::addMapObject(std::unique_ptr<MapObject> obj) {
 }
 
 bool Map::isAreaBlocked(const AABB& box, float tileSize) const {
-    // CHANGED: std::floor instead of static_cast<int>. static_cast<int>
-    // truncates toward zero, so for any negative coordinate with
-    // magnitude less than one tileSize (e.g. box.x == -15.8, tileSize ==
-    // 64), -15.8 / 64 == -0.247, and static_cast<int>(-0.247) == 0 — NOT
-    // -1. That silently mapped an out-of-bounds position to tile index 0
-    // (a valid, in-range tile), so the bounds check below never
-    // triggered until the box drifted past a full extra tileSize
-    // further out. std::floor rounds toward negative infinity, so
-    // floor(-0.247) == -1.0, correctly landing outside the valid range
-    // immediately.
-    //
-    // Only check the small neighborhood of tiles the box could possibly
-    // overlap, not the whole map — fine at any reasonable map size,
-    // since this runs every frame per moving entity.
+
     int minTileX = static_cast<int>(std::floor(box.x / tileSize));
     int maxTileX = static_cast<int>(std::floor((box.x + box.width) / tileSize));
     int minTileY = static_cast<int>(std::floor(box.y / tileSize));
@@ -73,6 +61,23 @@ bool Map::isAreaBlocked(const AABB& box, float tileSize) const {
             }
         }
     }
+
+    // Second, independent collision source: objects with a precise
+    // collisionBox (see CollisionBox in MapObjectRepository.h). This is
+    // deliberately separate from the tile-grid check above — an object
+    // with a collisionBox does NOT also mark its tile as blocking via
+    // footprint (see MapLoader::applyFootprint), so there's no double
+    // application of blocking for the same object. Objects WITHOUT a
+    // collisionBox return nullopt here and rely entirely on the
+    // tile-grid check above instead, via their footprint's blocking
+    // flag — exactly as before this method existed.
+    for (const auto& obj : map_objects) {
+        std::optional<AABB> objBox = obj->getCollisionBox(tileSize);
+        if (objBox && box.intersects(*objBox)) {
+            return true;
+        }
+    }
+
     return false;
 }
 

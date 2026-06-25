@@ -64,3 +64,21 @@ void MapObject::getTeleportTarget(int& x, int& y) const
     x = teleportTargetX_;
     y = teleportTargetY_;
 }
+
+// -------------------------
+// Collision
+// -------------------------
+std::optional<AABB> MapObject::getCollisionBox(float tileSize) const
+{
+    if (!metadata_->collisionBox) {
+        return std::nullopt;
+    }
+
+    const CollisionBox& cb = *metadata_->collisionBox;
+    return AABB{
+        (static_cast<float>(originX_) + cb.offsetX) * tileSize,
+        (static_cast<float>(originY_) + cb.offsetY) * tileSize,
+        cb.width * tileSize,
+        cb.height * tileSize
+    };
+}

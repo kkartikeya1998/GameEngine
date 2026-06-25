@@ -4,7 +4,8 @@
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1085,"y":1,"w":200,"h":160,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[{"dx":0,"dy":0,"blocking":false}],
+      "collision_box": {"offset_x": 0.25, "offset_y": 0.45, "width": 0.5, "height": 0.3}
     },
 
     "SS_Object_Flag": {

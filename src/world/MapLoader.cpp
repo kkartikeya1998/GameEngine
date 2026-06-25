@@ -66,6 +66,16 @@ void MapLoader::applyFootprint(Map& map, const ObjectTypeMetadata& meta,
     const int width = map.getWidth();
     const int height = map.getHeight();
 
+    // An object with a precise collisionBox (see CollisionBox in
+    // MapObjectRepository.h) handles its own blocking via
+    // Map::isAreaBlocked's separate object-AABB check — it does NOT
+    // also get whole-tile blocking from its footprint here, or the
+    // whole tile would be blocked anyway, making the precise box
+    // pointless. Teleport handling stays independent of this — a
+    // teleport tile is a trigger zone, not a blocking concern, so it's
+    // unaffected either way.
+    bool hasOwnCollisionBox = meta.collisionBox.has_value();
+
     for (const auto& fc : meta.footprint)
     {
         int tileX = originX + fc.dx;
@@ -76,7 +86,7 @@ void MapLoader::applyFootprint(Map& map, const ObjectTypeMetadata& meta,
 
         Tile& tile = map.tile_at(tileX, tileY);
 
-        if (fc.blocking) {
+        if (fc.blocking && !hasOwnCollisionBox) {
             tile.setWalkable(std::make_unique<NoWalkable>());
         }
 

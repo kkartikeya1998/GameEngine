@@ -53,6 +53,21 @@ void MapObjectRepository::load_from_file(const std::string& path) {
             meta.footprint.push_back(fc);
         }
 
+        // Optional precise collision rectangle — absent (nullopt) means
+        // "use footprint-based whole-tile blocking instead" (see
+        // CollisionBox's doc comment in MapObjectRepository.h). Only
+        // populated when the JSON entry actually has a "collision_box"
+        // object; everything else defaults to the existing behavior.
+        if (def.contains("collision_box")) {
+            const json& cb = def["collision_box"];
+            CollisionBox box;
+            box.offsetX = cb.value("offset_x", 0.f);
+            box.offsetY = cb.value("offset_y", 0.f);
+            box.width   = cb.value("width", 1.f);
+            box.height  = cb.value("height", 1.f);
+            meta.collisionBox = box;
+        }
+
         types_.emplace(typeName, std::move(meta));
     }
 }

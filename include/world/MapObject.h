@@ -1,9 +1,11 @@
 #pragma once
+#include <optional>
 #include <string>
 #include <vector>
 #include <SFML/Graphics.hpp>
 
 #include "asset/MapObjectRepository.h"
+#include "entities/movement/Position2D.h"
 
 // ---------------------------------------------------------------------------
 // MapObject — one placed instance of an object type on a Map.
@@ -12,11 +14,6 @@
 // MapObjectRepository is their real owner/loader, MapObject only ever
 // holds a non-owning pointer into it. See MapObjectRepository.h for the
 // rationale.
-//
-// ADDED: getTypeName() — exposes metadata_->name. Needed so a renderer can
-// take a MapObject and ask MapObjectAtlas::getObjectSprite(typeName) for
-// its sprite region, the same way drawTile already goes from a Tile's
-// Terrain::Type to TileAtlas::getTerrainSprite.
 // ---------------------------------------------------------------------------
 class MapObject {
 public:
@@ -36,6 +33,12 @@ public:
     int getOriginY() const;
     int getTeleportTargetMapId() const;
     void getTeleportTarget(int& x, int& y) const;
+
+    // Resolves this object's collisionBox (if it has one) into a
+    // world-space AABB, using tileSize to convert the metadata's
+    // tile-fraction units into pixels. Returns nullopt if metadata_ has
+    // no collisionBox set.
+    std::optional<AABB> getCollisionBox(float tileSize) const;
 
 private:
     const ObjectTypeMetadata* metadata_;
