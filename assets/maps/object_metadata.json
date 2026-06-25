@@ -5,7 +5,7 @@
       "x":1085,"y":1,"w":200,"h":160,
       "tile_size":256,
       "footprint":[{"dx":0,"dy":0,"blocking":false}],
-      "collision_box": {"offset_x": 0.25, "offset_y": 0.45, "width": 0.5, "height": 0.3}
+      "collision_box": {"offset_x": 0, "offset_y": 0, "width": 160, "height": 100}
     },
 
     "SS_Object_Flag": {
@@ -45,8 +45,9 @@
       "tile_size":256,
       "footprint":[
         {"dx":0,"dy":0,"blocking":true},
-        {"dx":1,"dy":0,"blocking":true}
-      ]
+        {"dx":0,"dy":-1,"blocking":true}
+      ],
+      "collision_box": {"offset_x": 0, "offset_y": 0, "width": 450, "height": 200}
     },
 
     "SS_Object_Windmill": {

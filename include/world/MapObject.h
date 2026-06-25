@@ -10,10 +10,9 @@
 // ---------------------------------------------------------------------------
 // MapObject — one placed instance of an object type on a Map.
 //
-// ObjectTypeMetadata and FootprintCell moved to MapObjectRepository.h —
+// ObjectTypeMetadata and FootprintCell reside in MapObjectRepository.h —
 // MapObjectRepository is their real owner/loader, MapObject only ever
-// holds a non-owning pointer into it. See MapObjectRepository.h for the
-// rationale.
+// holds a non-owning pointer into it.
 // ---------------------------------------------------------------------------
 class MapObject {
 public:
@@ -29,8 +28,8 @@ public:
     const std::string& getTypeName() const;
     const std::string& getTexturePath() const;
     const std::vector<FootprintCell>& getFootprint() const;
-    int getOriginX() const;
-    int getOriginY() const;
+    int getOriginPixelX() const;
+    int getOriginPixelY() const;
     int getTeleportTargetMapId() const;
     void getTeleportTarget(int& x, int& y) const;
 

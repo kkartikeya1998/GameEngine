@@ -8,7 +8,7 @@
 // ---------------------------------------------------------------------------
 // MapObjectAtlas — sprite lookup for placed map objects (trees, houses, ...).
 //
-// CHANGED: object types are no longer assumed to share one spritesheet.
+// object types are no longer assumed to share one spritesheet.
 // Each ObjectTypeMetadata carries its own texturePath, which can be the
 // same file as another type (e.g. several objects packed into one sheet)
 // or a completely separate image (e.g. tree.png, house.png). getObjectSprite

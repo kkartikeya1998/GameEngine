@@ -4,8 +4,6 @@
 #include <iostream>
 
 namespace {
-    constexpr float PLAYER_HITBOX_WIDTH = 32.f;
-    constexpr float PLAYER_HITBOX_HEIGHT = 24.f;
 
     float gridToPixelX(int gridX) {
         return (static_cast<float>(gridX) + 0.5f) * GameConstants::TILE_SIZE;
@@ -23,8 +21,8 @@ GameController::GameController(int startMapId, int playerX, int playerY,
         gridToPixelX(playerX),
         gridToPixelY(playerY),
         GameConstants::PLAYER_SPEED,
-        PLAYER_HITBOX_WIDTH,
-        PLAYER_HITBOX_HEIGHT
+        GameConstants::PLAYER_HITBOX_WIDTH,
+        GameConstants::PLAYER_HITBOX_HEIGHT
     ))
 {
     world_.loadMap(startMapId);
@@ -53,9 +51,8 @@ void GameController::changeMap(int mapId, int newX, int newY) {
 bool GameController::isPositionBlocked(const AABB& box) const {
     Map* activeMap = world_.getActiveMap();
     if (!activeMap) return true;
-    bool rev = activeMap->isAreaBlocked(box, GameConstants::TILE_SIZE);
-    std::cout << "Is next position blocked? " << rev << "\n";
-    return rev;
+    return activeMap->isAreaBlocked(box, GameConstants::TILE_SIZE);
+    
 }
 
 void GameController::updatePlayerMovement(float dt, Direction inputDir) {

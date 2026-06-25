@@ -21,7 +21,7 @@
 // via Terrain::terrain_from_string is no longer done at load time; callers
 // that need the enum should convert it themselves for now.
 //
-// ADDED: sourceTileSize. Pixels-per-tile in this entry's own source art.
+// sourceTileSize. Pixels-per-tile in this entry's own source art.
 // For a tile this is normally equal to textureRect's width/height (a tile
 // occupies exactly one grid cell by definition) — having it as explicit
 // data rather than inferred from w/h means re-exporting the tileset at a

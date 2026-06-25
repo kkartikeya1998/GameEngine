@@ -73,13 +73,12 @@ void SFMLRenderer::drawTile(int gridX, int gridY, const std::string& typeName) {
     window_->draw(sprite);
 }
 
-void SFMLRenderer::drawMapObject(int gridX, int gridY, const std::string& typeName) {
+void SFMLRenderer::drawMapObject(float originPixelX, float originPixelY, const std::string& typeName) {
     SpriteRegion region = mapObjAtlas_.getObjectSprite(typeName);
 
     // Each object type can point at its own texture (or share one with
     // other types) — region.texture is set by MapObjectAtlas per lookup.
-    // Falling back to objectTexture() is defensive only; getObjectSprite
-    // always sets region.texture today.
+    // Falling back to objectTexture() is defensive only
     const sf::Texture& tex = region.texture ? *region.texture : mapObjAtlas_.objectTexture();
 
     sf::Sprite sprite(tex);
@@ -95,25 +94,21 @@ void SFMLRenderer::drawMapObject(int gridX, int gridY, const std::string& typeNa
     // re-exported at 96x96px with sourceTileSize 32 would still render
     // 3 tiles wide, just with 3x the source detail per tile.
     float sourceTileSize = static_cast<float>(region.sourceTileSize);
-    float scaleX = TILE_SIZE / sourceTileSize;
-    float scaleY = TILE_SIZE / sourceTileSize;
+    float scale = TILE_SIZE / sourceTileSize;
+    // float scaleY = TILE_SIZE / sourceTileSize;
 
-    sprite.setScale(sf::Vector2f(scaleX, scaleY));
+    sprite.setScale(sf::Vector2f(scale, scale));
 
-    float spriteWidth = region.tile_size.x * scaleX;
-    float spriteHeight = region.tile_size.y * scaleY;
+    float spriteWidth = region.tile_size.x * scale;
+    float spriteHeight = region.tile_size.y * scale;
 
-    // Anchor: horizontally centered on the origin tile (a 3-tile-wide
-    // House, placed with origin at its middle/door tile per the
-    // footprint, ends up centered rather than growing off to one side);
-    // vertically anchored at the BOTTOM of the origin tile, so anything
-    // taller than 1 tile (Tree, Boulder) grows upward instead of sinking
-    // below ground — same idea as drawPlayer's "- 8.f" foot-planting
-    // offset, generalized to any height.
+
+    // float anchorX = static_cast<float>(gridX);
+    // float anchorY = static_cast<float>(gridY);
+
     sprite.setPosition(sf::Vector2f(
-        // screenX(gridX) + TILE_SIZE / 2.f - spriteWidth / 2.f,
-        // screenY(gridY) + TILE_SIZE - spriteHeight
-        gridX, gridY
+        originPixelX - spriteWidth / 2.f,
+        originPixelY - spriteHeight
     ));
 
     window_->draw(sprite);
@@ -129,10 +124,8 @@ void SFMLRenderer::drawPlayer(float worldX, float worldY, Direction facing, floa
     sf::Sprite sprite(tex);
     sprite.setTextureRect(region.subrect);
 
-    sprite.setScale(sf::Vector2f(
-        TILE_SIZE / region.tile_size.x,
-        TILE_SIZE / region.tile_size.y
-    ));
+    float spriteScale = std::min(TILE_SIZE / region.tile_size.x, TILE_SIZE / region.tile_size.y);
+    sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
 
     // Use the sprite's OWN scaled bounding box for width/height, instead
     // of re-deriving it from region.tile_size + an aspect-ratio formula.
@@ -156,41 +149,5 @@ void SFMLRenderer::drawPlayer(float worldX, float worldY, Direction facing, floa
     sprite.setPosition(sf::Vector2f(drawX, drawY));
 
     window_->draw(sprite);
-    drawDirectionIndicator(drawX, drawY, facing);
-}
-
-void SFMLRenderer::drawDirectionIndicator(float screenX, float screenY, Direction facing) {
-    sf::ConvexShape arrow(3);
-    arrow.setFillColor(sf::Color::White);
-
-    float centerX = screenX + TILE_SIZE / 2.f;
-    float centerY = screenY + TILE_SIZE / 2.f;
-    float offset = 6.f;
-
-    switch (facing) {
-        case Direction::UP:
-            arrow.setPoint(0, sf::Vector2f(centerX, centerY - offset));
-            arrow.setPoint(1, sf::Vector2f(centerX - 3, centerY));
-            arrow.setPoint(2, sf::Vector2f(centerX + 3, centerY));
-            break;
-        case Direction::DOWN:
-            arrow.setPoint(0, sf::Vector2f(centerX, centerY + offset));
-            arrow.setPoint(1, sf::Vector2f(centerX - 3, centerY));
-            arrow.setPoint(2, sf::Vector2f(centerX + 3, centerY));
-            break;
-        case Direction::LEFT:
-            arrow.setPoint(0, sf::Vector2f(centerX - offset, centerY));
-            arrow.setPoint(1, sf::Vector2f(centerX, centerY - 3));
-            arrow.setPoint(2, sf::Vector2f(centerX, centerY + 3));
-            break;
-        case Direction::RIGHT:
-            arrow.setPoint(0, sf::Vector2f(centerX + offset, centerY));
-            arrow.setPoint(1, sf::Vector2f(centerX, centerY - 3));
-            arrow.setPoint(2, sf::Vector2f(centerX, centerY + 3));
-            break;
-        case Direction::NONE:
-            break;
-    }
-
-    window_->draw(arrow);
+    // drawDirectionIndicator(drawX, drawY, facing);
 }

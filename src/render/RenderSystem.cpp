@@ -42,8 +42,8 @@ void RenderSystem::render(GameController& controller) {
         // -------------------------
         for (const auto& obj : map->getMapObjects()) {
             renderer_->drawMapObject(
-                obj->getOriginX(),
-                obj->getOriginY(),
+                obj->getOriginPixelX(),
+                obj->getOriginPixelY(),
                 obj->getTypeName()
             );
         }

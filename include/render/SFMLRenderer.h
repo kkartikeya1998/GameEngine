@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 
+#include "system/GameConstants.h"
 #include "render/IRenderer.h"
 #include "render/TileAtlas.h"
 #include "render/SpriteAtlas.h"
@@ -49,14 +50,14 @@ public:
     void clear() override;
     void drawTile(int gridX, int gridY, const std::string& typeName) override;
     void drawPlayer(float gridX, float gridY, Direction facing, float animProgress) override;
-    void drawMapObject(int gridX, int gridY, const std::string& typeName) override;
+    void drawMapObject(float originPixelX, float originPixelY, const std::string& typeName) override;
     void present() override;
     bool isOpen() const override;
 
     std::optional<sf::Event> pollEvent() override;
 
 private:
-    static constexpr int TILE_SIZE = 64;
+    static constexpr int TILE_SIZE = GameConstants::TILE_SIZE;
     static constexpr int WINDOW_WIDTH = 1024;
     static constexpr int WINDOW_HEIGHT = 768;
 
@@ -80,5 +81,5 @@ private:
     float screenX(float gridX) const { return gridX * TILE_SIZE; }
     float screenY(float gridY) const { return gridY * TILE_SIZE; }
 
-    void drawDirectionIndicator(float screenX, float screenY, Direction facing);
+    // void drawDirectionIndicator(float screenX, float screenY, Direction facing);
 };

@@ -2,7 +2,9 @@
 #include "world/Terrain.h"
 #include "world/Map.h"
 #include "world/MapObject.h"
+#include "system/GameConstants.h"
 
+#include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -66,20 +68,28 @@ void MapLoader::applyFootprint(Map& map, const ObjectTypeMetadata& meta,
     const int width = map.getWidth();
     const int height = map.getHeight();
 
+    // originX/originY arrive in PIXEL space (the object's anchor point —
+    // see MapObject's class comment / SFMLRenderer::drawMapObject).
+    // Footprint cells (fc.dx/fc.dy) are tile-offsets and tile_at() takes
+    // tile indices, so the anchor's containing tile is resolved here,
+    // once, before any cell math — std::floor (not truncation) so
+    // negative pixel coordinates round toward the correct tile, same
+    // reasoning as the gridToPixel boundary-check fix elsewhere.
+    int originTileX = static_cast<int>(std::floor(originX / GameConstants::TILE_SIZE));
+    int originTileY = static_cast<int>(std::floor(originY / GameConstants::TILE_SIZE));
+
     // An object with a precise collisionBox (see CollisionBox in
     // MapObjectRepository.h) handles its own blocking via
     // Map::isAreaBlocked's separate object-AABB check — it does NOT
     // also get whole-tile blocking from its footprint here, or the
     // whole tile would be blocked anyway, making the precise box
-    // pointless. Teleport handling stays independent of this — a
-    // teleport tile is a trigger zone, not a blocking concern, so it's
-    // unaffected either way.
+    // pointless. 
     bool hasOwnCollisionBox = meta.collisionBox.has_value();
 
     for (const auto& fc : meta.footprint)
     {
-        int tileX = originX + fc.dx;
-        int tileY = originY + fc.dy;
+        int tileX = originTileX + fc.dx;
+        int tileY = originTileY + fc.dy;
 
         if (tileX < 0 || tileX >= width || tileY < 0 || tileY >= height)
             continue;

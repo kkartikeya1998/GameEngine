@@ -22,6 +22,9 @@ namespace GameConstants {
     // and by SFML renderer to compute sprite scaling
     inline constexpr float TILE_SIZE = 64.f;
 
-    // pixels/second
+    // Units pixels and seconds
+    
+    inline constexpr float PLAYER_HITBOX_WIDTH = 32.f;
+    inline constexpr float PLAYER_HITBOX_HEIGHT = 24.f;
     inline constexpr float PLAYER_SPEED = 256.f;
 }

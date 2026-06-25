@@ -34,13 +34,13 @@ public:
     virtual void drawTile(int gridX, int gridY, const std::string& typeName) = 0;
 
     // Entities can be drawn at fractional grid positions for smooth animation
-    virtual void drawPlayer(float gridX, float gridY, Direction facing, float animProgress) = 0;
+    virtual void drawPlayer(float worldX, float worldY, Direction facing, float animProgress) = 0;
 
     // Draw a single placed map object (tree, house, sign, ...) at its
     // origin grid position. typeName is the object's catalog key (e.g.
     // "tree", "house") — used to look up its sprite region, the same way
     // drawTile uses Terrain::Type to look up a tile's sprite region.
-    virtual void drawMapObject(int gridX, int gridY, const std::string& typeName) = 0;
+    virtual void drawMapObject(float originPixelX, float originPixelY, const std::string& typeName) = 0;
 
     // Present the rendered frame to the screen
     virtual void present() = 0;
