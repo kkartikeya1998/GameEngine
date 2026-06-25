@@ -118,7 +118,9 @@ void SFMLRenderer::drawMapObject(int gridX, int gridY, const std::string& typeNa
     window_->draw(sprite);
 }
 
-void SFMLRenderer::drawPlayer(float gridX, float gridY, Direction facing, float animProgress) {
+
+
+void SFMLRenderer::drawPlayer(float worldX, float worldY, Direction facing, float animProgress) {
     WalkFrame frame = SpriteAtlas::frameFromProgress(animProgress);
     SpriteRegion region = spriteAtlas_.getPlayerSprite(facing, frame);
     const sf::Texture& tex = spriteAtlas_.playerTexture();
@@ -131,13 +133,29 @@ void SFMLRenderer::drawPlayer(float gridX, float gridY, Direction facing, float 
         TILE_SIZE / region.tile_size.y
     ));
 
-    sprite.setPosition(sf::Vector2f(
-        screenX(gridX),
-        screenY(gridY) - 8.f
-    ));
+    // Use the sprite's OWN scaled bounding box for width/height, instead
+    // of re-deriving it from region.tile_size + an aspect-ratio formula.
+    // getGlobalBounds() reflects setScale()'s actual effect directly —
+    // one less place for a height-calculation mismatch to creep in.
+    sf::FloatRect bounds = sprite.getGlobalBounds();
+    float spriteWidth = bounds.size.x;
+    float spriteHeight = bounds.size.y;
+
+    // worldX/worldY are the player's bottom-center point — this matches
+    // FreeMovementMechanics::hitboxAt's anchor convention exactly
+    // (hitboxAt computes the box as x - width/2, y - height, meaning
+    // position_.y IS the bottom edge / "feet" position). The sprite's
+    // top-left corner needs to land at (worldX - half its width,
+    // worldY - its full height) to make the visible sprite line up with
+    // where collision is actually computed, instead of the sprite's
+    // top-left sitting directly on the feet position.
+    float drawX = worldX - spriteWidth / 2.f;
+    float drawY = worldY - spriteHeight;
+
+    sprite.setPosition(sf::Vector2f(drawX, drawY));
 
     window_->draw(sprite);
-    drawDirectionIndicator(screenX(gridX), screenY(gridY), facing);
+    drawDirectionIndicator(drawX, drawY, facing);
 }
 
 void SFMLRenderer::drawDirectionIndicator(float screenX, float screenY, Direction facing) {

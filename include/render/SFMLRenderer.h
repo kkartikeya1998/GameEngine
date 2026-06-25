@@ -56,7 +56,7 @@ public:
     std::optional<sf::Event> pollEvent() override;
 
 private:
-    static constexpr int TILE_SIZE = 128;
+    static constexpr int TILE_SIZE = 64;
     static constexpr int WINDOW_WIDTH = 1024;
     static constexpr int WINDOW_HEIGHT = 768;
 

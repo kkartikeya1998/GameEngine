@@ -4,6 +4,7 @@
 #include "render/SFMLRenderer.h"
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
+#include <SFML/Window/Keyboard.hpp>
 
 // NOTE: assetsRoot_ should point at the "assets" folder itself (the same
 // folder that directly contains maps/ and sprites/). AssetManager builds
@@ -37,10 +38,11 @@ void Game::run()
         {
             float dt = gameClock_.restart().asSeconds();
 
-            // INPUT
-            Direction dir = Direction::NONE;
-            bool moveRequested = false;
-
+            // EVENTS — kept for one-shot, edge-triggered things only:
+            // window close, Escape-to-quit. Movement no longer reacts to
+            // KeyPressed events (that only fires once per physical press,
+            // which is wrong for continuous movement — holding a key
+            // should keep moving the player every frame it's held).
             while (auto eventOpt = renderSystem_->pollEvent())
             {
                 const sf::Event& event = *eventOpt;
@@ -52,42 +54,44 @@ void Game::run()
                 {
                     if (key->code == sf::Keyboard::Key::Escape)
                         return;
-
-                    switch (key->code)
-                    {
-                        case sf::Keyboard::Key::W:
-                        case sf::Keyboard::Key::Up:
-                            dir = Direction::UP;
-                            moveRequested = true;
-                            break;
-
-                        case sf::Keyboard::Key::S:
-                        case sf::Keyboard::Key::Down:
-                            dir = Direction::DOWN;
-                            moveRequested = true;
-                            break;
-
-                        case sf::Keyboard::Key::A:
-                        case sf::Keyboard::Key::Left:
-                            dir = Direction::LEFT;
-                            moveRequested = true;
-                            break;
-
-                        case sf::Keyboard::Key::D:
-                        case sf::Keyboard::Key::Right:
-                            dir = Direction::RIGHT;
-                            moveRequested = true;
-                            break;
-
-                        default:
-                            break;
-                    }
                 }
             }
 
-            // UPDATE
-            if (moveRequested && dir != Direction::NONE && !controller_.getPlayer()->isAnimating())
-                controller_.movePlayer(dir);
+            // INPUT — held-key state, polled fresh every frame. This is
+            // what makes continuous movement actually continuous: as
+            // long as W is down, this reads UP every frame, not just on
+            // the initial press.
+            //
+            // NOTE: this picks one direction per frame (last-checked-wins
+            // if multiple keys are held, since these are plain ifs, not a
+            // combined vector). If you want true 8-directional/diagonal
+            // movement, this would need to combine multiple held keys
+            // into one input vector instead of picking a single
+            // Direction — left as 4-directional for now since that's
+            // what GameController::updatePlayerMovement / Direction
+            // currently expect.
+            Direction dir = Direction::NONE;
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+                dir = Direction::UP;
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) ||
+                     sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+                dir = Direction::DOWN;
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
+                     sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+                dir = Direction::LEFT;
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ||
+                     sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+                dir = Direction::RIGHT;
+
+            // UPDATE — called every frame regardless of whether dir is
+            // NONE, so the player can decelerate/stop cleanly (handled
+            // inside FreeMovementMechanics::update). The old
+            // isAnimating()-gate is gone: that existed to stop a new
+            // discrete hop from interrupting an in-progress one, which
+            // has no equivalent for continuous movement.
+            controller_.updatePlayerMovement(dt, dir);
 
             controller_.update(dt);
 

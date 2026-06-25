@@ -10,35 +10,38 @@
 // ---------------------------------------------------------------------------
 // GameController — manages World and Player lifecycle.
 //
-// Responsibilities:
-//   - Owns World and Player instances
-//   - Places Player on the active map of World
-//   - Provides read-only access
+// CHANGED: player_ is now a Player (FreeEntity-based, continuous
+// movement) instead of a plain Entity wrapping GridMovementMechanics.
 //
-// CHANGED: constructor now takes assetsRoot explicitly instead of building
-// its own path from PROJECT_ROOT internally. Game is the single source of
-// truth for where assets live on disk (see Game.h) — GameController should
-// not independently know or guess that path.
+// movePlayer(Direction dir) — the old discrete, commit-or-refuse,
+// called-once-per-keypress method — is REMOVED. It assumed
+// GridEntity's move(dir)/nextPos(dir) contract, which Player no longer
+// implements (FreeEntity has no such method — see IFreeMovementMechanics).
+// It's replaced by updatePlayerMovement(dt, inputDir), called every
+// frame from Game::run() regardless of whether a key was just pressed
+// or is being held.
+//
+// GameController stays renderer-agnostic: it builds its own
+// world-space collision query from Map::isAreaBlocked using
+// GameConstants::TILE_SIZE, the same shared constant SFMLRenderer reads
+// — it does not include or know about SFMLRenderer.
 // ---------------------------------------------------------------------------
 class GameController {
 public:
-    // Initialize with a starting map ID, player position, the assets root
-    // path (used to locate maps/), and a reference to the single shared
-    // MapObjectRepository (owned by Game via AssetManager).
     GameController(int startMapId, int playerX, int playerY,
                     const std::string& assetsRoot,
                     MapObjectRepository& objectRepository);
 
-    // Read-only accessors for the game state
     World*  getWorld()       { return &world_;  }
-    Entity* getPlayer()      { return &player_; }
+    Player* getPlayer()      { return &player_; }
     Map*    getActiveMap()   { return world_.getActiveMap(); }
 
-    // Movement on the map or state updates
-    void movePlayer(Direction dir);
+    // Called every frame (not just on keypress) with the currently held
+    // movement input. NONE if no movement key is held this frame.
+    void updatePlayerMovement(float dt, Direction inputDir);
 
-    // Switch to a new map (called when Player steps on a TeleportPoint).
-    // Repositions player on the new map.
+    // Switch to a new map (called when Player's hitbox overlaps a
+    // TeleportPoint). Repositions player on the new map.
     void changeMap(int mapId, int newX, int newY);
 
     void update(float dt) {
@@ -47,5 +50,9 @@ public:
 
 private:
     World  world_;
-    Entity player_;
+    Player player_;
+
+    // Builds the AABB-overlap collision query Player's FreeMovementMechanics
+    // needs, backed by the active map's tile data.
+    bool isPositionBlocked(const AABB& box) const;
 };

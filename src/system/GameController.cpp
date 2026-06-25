@@ -1,46 +1,69 @@
 #include "system/GameController.h"
-#include "entities/movement/GridMovementMechanics.h"
+#include "entities/movement/FreeMovementMechanics.h"
+#include "system/GameConstants.h"
 #include <iostream>
+
+namespace {
+    constexpr float PLAYER_SPEED = 256.f;           // pixels/second
+    constexpr float PLAYER_HITBOX_WIDTH = 32.f;
+    constexpr float PLAYER_HITBOX_HEIGHT = 24.f;
+
+    float gridToPixelX(int gridX) {
+        return (static_cast<float>(gridX) + 0.5f) * GameConstants::TILE_SIZE;
+    }
+    float gridToPixelY(int gridY) {
+        return (static_cast<float>(gridY) + 1.0f) * GameConstants::TILE_SIZE;
+    }
+}
 
 GameController::GameController(int startMapId, int playerX, int playerY,
                                 const std::string& assetsRoot,
                                 MapObjectRepository& objectRepository)
     : world_(assetsRoot + "/maps/", objectRepository),
-    player_(std::make_unique<GridMovementMechanics>(playerX, playerY))
+    player_(std::make_unique<FreeMovementMechanics>(
+        gridToPixelX(playerX),
+        gridToPixelY(playerY),
+        PLAYER_SPEED,
+        PLAYER_HITBOX_WIDTH,
+        PLAYER_HITBOX_HEIGHT
+    ))
 {
     world_.loadMap(startMapId);
 }
 
+// Also update changeMap (if it currently sets raw newX/newY) to use the
+// same gridToPixelX/gridToPixelY helpers:
+//
+// void GameController::changeMap(int mapId, int newX, int newY) {
+//     world_.loadMap(mapId);
+//     player_.movement().setPosition(gridToPixelX(newX), gridToPixelY(newY));
+// }
+
 void GameController::changeMap(int mapId, int newX, int newY) {
     world_.loadMap(mapId);
 
-    // movement system handles position
-    player_.movement().setPosition(newX, newY);
+    // newX/newY arrive as grid coordinates (same convention as before —
+    // teleport targets in object_metadata.json are tile coordinates).
+    // Player's position is now in pixel/world space, so convert.
+    player_.movement().setPosition(
+        static_cast<float>(newX) * GameConstants::TILE_SIZE,
+        static_cast<float>(newY) * GameConstants::TILE_SIZE
+    );
 }
 
+bool GameController::isPositionBlocked(const AABB& box) const {
+    Map* activeMap = world_.getActiveMap();
+    if (!activeMap) return true;
+    bool rev = activeMap->isAreaBlocked(box, GameConstants::TILE_SIZE);
+    std::cout << "Is next position blocked? " << rev << "\n";
+    return rev;
+}
 
-void GameController::movePlayer(Direction dir) {
+void GameController::updatePlayerMovement(float dt, Direction inputDir) {
     Map* activeMap = world_.getActiveMap();
     if (!activeMap) return;
 
-    // ask movement system for next position
-    Position current = player_.movement().getPosition();
-    Position next = player_.movement().nextPos(dir);
+    player_.updateMovement(dt, inputDir,
+        [this](const AABB& box) { return isPositionBlocked(box); });
 
-    if(current == next) return;
-
-    // world validation (collision check placeholder)
-    bool inBounds = (next.x >= 0 && next.y >= 0 &&
-        next.x < activeMap->getWidth() &&
-        next.y < activeMap->getHeight());
-
-    if (!inBounds) return;
-
-
-    // terrain and map object footprint cell blocking logic
-    bool canMove = activeMap->tile_at(next.x, next.y).isWalkable();
-
-    if (!canMove) return;
-
-    player_.move(dir);
 }

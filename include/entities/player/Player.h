@@ -1,8 +1,9 @@
 #pragma once
 
-#include "entities/Entity.h"
+#include "entities/FreeEntity.h"
 
-class Player : public Entity {
+class Player : public FreeEntity {
 public:
-    explicit Player(std::unique_ptr<IMovementMechanics> movement);
+    explicit Player(std::unique_ptr<IFreeMovementMechanics> movement,
+                    float walkCyclePerSeconds = 2.0f);
 };

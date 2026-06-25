@@ -5,12 +5,12 @@
   "height": 6,
 
   "tiles": [
-    "SS_CSS_TL","SS_CSS_TC","SS_CSS_TR","Grass2","Grass1","Sand","Grass1","Grass2","Grass1","Grass2",
-    "SS_CSS_ML","SS_CSS_MC","SS_CSS_MR","Grass4","Grass3","Sand","Grass3","Grass4","Water","Grass4",
-    "SS_CSS_BL","SS_CSS_BC","SS_CSS_BR","Grass2","Sand","Sand","Grass1","Grass2","Grass1","Grass2",
-    "Grass3","Sand","Grass3","Grass4","Grass3","Grass4","Grass3","Water","Grass3","Grass4",
-    "Grass1","Grass2","Grass1","Sand","Sand","Grass2","Grass1","Grass2","Grass1","Grass2",
-    "Grass3","Grass4","Grass3","Grass4","Grass3","Grass4","Sand","Grass4","Grass3","Grass4"
+    "SS_CSS_TL","SS_CSS_TC","SS_CSS_TR","SS_CSS_TL","SS_CSS_TC","SS_CSS_TR","SS_CSS_TL","SS_CSS_TC","SS_CSS_TR","Grass2",
+    "SS_CSS_ML","SS_CSS_MC","SS_CSS_MR","SS_CSS_ML","SS_CSS_MC","SS_CSS_MR","SS_CSS_ML","SS_CSS_MC","SS_CSS_MR","Grass2",
+    "SS_CSS_BL","SS_CSS_BC","SS_CSS_BR","SS_CSS_BL","SS_CSS_BC","SS_CSS_BR","SS_CSS_BL","SS_CSS_BC","SS_CSS_BR","Grass2",
+    "SS_CSS_TL","SS_CSS_TC","SS_CSS_TR","SS_CSS_TL","SS_CSS_TC","SS_CSS_TR","SS_CSS_TL","SS_CSS_TC","SS_CSS_TR","Grass2",
+    "SS_CSS_ML","SS_CSS_MC","SS_CSS_MR","SS_CSS_ML","SS_CSS_MC","SS_CSS_MR","SS_CSS_ML","SS_CSS_MC","SS_CSS_MR","Grass2",
+    "SS_CSS_BL","SS_CSS_BC","SS_CSS_BR","SS_CSS_BL","SS_CSS_BC","SS_CSS_BR","SS_CSS_BL","SS_CSS_BC","SS_CSS_BR","Grass2"
   ],
 
   "map_objects": [
