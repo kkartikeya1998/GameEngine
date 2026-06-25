@@ -14,7 +14,7 @@ void RenderSystem::render(GameController& controller) {
 
     // Get references to world and player
     World* world = controller.getWorld();
-    Entity* player = controller.getPlayer();
+    FreeEntity* player = controller.getPlayer();
 
     if (!world || !player) {
         renderer_->present();
@@ -56,7 +56,7 @@ void RenderSystem::render(GameController& controller) {
         player->getRenderX(),
         player->getRenderY(),
         player->getDirection(),
-        player->getAnimationProgress()
+        player->getWalkProgress()
     );
 
     // Present the frame

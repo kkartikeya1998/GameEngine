@@ -63,8 +63,7 @@ Position2D FreeMovementMechanics::update(float dt, Direction inputDir,
             moved = true;
         }
     }
-std::cout << "dt=" << dt << " dx=" << dx << " dy=" << dy
-          << " pos=(" << position_.x << "," << position_.y << ")\n";
+    
     wasMoving_ = moved;
     return position_;
 }

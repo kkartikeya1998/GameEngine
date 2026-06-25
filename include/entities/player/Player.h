@@ -5,5 +5,5 @@
 class Player : public FreeEntity {
 public:
     explicit Player(std::unique_ptr<IFreeMovementMechanics> movement,
-                    float walkCyclePerSeconds = 2.0f);
+                    float walkCyclePerSeconds = 4.0f);
 };
