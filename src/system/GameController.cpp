@@ -4,7 +4,6 @@
 #include <iostream>
 
 namespace {
-    constexpr float PLAYER_SPEED = 256.f;           // pixels/second
     constexpr float PLAYER_HITBOX_WIDTH = 32.f;
     constexpr float PLAYER_HITBOX_HEIGHT = 24.f;
 
@@ -23,7 +22,7 @@ GameController::GameController(int startMapId, int playerX, int playerY,
     player_(std::make_unique<FreeMovementMechanics>(
         gridToPixelX(playerX),
         gridToPixelY(playerY),
-        PLAYER_SPEED,
+        GameConstants::PLAYER_SPEED,
         PLAYER_HITBOX_WIDTH,
         PLAYER_HITBOX_HEIGHT
     ))

@@ -75,8 +75,8 @@ private:
     std::map<Terrain::Type, TerrainColor> terrainColors_;
 
     void initTerrainColors();
-    int screenX(int gridX) const { return gridX * TILE_SIZE; }
-    int screenY(int gridY) const { return gridY * TILE_SIZE; }
+    // int screenX(int gridX) const { return gridX * TILE_SIZE; }
+    // int screenY(int gridY) const { return gridY * TILE_SIZE; }
     float screenX(float gridX) const { return gridX * TILE_SIZE; }
     float screenY(float gridY) const { return gridY * TILE_SIZE; }
 

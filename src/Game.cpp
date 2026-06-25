@@ -5,6 +5,7 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include "system/GameConstants.h"
 
 // NOTE: assetsRoot_ should point at the "assets" folder itself (the same
 // folder that directly contains maps/ and sprites/). AssetManager builds
@@ -19,7 +20,7 @@ Game::Game()
     , controller_(1, 0, 0, assetsRoot_, assets_.get<MapObjectRepository>())
     , renderSystem_(std::make_unique<RenderSystem>(
           std::make_unique<SFMLRenderer>(
-              800, 600,
+              GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H,
               assets_.get<TileRepository>(),
               assets_.get<MapObjectRepository>(),
               assets_.get<SpriteRepository>(),
@@ -57,19 +58,13 @@ void Game::run()
                 }
             }
 
-            // INPUT — held-key state, polled fresh every frame. This is
-            // what makes continuous movement actually continuous: as
-            // long as W is down, this reads UP every frame, not just on
-            // the initial press.
-            //
+
             // NOTE: this picks one direction per frame (last-checked-wins
             // if multiple keys are held, since these are plain ifs, not a
             // combined vector). If you want true 8-directional/diagonal
             // movement, this would need to combine multiple held keys
             // into one input vector instead of picking a single
-            // Direction — left as 4-directional for now since that's
-            // what GameController::updatePlayerMovement / Direction
-            // currently expect.
+            // Direction
             Direction dir = Direction::NONE;
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ||

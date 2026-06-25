@@ -14,7 +14,7 @@
   ],
 
   "map_objects": [
-    {"type": "SS_Object_Campfire", "origin":{"x":2, "y":2}},
+    {"type": "SS_Object_Campfire", "origin":{"x":200, "y":200}},
     {"type": "SS_Object_Flag", "origin":{"x":5, "y":2}} 
   ]
 }

@@ -111,8 +111,9 @@ void SFMLRenderer::drawMapObject(int gridX, int gridY, const std::string& typeNa
     // below ground — same idea as drawPlayer's "- 8.f" foot-planting
     // offset, generalized to any height.
     sprite.setPosition(sf::Vector2f(
-        screenX(gridX) + TILE_SIZE / 2.f - spriteWidth / 2.f,
-        screenY(gridY) + TILE_SIZE - spriteHeight
+        // screenX(gridX) + TILE_SIZE / 2.f - spriteWidth / 2.f,
+        // screenY(gridY) + TILE_SIZE - spriteHeight
+        gridX, gridY
     ));
 
     window_->draw(sprite);
