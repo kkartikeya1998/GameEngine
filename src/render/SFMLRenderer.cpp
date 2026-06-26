@@ -1,6 +1,7 @@
 #include "render/SFMLRenderer.h"
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
+#include <iostream>
 
 SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight,
                             const TileRepository& tileRepository,
@@ -59,11 +60,9 @@ void SFMLRenderer::drawTile(int gridX, int gridY, const std::string& typeName) {
 
     sf::Sprite sprite(tex);
     sprite.setTextureRect(region.subrect);
+    float scale = static_cast<float>(TILE_SIZE) / region.sourceTileSize;
 
-    sprite.setScale(sf::Vector2f(
-        TILE_SIZE / region.tile_size.x,
-        TILE_SIZE / region.tile_size.y
-    ));
+    sprite.setScale(sf::Vector2f(scale, scale));
 
     sprite.setPosition(sf::Vector2f(
         screenX(gridX),
@@ -124,7 +123,10 @@ void SFMLRenderer::drawPlayer(float worldX, float worldY, Direction facing, floa
     sf::Sprite sprite(tex);
     sprite.setTextureRect(region.subrect);
 
-    float spriteScale = std::min(TILE_SIZE / region.tile_size.x, TILE_SIZE / region.tile_size.y);
+    float spriteScale = std::min(
+        static_cast<float>(TILE_SIZE) / region.tile_size.x,
+        static_cast<float>(TILE_SIZE) / region.tile_size.y
+    );
     sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
 
     // Use the sprite's OWN scaled bounding box for width/height, instead

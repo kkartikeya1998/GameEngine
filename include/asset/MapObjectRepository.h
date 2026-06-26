@@ -6,7 +6,7 @@
 #include <vector>
 
 #include <SFML/Graphics.hpp>
-
+#include "system/GameConstants.h"
 #include "asset/IAssetRepository.h"
 
 // ---------------------------------------------------------------------------
@@ -76,7 +76,7 @@ struct ObjectTypeMetadata {
     std::string texturePath;
     sf::IntRect textureRect;
     std::vector<FootprintCell> footprint;
-    int sourceTileSize = 32;
+    int sourceTileSize = GameConstants::TILE_SIZE;
     std::optional<CollisionBox> collisionBox;
 };
 

@@ -58,8 +58,8 @@ public:
 
 private:
     static constexpr int TILE_SIZE = GameConstants::TILE_SIZE;
-    static constexpr int WINDOW_WIDTH = 1024;
-    static constexpr int WINDOW_HEIGHT = 768;
+    static constexpr int WINDOW_WIDTH = GameConstants::GAME_RESOLUTION_W;
+    static constexpr int WINDOW_HEIGHT = GameConstants::GAME_RESOLUTION_H;
 
     // Atlases — genuinely owned here, each references a repository that
     // Game owns and passed in via the constructor above.
@@ -80,6 +80,6 @@ private:
     // int screenY(int gridY) const { return gridY * TILE_SIZE; }
     float screenX(float gridX) const { return gridX * TILE_SIZE; }
     float screenY(float gridY) const { return gridY * TILE_SIZE; }
-
+    float spriteScale(float width, float height) { return std::min( static_cast<float>(TILE_SIZE) / width, static_cast<float>(TILE_SIZE) / height); }
     // void drawDirectionIndicator(float screenX, float screenY, Direction facing);
 };

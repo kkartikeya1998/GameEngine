@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <type_traits>
 
+#include "system/GameConstants.h"
+
 // ---------------------------------------------------------------------------
 // SpriteRegion — a sub-rectangle within a texture, plus its size for
 // scaling. Returned by every concrete atlas's sprite-lookup method.
@@ -29,7 +31,7 @@ struct SpriteRegion {
     sf::Rect<int> subrect;
     sf::Vector2f tile_size;
     const sf::Texture* texture = nullptr;
-    int sourceTileSize = 32;
+    int sourceTileSize = GameConstants::TILE_SIZE;
 };
 
 // ---------------------------------------------------------------------------

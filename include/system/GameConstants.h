@@ -14,16 +14,16 @@
 // here.
 // ---------------------------------------------------------------------------
 namespace GameConstants {
-    // resolution of the game
-    inline constexpr int GAME_RESOLUTION_W = 800;
-    inline constexpr int GAME_RESOLUTION_H = 800;
     
     // TILE_SIZE: Used by GameController to set pixels per tile
     // and by SFML renderer to compute sprite scaling
-    inline constexpr float TILE_SIZE = 64.f;
+    inline constexpr float TILE_SIZE = 128.f;
 
-    // Units pixels and seconds
-    
+    // resolution of the game
+    inline constexpr int GAME_RESOLUTION_W = TILE_SIZE*12;
+    inline constexpr int GAME_RESOLUTION_H = TILE_SIZE*10;
+
+    // Units pixels and seconds    
     inline constexpr float PLAYER_HITBOX_WIDTH = 32.f;
     inline constexpr float PLAYER_HITBOX_HEIGHT = 24.f;
     inline constexpr float PLAYER_SPEED = 256.f;

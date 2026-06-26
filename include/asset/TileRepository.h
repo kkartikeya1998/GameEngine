@@ -7,7 +7,7 @@
 
 #include "asset/IAssetRepository.h"
 #include "world/Terrain.h"
-
+#include "system/GameConstants.h"
 // ---------------------------------------------------------------------------
 // TileTypeMetadata — full description of one tile TYPE.
 //
@@ -39,7 +39,7 @@ struct TileTypeMetadata {
     std::string texturePath;
     sf::IntRect textureRect;
     std::string terrainType;
-    int sourceTileSize = 32;
+    int sourceTileSize = GameConstants::TILE_SIZE;
 };
 
 // ---------------------------------------------------------------------------

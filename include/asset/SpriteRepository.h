@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <unordered_map>
-
+#include "system/GameConstants.h"
 #include "asset/IAssetRepository.h"
 
 // ---------------------------------------------------------------------------
@@ -17,6 +17,7 @@ struct SpriteFrameMetadata {
     std::string texturePath;
     sf::IntRect textureRect;
     std::string spriteName;
+    int sourceTileSize = GameConstants::TILE_SIZE;
 };
 
 // ---------------------------------------------------------------------------

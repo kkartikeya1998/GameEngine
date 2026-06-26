@@ -1,170 +1,73 @@
 {
   "tile_types": {
-    "SS_CSS_TL": {      
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 0,
-      "y": 0,
-      "w": 256,
-      "h": 256,
-      "terrain": "Grass1"
-    },
-    "SS_CSS_TC": {      
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 256,
-      "y": 0,
-      "w": 256,
-      "h": 256,
-      "terrain": "Grass1"
-    },
-    "SS_CSS_TR": {      
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 512,
-      "y": 0,
-      "w": 256,
-      "h": 256,
-      "terrain": "Grass1"
-    },
+    "SS_Grass01": { "x": 0, "y": 0, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass02": { "x": 256, "y": 0, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass03": { "x": 512, "y": 0, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass04": { "x": 768, "y": 0, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass05": { "x": 1024, "y": 0, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass06": { "x": 1280, "y": 0, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass07": { "x": 1536, "y": 0, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass08": { "x": 1792, "y": 0, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass09": { "x": 2048, "y": 0, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
 
-    
-    "SS_CSS_ML": {      
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 0,
-      "y": 256,
-      "w": 256,
-      "h": 256,
-      "terrain": "Grass1"
-    },
-    "SS_CSS_MC": {      
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 256,
-      "y": 256,
-      "w": 256,
-      "h": 256,
-      "terrain": "Grass1"
-    },
-    "SS_CSS_MR": {      
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 512,
-      "y": 256,
-      "w": 256,
-      "h": 256,
-      "terrain": "Grass1"
-    },
+    "SS_Grass10": { "x": 0, "y": 256, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass11": { "x": 256, "y": 256, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass12": { "x": 512, "y": 256, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass13": { "x": 768, "y": 256, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass14": { "x": 1024, "y": 256, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass15": { "x": 1280, "y": 256, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass16": { "x": 1536, "y": 256, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass17": { "x": 1792, "y": 256, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass18": { "x": 2048, "y": 256, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
 
-    
-    "SS_CSS_BL": {      
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 0,
-      "y": 512,
-      "w": 256,
-      "h": 256,
-      "terrain": "Grass1"
-    },
-    "SS_CSS_BC": {      
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 256,
-      "y": 512,
-      "w": 256,
-      "h": 256,
-      "terrain": "Grass1"
-    },
-    "SS_CSS_BR": {      
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 512,
-      "y": 512,
-      "w": 256,
-      "h": 256,
-      "terrain": "Grass1"
-    },
+    "SS_Grass19": { "x": 0, "y": 512, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass20": { "x": 256, "y": 512, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass21": { "x": 512, "y": 512, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass22": { "x": 768, "y": 512, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass23": { "x": 1024, "y": 512, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass24": { "x": 1280, "y": 512, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass25": { "x": 1536, "y": 512, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass26": { "x": 1792, "y": 512, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass27": { "x": 2048, "y": 512, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
 
+    "SS_Grass28": { "x": 0, "y": 768, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass29": { "x": 256, "y": 768, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass30": { "x": 512, "y": 768, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass31": { "x": 768, "y": 768, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass32": { "x": 1024, "y": 768, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass33": { "x": 1280, "y": 768, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass34": { "x": 1536, "y": 768, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass35": { "x": 1792, "y": 768, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass36": { "x": 2048, "y": 768, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
 
-    "Grass": {
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 812,
-      "y": 464,
-      "w": 116,
-      "h": 116,
-      "terrain": "Grass1"
-    },
-    "Grass1": {
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 2,
-      "y": 2,
-      "w": 114,
-      "h": 114,
-      "terrain": "Grass1"
-    },
-    "Grass2": {
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 2,
-      "y": 2,
-      "w": 114,
-      "h": 114,
-      "terrain": "Grass1"
-    },
-    "Grass3": {
-      "texture": "assets/objects/SimpleSummer_Tiles.png",
-      "x": 2,
-      "y": 2,
-      "w": 114,
-      "h": 114,
-      "terrain": "Grass1"
-    },
-    "Grass4": {
-      "texture": "assets/maps/path_tileset.png",
-      "x": 32,
-      "y": 64,
-      "w": 32,
-      "h": 32,
-      "terrain": "Grass4"
-    },
-    "Sand": {
-      "texture": "assets/maps/path_tileset.png",
-      "x": 32,
-      "y": 0,
-      "w": 32,
-      "h": 32,
-      "terrain": "Sand"
-    },
-    "Water": {
-      "texture": "assets/maps/path_tileset.png",
-      "x": 64,
-      "y": 0,
-      "w": 32,
-      "h": 32,
-      "terrain": "Water"
-    },
-    "Ice": {
-      "texture": "assets/maps/path_tileset.png",
-      "x": 96,
-      "y": 0,
-      "w": 32,
-      "h": 32,
-      "terrain": "Ice"
-    },
-    "Cave": {
-      "texture": "assets/maps/path_tileset.png",
-      "x": 128,
-      "y": 0,
-      "w": 32,
-      "h": 32,
-      "terrain": "Cave"
-    },
-    "Building": {
-      "texture": "assets/maps/path_tileset.png",
-      "x": 160,
-      "y": 0,
-      "w": 32,
-      "h": 32,
-      "terrain": "Building"
-    },
-    "Tree": {
-      "texture": "assets/maps/path_tileset.png",
-      "x": 192,
-      "y": 0,
-      "w": 32,
-      "h": 32,
-      "terrain": "Tree"
-    }
+    "SS_Grass37": { "x": 0, "y": 1024, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass38": { "x": 256, "y": 1024, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass39": { "x": 512, "y": 1024, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass40": { "x": 768, "y": 1024, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass41": { "x": 1024, "y": 1024, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass42": { "x": 1280, "y": 1024, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass43": { "x": 1536, "y": 1024, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass44": { "x": 1792, "y": 1024, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass45": { "x": 2048, "y": 1024, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+
+    "SS_Grass46": { "x": 0, "y": 1280, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass47": { "x": 256, "y": 1280, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass48": { "x": 512, "y": 1280, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass49": { "x": 768, "y": 1280, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass50": { "x": 1024, "y": 1280, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass51": { "x": 1280, "y": 1280, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass52": { "x": 1536, "y": 1280, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass53": { "x": 1792, "y": 1280, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass54": { "x": 2048, "y": 1280, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+
+    "SS_Grass55": { "x": 0, "y": 1536, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass56": { "x": 256, "y": 1536, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass57": { "x": 512, "y": 1536, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass58": { "x": 768, "y": 1536, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass59": { "x": 1024, "y": 1536, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass60": { "x": 1280, "y": 1536, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass61": { "x": 1536, "y": 1536, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass62": { "x": 1792, "y": 1536, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" },
+    "SS_Grass63": { "x": 2048, "y": 1536, "w": 256, "h": 256, "texture": "assets/objects/SimpleSummer_Tiles.png" }
   }
 }

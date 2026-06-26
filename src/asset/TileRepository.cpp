@@ -45,9 +45,9 @@ void TileRepository::load_from_file(const std::string& path) {
 
         // Defaults to w (the region's own width) if not explicitly given —
         // for a tile, "pixels per tile" and "this region's width" are the
-        // same thing unless you say otherwise. Falls back further to 32
+        // same thing unless you say otherwise. Falls back further to GameConstants::TILE_SIZE
         // only if w itself was never set (malformed/legacy entry).
-        meta.sourceTileSize = def.value("tile_size", w > 0 ? w : 32);
+        meta.sourceTileSize = def.value("tile_size", w > 0 ? w : GameConstants::TILE_SIZE);
 
         types_.emplace(typeName, std::move(meta));
     }

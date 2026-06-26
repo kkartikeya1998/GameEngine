@@ -42,7 +42,7 @@ void MapObjectRepository::load_from_file(const std::string& path) {
         // worth of pixels (that's the whole point — House is 3 tiles wide).
         // So this can't default to w the way TileRepository does; it needs
         // its own explicit value, falling back to 32.
-        meta.sourceTileSize = def.value("tile_size", 32);
+        meta.sourceTileSize = def.value("tile_size", GameConstants::TILE_SIZE);
 
         for (const auto& cell : def.at("footprint")) {
             FootprintCell fc;
