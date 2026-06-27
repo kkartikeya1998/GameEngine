@@ -19,7 +19,7 @@ void SpriteRepository::load_from_file(const std::string& path) {
 
     json j;
     file >> j;
-    float tile_size = j.value("tile_size", 0);
+    float tile_size = j.value("tile_size", GameConstants::TILE_SIZE);
     const auto& frames = j.at("frames");
     for (auto it = frames.begin(); it != frames.end(); ++it) {
         const std::string& frameName = it.key();

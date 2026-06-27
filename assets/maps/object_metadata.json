@@ -5,28 +5,31 @@
       "x":1085,"y":1,"w":200,"h":160,
       "tile_size":256,
       "footprint":[{"dx":0,"dy":0,"blocking":false}],
-      "collision_box": {"offset_x": 20, "offset_y": -30, "width": 120, "height": 100}
+      "collision_box": {"offset_x": 8, "offset_y": -20, "width": 140, "height": 120}
     },
 
     "SS_Object_Flag": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1249,"y":887,"w":100,"h":160,
       "tile_size":256,
-      "footprint":[]
+      "footprint":[],
+      "collision_box": {"offset_x": -22, "offset_y": -5, "width": 45, "height": 25}
     },
 
     "SS_Object_RedBanner": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":967,"y":1789,"w":160,"h":240,
       "tile_size":256,
-      "footprint":[]
+      "footprint":[],
+      "collision_box": {"offset_x": 0, "offset_y": 0, "width": 45, "height": 25}
     },
 
     "SS_Object_BlueBanner": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1129,"y":1789,"w":160,"h":240,
       "tile_size":256,
-      "footprint":[]
+      "footprint":[],
+      "collision_box": {"offset_x": 0, "offset_y": 0, "width": 45, "height": 25}
     },
 
     "SS_Object_Tent": {
@@ -36,7 +39,8 @@
       "footprint":[
         {"dx":0,"dy":0,"blocking":true},
         {"dx":1,"dy":0,"blocking":true}
-      ]
+      ],
+      "collision_box": {"offset_x": 5, "offset_y": -40, "width": 240, "height": 150}
     },
 
     "SS_Object_House": {
@@ -47,18 +51,15 @@
         {"dx":0,"dy":0,"blocking":true},
         {"dx":0,"dy":-1,"blocking":true}
       ],
-      "collision_box": {"offset_x": 0, "offset_y": 0, "width": 450, "height": 200}
+      "collision_box": {"offset_x": 0, "offset_y": -15, "width": 350, "height": 170}
     },
 
     "SS_Object_Windmill": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1,"y":1,"w":720,"h":720,
       "tile_size":256,
-      "footprint":[
-        {"dx":0,"dy":0,"blocking":true},
-        {"dx":1,"dy":0,"blocking":true},
-        {"dx":2,"dy":0,"blocking":true}
-      ]
+      "footprint":[],
+      "collision_box": {"offset_x": -30, "offset_y": -55, "width": 265, "height": 125}
     },
 
     "SS_Object_CastleRound": {
@@ -68,7 +69,8 @@
       "footprint":[
         {"dx":0,"dy":0,"blocking":true},
         {"dx":1,"dy":0,"blocking":true}
-      ]
+      ],
+      "collision_box": {"offset_x": 0, "offset_y": -45, "width": 245, "height": 150}
     },
 
     "SS_Object_CastleSquare": {
@@ -78,7 +80,8 @@
       "footprint":[
         {"dx":0,"dy":0,"blocking":true},
         {"dx":1,"dy":0,"blocking":true}
-      ]
+      ],
+      "collision_box": {"offset_x": 5, "offset_y": -15, "width": 280, "height": 120}
     },
 
     "SS_Object_TreeLarge": {
@@ -88,7 +91,8 @@
       "footprint":[
         {"dx":0,"dy":0,"blocking":true},
         {"dx":1,"dy":0,"blocking":true}
-      ]
+      ],
+      "collision_box": {"offset_x": 15, "offset_y": -70, "width": 85, "height": 60}
     },
 
     "SS_Object_TreeMedium": {
@@ -98,7 +102,7 @@
       "footprint":[
         {"dx":0,"dy":0,"blocking":true}
       ],
-      "collision_box": {"offset_x": 20, "offset_y": -30, "width": 120, "height": 30}
+      "collision_box": {"offset_x": -10, "offset_y": -40, "width": 80, "height": 50}
     },
 
     "SS_Object_TreeSmall": {
@@ -107,7 +111,8 @@
       "tile_size":256,
       "footprint":[
         {"dx":0,"dy":0,"blocking":true}
-      ]
+      ],
+      "collision_box": {"offset_x": 15, "offset_y": -30, "width": 70, "height": 40}
     },
 
     "SS_Object_TreeStumpTall": {
@@ -128,14 +133,16 @@
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":725,"y":1447,"w":240,"h":400,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[{"dx":0,"dy":0,"blocking":true}],
+      "collision_box": {"offset_x": 0, "offset_y": -20, "width": 170, "height": 120}
     },
 
     "SS_Object_WatchtowerTall": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":967,"y":1447,"w":260,"h":340,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[{"dx":0,"dy":0,"blocking":true}],
+      "collision_box": {"offset_x": 15, "offset_y": -25, "width": 180, "height": 110}
     },
 
     "SS_Object_WatchtowerShort": {
@@ -156,21 +163,24 @@
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":525,"y":1849,"w":240,"h":140,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 0, "offset_y": -25, "width": 0, "height": 0}
     },
 
     "SS_Object_BushesMedium": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":767,"y":1849,"w":180,"h":140,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 0, "offset_y": -25, "width": 0, "height": 0}
     },
 
     "SS_Object_BushesSmall": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1209,"y":1231,"w":140,"h":120,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 0, "offset_y": -30, "width": 0, "height": 0}
     },
 
     "SS_Object_WoodenBridgeHorizontal": {
@@ -191,21 +201,24 @@
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1087,"y":1149,"w":220,"h":80,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[{"dx":0,"dy":0,"blocking":true}],
+      "collision_box": {"offset_x": 0, "offset_y": 0, "width": 180, "height": 25}
     },
 
     "SS_Object_WoodenFenceVertical": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1207,"y":665,"w":80,"h":220,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[{"dx":0,"dy":0,"blocking":true}],
+      "collision_box": {"offset_x": -5, "offset_y": -10, "width": 45, "height": 170}
     },
 
     "SS_Object_WoodenCart": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1,"y":1849,"w":320,"h":160,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[{"dx":0,"dy":0,"blocking":true}],
+      "collision_box": {"offset_x": 10, "offset_y": -10, "width": 260, "height": 110}
     },
 
     "SS_Object_WoodenBarrel": {
@@ -226,35 +239,40 @@
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1309,"y":1049,"w":120,"h":100,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
-    },
+      "footprint":[],
+      "collision_box": {"offset_x": 10, "offset_y": -5, "width": 85, "height": 45}
+	  },
 
     "SS_Object_Rock02": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1087,"y":1373,"w":100,"h":60,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 10, "offset_y": -5, "width": 65, "height": 35}
     },
 
     "SS_Object_Rock03": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1189,"y":1373,"w":100,"h":60,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 5, "offset_y": -10, "width": 75, "height": 30}
     },
 
     "SS_Object_Rock04": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1085,"y":325,"w":60,"h":60,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 5, "offset_y": -15, "width": 35, "height": 15}
     },
 
     "SS_Object_Rock05": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1147,"y":325,"w":60,"h":60,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 5, "offset_y": -15, "width": 30, "height": 10}
     }
   }
 }

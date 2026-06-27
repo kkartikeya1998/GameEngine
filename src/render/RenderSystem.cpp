@@ -67,9 +67,15 @@ void RenderSystem::render(GameController& controller) {
         for (const auto& obj : map->getMapObjects()) {
             if (auto box = obj->getCollisionBox(GameConstants::TILE_SIZE)) {
                 renderer_->drawDebugRect(box->x, box->y, box->width, box->height);
-            }
+            }    std::optional<AABB> collisionBox = obj->getCollisionBox(GameConstants::TILE_SIZE);
+
+
+            float depthY = collisionBox
+                ? (collisionBox->y + collisionBox->height)
+                : static_cast<float>(obj->getOriginPixelY());
+
             renderables.push_back({
-                static_cast<float>(obj->getOriginPixelY()),
+                depthY,
                 [this, &obj]() {
                     renderer_->drawMapObject(
                         obj->getOriginPixelX(),
@@ -96,6 +102,7 @@ void RenderSystem::render(GameController& controller) {
                     // renderer_->drawNpc(originX, originY, typeName, ...)
                     // — a new IRenderer method (additive), not a change
                     // to this loop's shape or the sort itself.
+                    // Also needs fixing draw order if the logic hasnt been moved from here
                     renderer_->drawPlayer(
                         npc->getRenderX(),
                         npc->getRenderY(),
@@ -109,7 +116,7 @@ void RenderSystem::render(GameController& controller) {
     AABB playerBox = player->getHitbox();
     renderer_->drawDebugRect(playerBox.x, playerBox.y, playerBox.width, playerBox.height);
         renderables.push_back({
-            player->getRenderY(),
+            player->getRenderY() - 25.0f, // [TODO] Needs to be fixed according to the player collision box
             [this, player]() {
                 renderer_->drawPlayer(
                     player->getRenderX(),

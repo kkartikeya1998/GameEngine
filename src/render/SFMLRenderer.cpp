@@ -115,12 +115,37 @@ void SFMLRenderer::drawMapObject(float originPixelX, float originPixelY, const s
 
 
 void SFMLRenderer::drawDebugRect(float x, float y, float width, float height) {
-    sf::RectangleShape rect(sf::Vector2f(width, height));
-    rect.setPosition(sf::Vector2f(x, y));
-    rect.setFillColor(sf::Color::Transparent);
-    rect.setOutlineColor(sf::Color::Red);
-    rect.setOutlineThickness(2.f);
-    window_->draw(rect);
+    // Innermost ring (margin 0, the actual box) is solid red; each
+    // successive ring lightens toward white while staying in the same
+    // red hue family (green/blue channels rise together, red stays
+    // maxed), so they read as "the same color, fading outward" rather
+    // than a hue shift.
+    static constexpr float kMargins[]     = { 0.f, 5.f, 10.f, 20.f };
+    static constexpr float kThicknesses[] = { 3.f, 2.f, 2.f, 1.f };
+    static const sf::Color kColors[] = {
+        sf::Color(255, 0,   0),    // innermost — solid red
+        sf::Color(255, 80,  80),   // light red
+        sf::Color(255, 150, 150),  // lighter red / pink
+        sf::Color(255, 210, 210),  // lightest — near-white pink
+    };
+
+    for (std::size_t i = 0; i < std::size(kMargins); ++i) {
+        float margin = kMargins[i];
+
+        sf::RectangleShape rect(sf::Vector2f(
+            width  + 2.f * margin,
+            height + 2.f * margin
+        ));
+        rect.setPosition(sf::Vector2f(
+            x - margin,
+            y - margin
+        ));
+        rect.setFillColor(sf::Color::Transparent);
+        rect.setOutlineColor(kColors[i]);
+        rect.setOutlineThickness(kThicknesses[i]);
+
+        window_->draw(rect);
+    }
 }
 
 void SFMLRenderer::drawPlayer(float worldX, float worldY, Direction facing, float animProgress) {
@@ -131,11 +156,11 @@ void SFMLRenderer::drawPlayer(float worldX, float worldY, Direction facing, floa
     sf::Sprite sprite(tex);
     sprite.setTextureRect(region.subrect);
 
-    float spriteScale = std::min(
-        static_cast<float>(TILE_SIZE) / region.tile_size.x,
-        static_cast<float>(TILE_SIZE) / region.tile_size.y
-    );
-    sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
+    
+    float sourceTileSize = static_cast<float>(region.sourceTileSize);
+    float scale = TILE_SIZE / sourceTileSize;
+
+    sprite.setScale(sf::Vector2f(scale, scale));
 
     // Use the sprite's OWN scaled bounding box for width/height, instead
     // of re-deriving it from region.tile_size + an aspect-ratio formula.
