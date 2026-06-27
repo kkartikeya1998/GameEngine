@@ -17,12 +17,15 @@ GameController::GameController(int startMapId, int playerX, int playerY,
                                 const std::string& assetsRoot,
                                 MapObjectRepository& objectRepository)
     : world_(assetsRoot + "/maps/", objectRepository),
-    player_(std::make_unique<FreeMovementMechanics>(
+        player_(std::make_unique<FreeMovementMechanics>(
         gridToPixelX(playerX),
         gridToPixelY(playerY),
         GameConstants::PLAYER_SPEED,
         GameConstants::PLAYER_HITBOX_WIDTH,
-        GameConstants::PLAYER_HITBOX_HEIGHT
+        GameConstants::PLAYER_HITBOX_HEIGHT,
+        GameConstants::PLAYER_HITBOX_OFFSET_X,  // NEW
+        GameConstants::PLAYER_HITBOX_OFFSET_Y,   // NEW
+        Direction::NONE
     ))
 {
     world_.loadMap(startMapId);

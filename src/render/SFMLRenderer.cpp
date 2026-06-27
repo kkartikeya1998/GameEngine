@@ -114,6 +114,14 @@ void SFMLRenderer::drawMapObject(float originPixelX, float originPixelY, const s
 }
 
 
+void SFMLRenderer::drawDebugRect(float x, float y, float width, float height) {
+    sf::RectangleShape rect(sf::Vector2f(width, height));
+    rect.setPosition(sf::Vector2f(x, y));
+    rect.setFillColor(sf::Color::Transparent);
+    rect.setOutlineColor(sf::Color::Red);
+    rect.setOutlineThickness(2.f);
+    window_->draw(rect);
+}
 
 void SFMLRenderer::drawPlayer(float worldX, float worldY, Direction facing, float animProgress) {
     WalkFrame frame = SpriteAtlas::frameFromProgress(animProgress);

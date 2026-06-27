@@ -21,7 +21,7 @@ struct Position2D {
 // collision queries: an entity's hitbox, or a blocking tile's rectangle.
 // ---------------------------------------------------------------------------
 struct AABB {
-    float x, y;       // top-left corner
+    float x, y; 
     float width, height;
 
     bool intersects(const AABB& other) const {

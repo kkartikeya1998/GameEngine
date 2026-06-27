@@ -41,7 +41,12 @@ public:
     // "tree", "house") — used to look up its sprite region, the same way
     // drawTile uses Terrain::Type to look up a tile's sprite region.
     virtual void drawMapObject(float originPixelX, float originPixelY, const std::string& typeName) = 0;
-
+    
+    // Debug-only: draws an unfilled rectangle outline at world-pixel
+    // coordinates (x, y = top-left), given width/height in pixels. Not
+    // part of normal gameplay rendering — exists purely so collision
+    // boxes, hitboxes, etc. can be visually verified during development.
+    virtual void drawDebugRect(float x, float y, float width, float height) = 0;
     // Present the rendered frame to the screen
     virtual void present() = 0;
 

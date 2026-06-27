@@ -65,6 +65,9 @@ void RenderSystem::render(GameController& controller) {
         renderables.reserve(map->getMapObjects().size() + map->getNpcs().size() + 1);
 
         for (const auto& obj : map->getMapObjects()) {
+            if (auto box = obj->getCollisionBox(GameConstants::TILE_SIZE)) {
+                renderer_->drawDebugRect(box->x, box->y, box->width, box->height);
+            }
             renderables.push_back({
                 static_cast<float>(obj->getOriginPixelY()),
                 [this, &obj]() {
@@ -76,6 +79,7 @@ void RenderSystem::render(GameController& controller) {
                 }
             });
         }
+        
 
         // NEW — NPCs feed the same queue as objects/player. Npc exposes
         // the same getRenderX/Y()/getDirection() surface Player already
@@ -102,6 +106,8 @@ void RenderSystem::render(GameController& controller) {
             });
         }
 
+    AABB playerBox = player->getHitbox();
+    renderer_->drawDebugRect(playerBox.x, playerBox.y, playerBox.width, playerBox.height);
         renderables.push_back({
             player->getRenderY(),
             [this, player]() {

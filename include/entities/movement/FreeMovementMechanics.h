@@ -18,6 +18,7 @@ public:
     FreeMovementMechanics(float x, float y,
                            float speed,
                            float hitboxWidth, float hitboxHeight,
+                           float hitboxOffsetX, float hitboxOffsetY,
                            Direction dir = Direction::NONE);
 
     Position2D update(float dt, Direction inputDir,
@@ -38,6 +39,8 @@ private:
     float hitboxWidth_;
     float hitboxHeight_;
     bool wasMoving_ = false;
+    float offsetX_ = 0.f;
+    float offsetY_ = 0.f;
 
     AABB hitboxAt(float x, float y) const;
 };

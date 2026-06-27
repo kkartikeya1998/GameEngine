@@ -51,7 +51,7 @@ public:
     void drawTile(int gridX, int gridY, const std::string& typeName) override;
     void drawPlayer(float gridX, float gridY, Direction facing, float animProgress) override;
     void drawMapObject(float originPixelX, float originPixelY, const std::string& typeName) override;
-    void present() override;
+    void drawDebugRect(float x, float y, float width, float height) override;    void present() override;
     bool isOpen() const override;
 
     std::optional<sf::Event> pollEvent() override;

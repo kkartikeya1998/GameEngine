@@ -4,28 +4,35 @@
 FreeMovementMechanics::FreeMovementMechanics(float x, float y,
                                               float speed,
                                               float hitboxWidth, float hitboxHeight,
+                                              float offsetX, float offsetY,
                                               Direction dir)
     : position_{x, y, dir}
     , speed_(speed)
     , hitboxWidth_(hitboxWidth)
     , hitboxHeight_(hitboxHeight)
+    , offsetX_(offsetX)
+    , offsetY_(offsetY)
 {
 }
 
+
 AABB FreeMovementMechanics::hitboxAt(float x, float y) const
 {
-    // Hitbox centered horizontally on x, bottom-anchored on y — matches
-    // the convention already used for sprite anchoring (drawMapObject's
-    // bottom-center anchor) so the collision box lines up with where the
-    // sprite visually "stands," not its top-left corner.
+    // offsetX_/offsetY_ displace the box's bottom-center from (x, y) —
+    // same role as ObjectTypeMetadata::CollisionBox's offsetX/offsetY
+    // displacing from an object's origin. Default {0,0} reproduces the
+    // exact previous behavior (box bottom-center == position) for every
+    // existing caller.
+    float boxBottomCenterX = x + offsetX_;
+    float boxBottomCenterY = y + offsetY_;
+
     return AABB{
-        x - hitboxWidth_ / 2.f,
-        y - hitboxHeight_,
+        boxBottomCenterX - hitboxWidth_ / 2.f,
+        boxBottomCenterY - hitboxHeight_,
         hitboxWidth_,
         hitboxHeight_
     };
 }
-
 Position2D FreeMovementMechanics::update(float dt, Direction inputDir,
                                           const std::function<bool(const AABB&)>& isBlocked)
 {

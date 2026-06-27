@@ -24,7 +24,9 @@ namespace GameConstants {
     inline constexpr int GAME_RESOLUTION_H = TILE_SIZE*10;
 
     // Units pixels and seconds    
-    inline constexpr float PLAYER_HITBOX_WIDTH = 32.f;
+    inline constexpr float PLAYER_HITBOX_WIDTH = 60.f;
     inline constexpr float PLAYER_HITBOX_HEIGHT = 24.f;
+    inline constexpr float PLAYER_HITBOX_OFFSET_X = -10.f;
+    inline constexpr float PLAYER_HITBOX_OFFSET_Y = 0.f;
     inline constexpr float PLAYER_SPEED = 256.f;
 }
