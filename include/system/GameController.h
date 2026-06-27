@@ -25,6 +25,12 @@
 // world-space collision query from Map::isAreaBlocked using
 // GameConstants::TILE_SIZE, the same shared constant SFMLRenderer reads
 // — it does not include or know about SFMLRenderer.
+//
+// NEW: update(dt) now also ticks every NPC on the active map, sibling
+// to the existing player_.update(dt) call. NPCs are owned by Map (see
+// Map::getNpcs()), not by GameController — GameController only reaches
+// in to drive their per-frame update, same relationship it already has
+// with World/Map for everything else.
 // ---------------------------------------------------------------------------
 class GameController {
 public:
@@ -46,6 +52,15 @@ public:
 
     void update(float dt) {
         player_.update(dt);
+
+        // NEW — sibling loop. No-op (zero iterations) on any map with
+        // no "npcs" entry, i.e. every map you have today — behavior is
+        // unchanged until npcs actually exist on a map.
+        if (Map* activeMap = world_.getActiveMap()) {
+            for (auto& npc : activeMap->getNpcs()) {
+                npc->update(dt);
+            }
+        }
     }
 
 private:

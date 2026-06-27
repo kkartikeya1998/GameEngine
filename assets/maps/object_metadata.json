@@ -97,7 +97,8 @@
       "tile_size":256,
       "footprint":[
         {"dx":0,"dy":0,"blocking":true}
-      ]
+      ],
+      "collision_box": {"offset_x": 20, "offset_y": -30, "width": 120, "height": 30}
     },
 
     "SS_Object_TreeSmall": {

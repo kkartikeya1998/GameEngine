@@ -28,7 +28,7 @@ void AnimationComponent::begin(
 
 void AnimationComponent::update(float dt)
 {
-    std::cout << "Animation progress: " << progress_ << ", currentX: " << currentX_ << ", currentY: " << currentY_ << std::endl;
+    // std::cout << "Animation progress: " << progress_ << ", currentX: " << currentX_ << ", currentY: " << currentY_ << std::endl;
     if (progress_ >= 1.f)
         return;
 

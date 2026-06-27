@@ -7,6 +7,7 @@
 #include "Tile.h"
 #include "MapObject.h"
 #include "entities/movement/Position2D.h"
+#include "entities/npc/Npc.h" // NEW
 // ---------------------------------------------------------------------------
 // Map — pure in-memory representation of a loaded map.
 //
@@ -25,11 +26,19 @@
 // (free) movement needs that grid movement never did: "does this
 // world-space box overlap any blocking tile," rather than "is this one
 // specific grid cell walkable."
+//
+// NEW: npcs_ — a second owned collection, sibling to map_objects, NOT
+// merged into it. MapObject has no update()/movement mechanic/position
+// concept beyond a fixed origin; Npc does. Keeping them as two distinct
+// collections on the same Map reflects that these are two genuinely
+// different kinds of things that happen to both live spatially on a
+// map, rather than forcing one container to serve two contracts.
 // ---------------------------------------------------------------------------
 class Map {
 private:
     std::vector<Tile> tiles;
     std::vector<std::unique_ptr<MapObject>> map_objects;
+    std::vector<std::unique_ptr<Npc>> npcs_; // NEW
 
     int width{0};
     int height{0};
@@ -52,6 +61,17 @@ public:
 
     const std::vector<std::unique_ptr<MapObject>>& getMapObjects() const {
         return map_objects;
+    }
+
+    // NEW — same ownership pattern as addMapObject/getMapObjects above.
+    // A map with no "npcs" entry in its JSON simply never calls this;
+    // npcs_ stays empty, identical to today's behavior.
+    void addNpc(std::unique_ptr<Npc> npc) {
+        npcs_.push_back(std::move(npc));
+    }
+
+    const std::vector<std::unique_ptr<Npc>>& getNpcs() const {
+        return npcs_;
     }
 
     // True if box (world/pixel space) overlaps any non-walkable tile, or

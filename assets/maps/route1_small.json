@@ -1,27 +1,63 @@
 {
   "id": 1,
   "name": "Route 1 (Small Demo)",
-  "width": 10,
-  "height": 8,
+  "width": 11,
+  "height": 7,
 
   "tiles": [
-    "SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58",
-    "SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58",
-    "SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58",
-    "SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58",
-    "SS_Grass58","SS_Grass58","SS_Grass28","SS_Grass56","SS_Grass56","SS_Grass29","SS_Grass35","SS_Grass53","SS_Grass35","SS_Grass36",
-    "SS_Grass58","SS_Grass58","SS_Grass40","SS_Grass58","SS_Grass58","SS_Grass45","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass52",
-    "SS_Grass56","SS_Grass56","SS_Grass48","SS_Grass58","SS_Grass58","SS_Grass43","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58",
-    "SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass45","SS_Grass58","SS_Grass58","SS_Grass58","SS_Grass58"
+    "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58",
+    "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58",
+    "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58",
+    "SS_Grass58", "SS_Grass58", "SS_Grass28", "SS_Grass56", "SS_Grass56", "SS_Grass29", "SS_Grass35", "SS_Grass53", "SS_Grass35", "SS_Grass36", "SS_Grass58",
+    "SS_Grass58", "SS_Grass58", "SS_Grass40", "SS_Grass58", "SS_Grass58", "SS_Grass45", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass52", "SS_Grass58",
+    "SS_Grass56", "SS_Grass56", "SS_Grass48", "SS_Grass58", "SS_Grass58", "SS_Grass43", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58",
+    "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass45", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58", "SS_Grass58"
   ],
 
   "map_objects": [
-    {"type": "SS_Object_Campfire", "origin":{"x":200, "y":200}},
-    {"type": "SS_Object_CastleSquare", "origin":{"x":80, "y":768}},
-    {"type": "SS_Object_BushesLarge", "origin":{"x":165, "y":700}},
-    {"type": "SS_Object_BushesSmall", "origin":{"x":150, "y":720}},
-    {"type": "SS_Object_Flag", "origin":{"x": 200, "y": 768}},
-    {"type": "SS_Object_WoodenBridgeHorizontal", "origin":{"x": 325, "y": 768}}
-  
+    { "type": "SS_Object_Campfire", "origin": { "x": 200, "y": 75 } },
+
+    { "type": "SS_Object_TreeMedium", "origin": { "x": 65, "y": 240 } },
+    { "type": "SS_Object_TreeSmall", "origin": { "x": 270, "y": 245 } },
+    { "type": "SS_Object_BushesLarge", "origin": { "x": 250, "y": 280 } },
+    { "type": "SS_Object_TreeLarge", "origin": { "x": 190, "y": 315 } },
+    { "type": "SS_Object_Windmill", "origin": { "x": 155, "y": 415 } },
+    { "type": "SS_Object_Rock01", "origin": { "x": 255, "y": 345 } },
+
+    { "type": "SS_Object_TreeMedium", "origin": { "x": 460, "y": 190 } },
+    { "type": "SS_Object_TreeSmall", "origin": { "x": 350, "y": 180 } },
+    { "type": "SS_Object_BushesLarge", "origin": { "x": 400, "y": 204 } },
+    { "type": "SS_Object_Rock03", "origin": { "x": 375, "y": 205 } },
+    { "type": "SS_Object_Tent", "origin": { "x": 400, "y": 300 } },
+    { "type": "SS_Object_Rock05", "origin": { "x": 305, "y": 325 } },
+
+    { "type": "SS_Object_WatchtowerTall", "origin": { "x": 510, "y": 415 } },
+
+    { "type": "SS_Object_WoodenFenceVertical", "origin": { "x": 590, "y": 385 } },
+
+    { "type": "SS_Object_WoodenFenceHorizontal", "origin": { "x": 630, "y": 400 } },
+    { "type": "SS_Object_WoodenFenceHorizontal", "origin": { "x": 730, "y": 400 } },
+    { "type": "SS_Object_WoodenFenceHorizontal", "origin": { "x": 830, "y": 400 } },
+    { "type": "SS_Object_WoodenFenceHorizontal", "origin": { "x": 930, "y": 400 } },
+    { "type": "SS_Object_WoodenFenceHorizontal", "origin": { "x": 1030, "y": 400 } },
+
+    { "type": "SS_Object_House", "origin": { "x": 1150, "y": 380 } },
+
+    { "type": "SS_Object_TreeMedium", "origin": { "x": 90, "y": 540 } },
+    { "type": "SS_Object_CastleSquare", "origin": { "x": 80, "y": 643 } },
+    { "type": "SS_Object_BushesLarge", "origin": { "x": 165, "y": 575 } },
+    { "type": "SS_Object_BushesSmall", "origin": { "x": 150, "y": 595 } },
+    { "type": "SS_Object_Flag", "origin": { "x": 200, "y": 643 } },
+    { "type": "SS_Object_Rock01", "origin": { "x": 395, "y": 545 } },
+    { "type": "SS_Object_Rock04", "origin": { "x": 385, "y": 550 } },
+    { "type": "SS_Object_WoodenBridgeHorizontal", "origin": { "x": 325, "y": 655 } },
+
+    { "type": "SS_Object_MagicStoneTower", "origin": { "x": 510, "y": 645 } },
+    { "type": "SS_Object_Flag", "origin": { "x": 1310, "y": 520 } },
+    { "type": "SS_Object_WoodenCart", "origin": { "x": 1330, "y": 475 } },
+    { "type": "SS_Object_RedBanner", "origin": { "x": 965, "y": 425 } },
+    { "type": "SS_Object_TreasureChest", "origin": { "x": 700, "y": 310 } },
+    { "type": "SS_Object_CastleRound", "origin": { "x": 880, "y": 740 } },
+    { "type": "SS_Object_BlueBanner", "origin": { "x": 635, "y": 870 } }
   ]
 }
