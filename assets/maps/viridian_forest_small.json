@@ -15,9 +15,8 @@
   ],
 
   "map_objects": [
-    { "type": "SS_Object_BushesLarge", "origin": { "x": 150, "y": 600 } },
-    { "type": "SS_Object_BushesMedium", "origin": { "x": 150, "y": 700 } },
-    { "type": "SS_Object_BushesSmall", "origin": { "x": 150, "y": 800 } },
+    { "type": "SS_Object_TreasureChest", "origin": { "x": 150, "y": 600 } },
+
     { "type": "SS_Object_Flag", "origin": { "x": 510, "y": 415 } },
     { "type": "SS_Object_RedBanner", "origin": { "x": 965, "y": 425 } },
     { "type": "SS_Object_TreasureChest", "origin": { "x": 700, "y": 310 } }

@@ -18,8 +18,8 @@ GameController::GameController(int startMapId, int playerX, int playerY,
                                 MapObjectRepository& objectRepository)
     : world_(assetsRoot + "/maps/", objectRepository),
         player_(std::make_unique<FreeMovementMechanics>(
-        gridToPixelX(playerX),
-        gridToPixelY(playerY),
+        playerX,
+        playerY,
         GameConstants::PLAYER_SPEED,
         GameConstants::PLAYER_HITBOX_WIDTH,
         GameConstants::PLAYER_HITBOX_HEIGHT,
@@ -54,7 +54,7 @@ void GameController::changeMap(int mapId, int newX, int newY) {
 bool GameController::isPositionBlocked(const AABB& box) const {
     Map* activeMap = world_.getActiveMap();
     if (!activeMap) return true;
-    return activeMap->isAreaBlocked(box, GameConstants::TILE_SIZE);
+    return activeMap->isAreaBlocked(box);
     
 }
 

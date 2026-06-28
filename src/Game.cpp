@@ -17,7 +17,7 @@
 Game::Game()
     : assetsRoot_(std::string(PROJECT_ROOT) + "/assets")
     , assets_(assetsRoot_)
-    , controller_(1, 0, 5, assetsRoot_, assets_.get<MapObjectRepository>())
+    , controller_(1, 600, 600, assetsRoot_, assets_.get<MapObjectRepository>()) // map ID: 1 main map, 2 asset tuning map
     , renderSystem_(std::make_unique<RenderSystem>(
           std::make_unique<SFMLRenderer>(
               GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H,

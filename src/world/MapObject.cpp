@@ -68,7 +68,7 @@ void MapObject::getTeleportTarget(int& x, int& y) const
 // -------------------------
 // Collision
 // -------------------------
-std::optional<AABB> MapObject::getCollisionBox(float tileSize) const
+std::optional<AABB> MapObject::getCollisionBox() const
 {
     if (!metadata_->collisionBox)
         return std::nullopt;
@@ -81,7 +81,7 @@ std::optional<AABB> MapObject::getCollisionBox(float tileSize) const
     // pixels, using the exact same ratio SFMLRenderer::drawMapObject uses
     // to scale the sprite itself — so the hitbox always matches however
     // big the sprite is currently being drawn, automatically.
-    float scale = tileSize / static_cast<float>(metadata_->sourceTileSize);
+    float scale = GameConstants::TILE_SIZE / static_cast<float>(metadata_->sourceTileSize);
 
     // origin_ (originX_, originY_) IS ALREADY the sprite's center-bottom
     // point in world pixels — see SFMLRenderer::drawMapObject, which

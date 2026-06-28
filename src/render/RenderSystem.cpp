@@ -64,11 +64,11 @@ void RenderSystem::render(GameController& controller) {
         std::vector<Renderable> renderables;
         renderables.reserve(map->getMapObjects().size() + map->getNpcs().size() + 1);
 
-        for (const auto& obj : map->getMapObjects()) {
-            if (auto box = obj->getCollisionBox(GameConstants::TILE_SIZE)) {
-                renderer_->drawDebugRect(box->x, box->y, box->width, box->height);
-            }    std::optional<AABB> collisionBox = obj->getCollisionBox(GameConstants::TILE_SIZE);
-
+        for (const auto& obj : map->getMapObjects()) {    
+            std::optional<AABB> collisionBox = obj->getCollisionBox();
+            if (collisionBox) {
+                renderer_->drawDebugRect(collisionBox->x, collisionBox->y, collisionBox->width, collisionBox->height);
+            }
 
             float depthY = collisionBox
                 ? (collisionBox->y + collisionBox->height)

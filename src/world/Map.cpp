@@ -36,12 +36,12 @@ void Map::addMapObject(std::unique_ptr<MapObject> obj) {
     map_objects.push_back(std::move(obj));
 }
 
-bool Map::isAreaBlocked(const AABB& box, float tileSize) const {
+bool Map::isAreaBlocked(const AABB& box) const {
 
-    int minTileX = static_cast<int>(std::floor(box.x / tileSize));
-    int maxTileX = static_cast<int>(std::floor((box.x + box.width) / tileSize));
-    int minTileY = static_cast<int>(std::floor(box.y / tileSize));
-    int maxTileY = static_cast<int>(std::floor((box.y + box.height) / tileSize));
+    int minTileX = static_cast<int>(std::floor(box.x / GameConstants::TILE_SIZE));
+    int maxTileX = static_cast<int>(std::floor((box.x + box.width) / GameConstants::TILE_SIZE));
+    int minTileY = static_cast<int>(std::floor(box.y / GameConstants::TILE_SIZE));
+    int maxTileY = static_cast<int>(std::floor((box.y + box.height) / GameConstants::TILE_SIZE));
 
     for (int ty = minTileY; ty <= maxTileY; ++ty) {
         for (int tx = minTileX; tx <= maxTileX; ++tx) {
@@ -50,10 +50,10 @@ bool Map::isAreaBlocked(const AABB& box, float tileSize) const {
             }
             if (!tile_at(tx, ty).isWalkable()) {
                 AABB tileBox{
-                    static_cast<float>(tx) * tileSize,
-                    static_cast<float>(ty) * tileSize,
-                    tileSize,
-                    tileSize
+                    static_cast<float>(tx) * GameConstants::TILE_SIZE,
+                    static_cast<float>(ty) * GameConstants::TILE_SIZE,
+                    GameConstants::TILE_SIZE,
+                    GameConstants::TILE_SIZE
                 };
                 if (box.intersects(tileBox)) {
                     return true;
@@ -72,7 +72,7 @@ bool Map::isAreaBlocked(const AABB& box, float tileSize) const {
     // tile-grid check above instead, via their footprint's blocking
     // flag — exactly as before this method existed.
     for (const auto& obj : map_objects) {
-        std::optional<AABB> objBox = obj->getCollisionBox(tileSize);
+        std::optional<AABB> objBox = obj->getCollisionBox();
         if (objBox && box.intersects(*objBox)) {
             return true;
         }

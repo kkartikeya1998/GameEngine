@@ -23,7 +23,8 @@ namespace GameConstants {
     inline constexpr int GAME_RESOLUTION_W = TILE_SIZE*12;
     inline constexpr int GAME_RESOLUTION_H = TILE_SIZE*8;
 
-    // Units pixels and seconds    
+    // Units pixels and seconds
+    // works good only for 128 tile size
     inline constexpr float PLAYER_HITBOX_WIDTH = 25.f;
     inline constexpr float PLAYER_HITBOX_HEIGHT = 15.f;
     inline constexpr float PLAYER_HITBOX_OFFSET_X = 0.f;

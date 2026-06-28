@@ -119,14 +119,16 @@
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1087,"y":1007,"w":160,"h":140,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 0, "offset_y": -10, "width": 70, "height": 35}
     },
 
     "SS_Object_TreeStumpShort": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1267,"y":325,"w":120,"h":100,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 15, "offset_y": -20, "width": 70, "height": 25}
     },
 
     "SS_Object_MagicStoneTower": {
@@ -156,7 +158,8 @@
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":323,"y":1847,"w":200,"h":200,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 0, "offset_y": -20, "width": 160, "height": 90}
     },
 
     "SS_Object_BushesLarge": {
@@ -225,14 +228,16 @@
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1087,"y":1231,"w":120,"h":140,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 0, "offset_y": -15, "width": 90, "height": 60}
     },
 
     "SS_Object_TreasureChest": {
       "texture":"assets/objects/SimpleSummer_Objects.png",
       "x":1085,"y":163,"w":200,"h":160,
       "tile_size":256,
-      "footprint":[{"dx":0,"dy":0,"blocking":true}]
+      "footprint":[],
+      "collision_box": {"offset_x": 0, "offset_y": -20, "width": 140, "height": 75}
     },
 
     "SS_Object_Rock01": {

@@ -37,7 +37,7 @@ public:
     // world-space AABB, using tileSize to convert the metadata's
     // tile-fraction units into pixels. Returns nullopt if metadata_ has
     // no collisionBox set.
-    std::optional<AABB> getCollisionBox(float tileSize) const;
+    std::optional<AABB> getCollisionBox() const;
 
 private:
     const ObjectTypeMetadata* metadata_;

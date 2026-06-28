@@ -78,7 +78,7 @@ public:
     // falls outside the map's bounds. tileSize is the caller's render
     // tile size (e.g. SFMLRenderer::TILE_SIZE) — Map stays agnostic of
     // any specific rendering constant, the caller supplies it.
-    bool isAreaBlocked(const AABB& box, float tileSize) const;
+    bool isAreaBlocked(const AABB& box) const;
 
     // void render() const;
 };
