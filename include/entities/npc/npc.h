@@ -1,73 +1,60 @@
 #pragma once
 
-#include <memory>
 #include <string>
 
 #include "entities/Entity.h"
 
 // ---------------------------------------------------------------------------
-// Npc — owns an Entity polymorphically (composition), rather than being one.
+// Npc — MINIMAL PLACEHOLDER, land-now version.
 //
-// WHY COMPOSITION INSTEAD OF "class Npc : public GridEntity" (or FreeEntity):
-// GridEntity and FreeEntity drive fundamentally different animation models
-// (AnimationComponent lerp-to-target vs. WalkCycleTimer elapsed-time —
-// see FreeEntity.h's class comment), so "which movement family" isn't a
-// detail, it's effectively which concrete class the NPC currently is.
-// If Npc inherited from one of them, it could never legitimately become
-// the other at runtime — that would be a Liskov violation (lying about
-// its own type). By holding a pointer-to-base instead, switching which
-// concrete Entity is active is just reassigning a pointer — no lying,
-// no rewrite of GridEntity/FreeEntity/Player required.
+// WHY THIS FILE HAD TO CHANGE EVEN THOUGH NPCs AREN'T BEING BUILT OUT
+// YET: Map.h already unconditionally #includes "entities/npc/Npc.h" and
+// stores std::vector<std::unique_ptr<Npc>> — that wiring predates this
+// redesign. The OLD npc.h called active_->update(dt) with ONE argument;
+// the new Entity::update() requires THREE (dt, inputDir, isBlocked), no
+// defaults. So the old npc.h would fail to compile the instant Entity.h
+// changes, regardless of whether Npc itself is "done" — this isn't
+// optional scope creep, it's the minimum edit required to keep
+// Map/MapLoader/GameController compiling at all.
 //
-// TODAY: active_ is set once at construction and never reassigned.
-// switchMovement() does not exist yet — deliberately. This class is
-// scoped to "NPCs exist, hold a position via whichever movement family
-// fits them individually, and render correctly," per the current pass.
+// This version is deliberately NOT the fuller Npc design (no
+// computeInputDir() seam, no behavior_ comment, no escape-hatch
+// entity() accessor beyond what's needed) — keeping it minimal since
+// you said NPCs are still a dummy with no real constructor. Replace
+// this file with the fuller version (see Npc_full.h provided alongside
+// this) whenever you actually start building NPCs out — that version
+// adds the behavior-driver seam and is a pure addition over this one,
+// not a rewrite.
 //
-// FUTURE SEAM (not implemented): a later pass can add
-//     void switchMovement(std::unique_ptr<Entity> newMode);
-// which would copy position/facing from active_ into newMode (or leave
-// that to the caller) and reassign active_. That method, and whatever
-// behavior_ /fight-mode trigger eventually calls it, are the ONLY things
-// that should need to change later — Map, MapLoader, RenderSystem, and
-// GameController only ever touch Npc through the same getRenderX/Y(),
-// getDirection(), update() surface they already use for Player, and
-// none of them need to know switching is even possible.
-//
-// typeName_ exists for the same reason MapObject::getTypeName() exists:
-// Entity's contract is position + direction, not "what sprite am I" —
-// that lookup key has to live somewhere, and Npc is the minimal class
-// that holds what NPCs need beyond Entity's existing contract.
+// update() forwards Direction::NONE and an always-false isBlocked,
+// since nothing currently drives NPC movement and Map::isAreaBlocked
+// isn't reachable from here without a Map reference. This matches
+// "dummy" exactly: an Npc placed on a map sits still and renders at its
+// spawn position, nothing more.
 // ---------------------------------------------------------------------------
 class Npc {
 public:
-    Npc(std::unique_ptr<Entity> initialMovement, std::string typeName)
-        : active_(std::move(initialMovement))
+    Npc(Entity entity, std::string typeName)
+        : entity_(std::move(entity))
         , typeName_(std::move(typeName))
     {
     }
 
-    // Forwarded surface — identical shape to what RenderSystem/GameController
-    // already call on Player via Entity's virtuals. Callers holding an
-    // Npc& never need to know it's not itself an Entity.
-    void update(float dt) { active_->update(dt); }
+    void update(float dt)
+    {
+        entity_.update(dt, Direction::NONE, [](const AABB&) { return false; });
+    }
 
-    Direction getDirection() const { return active_->getDirection(); }
-    float getRenderX() const { return active_->getRenderX(); }
-    float getRenderY() const { return active_->getRenderY(); }
+    Direction getDirection() const { return entity_.getDirection(); }
+    float getRenderX() const { return entity_.getRenderX(); }
+    float getRenderY() const { return entity_.getRenderY(); }
 
     const std::string& getTypeName() const { return typeName_; }
 
-    // Escape hatch for code that genuinely needs the concrete Entity
-    // (e.g. a future collision query mirroring isPositionBlocked, if
-    // NPCs ever need their own movement validated against the map).
-    Entity& current() { return *active_; }
-    const Entity& current() const { return *active_; }
+    Entity& entity() { return entity_; }
+    const Entity& entity() const { return entity_; }
 
 private:
-    std::unique_ptr<Entity> active_;
+    Entity entity_;
     std::string typeName_;
-
-    // FUTURE: std::unique_ptr<INpcBehavior> behavior_;  // nullptr today.
-    // Not added yet — no behavior system exists to implement it against.
 };

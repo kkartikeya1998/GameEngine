@@ -15,15 +15,22 @@ struct MapMetadata {
 // ---------------------------------------------------------------------------
 // MapLoader — builds Map instances from JSON files on disk.
 //
-// Responsibilities:
-//   - locate map files in maps_folder_
-//   - parse a chosen map's JSON into tiles + placed objects
-//   - apply each placed object's footprint traits onto the resulting tiles
-//   - NEW: parse a chosen map's "npcs" array (if present) into Npc instances
+// CHANGED (this pass): buildNpc's TODO ("GridMovementMechanics
+// constructor signature unconfirmed") is resolved — GridMovementMechanics
+// still takes (x, y, dir), unchanged signature, see
+// GridMovementMechanics.h. What changed is what buildNpc constructs
+// AROUND it: instead of producing an Entity subclass instance, it now
+// assembles an Entity directly from a GridMovementMechanics +
+// AnimationComponentAdapter pair (the grid-movement/grid-render
+// combination, matching "the exact choice GridEntity used to hardcode"
+// — see AnimationComponentAdapter.h), wrapped in an Npc.
 //
-// Object-type metadata loading (object_metadata.json) now lives entirely
-// in MapObjectRepository — MapLoader only triggers it once at construction
-// and never re-implements the parsing itself.
+// Movement-family selection still lives here today as a single fixed
+// choice (grid movement, AnimationComponentAdapter render) — not yet
+// branching on any "movement" JSON field. When that's needed, this is
+// still the one function that grows the branch; Map/RenderSystem/
+// GameController do not change — same design intent as before, now
+// just composing two components instead of picking a subclass.
 // ---------------------------------------------------------------------------
 class MapLoader {
 public:
@@ -45,16 +52,6 @@ private:
                          int originX, int originY,
                          int teleportMapId, int teleportX, int teleportY) const;
 
-    // NEW — sibling helper to applyFootprint, same role one level up:
-    // takes one parsed "npcs" JSON entry's fields and produces an owned
-    // Npc, ready for map.addNpc(). Kept private and file-scoped to
-    // MapLoader, same as applyFootprint, since "JSON field names" should
-    // never leak past this class.
-    //
-    // Movement-family selection lives here today as a single fixed
-    // choice (GridEntity) — not yet branching on any "movement" JSON
-    // field. When that's needed, this is the one function that grows
-    // the branch; Map/RenderSystem/GameController do not change.
     std::unique_ptr<Npc> buildNpc(const std::string& typeName,
                                    int gridX, int gridY) const;
 };

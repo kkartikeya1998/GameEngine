@@ -1,7 +1,6 @@
 #pragma once
 
-class Player; // forward declaration
-
+#include "entities/player/Player.h"
 // ---------------------------------------------------------------------------
 // IInteractable — capability interface for tiles the player can interact
 // with (sign posts, NPCs standing on a tile, item pickups, doors).
@@ -12,5 +11,5 @@ class Player; // forward declaration
 class IInteractable {
 public:
     virtual ~IInteractable() = default;
-    virtual void interact(Player& player) = 0;
+    virtual void interact(Entity& entity) = 0;
 };

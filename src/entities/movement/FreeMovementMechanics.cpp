@@ -1,5 +1,4 @@
 #include "entities/movement/FreeMovementMechanics.h"
-#include <iostream>
 
 FreeMovementMechanics::FreeMovementMechanics(float x, float y,
                                               float speed,
@@ -15,14 +14,8 @@ FreeMovementMechanics::FreeMovementMechanics(float x, float y,
 {
 }
 
-
 AABB FreeMovementMechanics::hitboxAt(float x, float y) const
 {
-    // offsetX_/offsetY_ displace the box's bottom-center from (x, y) —
-    // same role as ObjectTypeMetadata::CollisionBox's offsetX/offsetY
-    // displacing from an object's origin. Default {0,0} reproduces the
-    // exact previous behavior (box bottom-center == position) for every
-    // existing caller.
     float boxBottomCenterX = x + offsetX_;
     float boxBottomCenterY = y + offsetY_;
 
@@ -33,8 +26,9 @@ AABB FreeMovementMechanics::hitboxAt(float x, float y) const
         hitboxHeight_
     };
 }
-Position2D FreeMovementMechanics::update(float dt, Direction inputDir,
-                                          const std::function<bool(const AABB&)>& isBlocked)
+
+void FreeMovementMechanics::update(float dt, Direction inputDir,
+                                    const std::function<bool(const AABB&)>& isBlocked)
 {
     float dx = 0.f, dy = 0.f;
 
@@ -52,9 +46,6 @@ Position2D FreeMovementMechanics::update(float dt, Direction inputDir,
 
     bool moved = false;
 
-    // Resolve X and Y independently so the entity slides along an
-    // obstruction instead of stopping outright when only one axis is
-    // blocked (e.g. walking diagonally into a wall corner).
     if (dx != 0.f) {
         AABB testX = hitboxAt(position_.x + dx, position_.y);
         if (!isBlocked(testX)) {
@@ -70,33 +61,22 @@ Position2D FreeMovementMechanics::update(float dt, Direction inputDir,
             moved = true;
         }
     }
-    
+
     wasMoving_ = moved;
-    return position_;
 }
 
-Position2D FreeMovementMechanics::getPosition() const
-{
-    return position_;
-}
-
-void FreeMovementMechanics::setPosition(float x, float y)
-{
-    position_.x = x;
-    position_.y = y;
-}
-
-Direction FreeMovementMechanics::getFacing() const
-{
-    return position_.dir;
-}
+float FreeMovementMechanics::getX() const { return position_.x; }
+float FreeMovementMechanics::getY() const { return position_.y; }
+Direction FreeMovementMechanics::getFacing() const { return position_.dir; }
+bool FreeMovementMechanics::isMoving() const { return wasMoving_; }
 
 AABB FreeMovementMechanics::getHitbox() const
 {
     return hitboxAt(position_.x, position_.y);
 }
 
-bool FreeMovementMechanics::isMoving() const
+void FreeMovementMechanics::setPosition(float x, float y)
 {
-    return wasMoving_;
+    position_.x = x;
+    position_.y = y;
 }
