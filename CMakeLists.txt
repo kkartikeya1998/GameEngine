@@ -37,8 +37,12 @@ add_executable(PokemonProject
     
 
     
-    src/entities/movement/GridMovementMechanics.cpp
-    src/entities/movement/FreeMovementMechanics.cpp
+    # src/entities/movement/GridMovementMechanics.cpp
+    # src/entities/movement/FreeMovementMechanics.cpp
+    src/system/MovementSystem.cpp
+    src/system/RenderStateSystem.cpp
+    src/system/MapObjectSystem.cpp
+
     src/entities/animation/AnimationComponent.cpp
 
 

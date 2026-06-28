@@ -32,10 +32,6 @@ void Map::set_tile(int x, int y, Terrain::Type terrain, std::string typeName) {
     tiles[index(x, y)] = Tile(terrain, std::move(typeName));
 }
 
-void Map::addMapObject(std::unique_ptr<MapObject> obj) {
-    map_objects.push_back(std::move(obj));
-}
-
 bool Map::isAreaBlocked(const AABB& box) const {
 
     int minTileX = static_cast<int>(std::floor(box.x / GameConstants::TILE_SIZE));
@@ -72,7 +68,12 @@ bool Map::isAreaBlocked(const AABB& box) const {
     // tile-grid check above instead, via their footprint's blocking
     // flag — exactly as before this method existed.
     for (const auto& obj : map_objects) {
-        std::optional<AABB> objBox = obj->getCollisionBox();
+        
+        const auto* render = obj->get<MapObjectRenderComponent>();
+        if (!render) continue;
+
+        std::optional<AABB> objBox = MapObjectSystem::getCollisionBox(*render);
+
         if (objBox && box.intersects(*objBox)) {
             return true;
         }

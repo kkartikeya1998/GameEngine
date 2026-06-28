@@ -5,33 +5,43 @@
 
 #include "world/World.h"
 #include "asset/MapObjectRepository.h"
+#include "entities/Entity.h"
 #include "entities/player/Player.h"
+
 // ---------------------------------------------------------------------------
 // GameController — manages World and Player lifecycle.
 //
-// CHANGED (this pass): Player is now `using Player = Entity;` (see
-// Player.h) — player_'s declared type and getPlayer()'s return type are
-// UNCHANGED at the syntax level; only what "Player" means underneath
-// changed. updatePlayerMovement(dt, inputDir) now forwards straight into
-// Entity::update(dt, inputDir, isBlocked) — Entity itself owns calling
-// the right IMovementBehavior, so this method's body shrinks to "build
-// isBlocked, forward."
+// CHANGED (ECS pass): Player is no longer a type at all (see Player.h —
+// `using Player = Entity;` is gone, replaced by makePlayer() returning
+// a plain Entity tagged with PlayerControlComponent). player_'s
+// declared type changes from Player to Entity; getPlayer()'s return
+// type changes from Player* to Entity*. Every external caller that
+// held a `Player*` (RenderSystem.cpp chiefly) now holds `Entity*` and
+// reads whatever components it needs via get<T>() — see
+// RenderSystem.cpp's ported version.
 //
-// CHANGED: update(dt)'s NPC loop now calls npc->update(dt, isBlocked) —
-// two args instead of one. NPCs are full Entities now (movement-capable,
-// not just animated-in-place dummies), so they need the same collision
-// query Player does. They are NOT given live input (see Npc::update /
-// computeInputDir — always Direction::NONE today, since no behavior
-// driver exists yet), so in practice every NPC currently just stands
-// still and lets its IRenderState idle — identical visible behavior to
-// before this change, just routed through the now-uniform Entity
-// update() signature instead of a a no-collision shortcut.
+// updatePlayerMovement(dt, inputDir) now looks up player_'s
+// FreeMovementComponent directly and calls
+// MovementSystem::updateFree() on it — there is no more
+// Entity::update() method to forward to (Entity holds no behavior of
+// its own anymore), so GameController is now the place that decides
+// WHICH movement system function to call. For player_ specifically
+// this is always updateFree() (player_ is always built by makePlayer,
+// which only ever attaches FreeMovementComponent) — no dispatch
+// needed, unlike the NPC loop below.
 //
-// isPositionBlocked is now reused for BOTH player and NPCs (previously
-// it served the player-only collision query) — it's already
-// Map-and-TILE_SIZE-driven and has no player-specific assumption in it,
-// so no change to its own implementation is needed, only that more
-// callers now share it.
+// update(dt)'s NPC loop dispatches per-NPC by which movement component
+// is actually present (GridMovementComponent vs FreeMovementComponent),
+// since NPCs are no longer guaranteed to be one specific kind the way
+// player_ is. Today this is moot (no NPC behavior driver exists yet,
+// so every NPC's update call always receives Direction::NONE — same
+// "stands still" visible behavior as before this change), but the
+// dispatch is real and will matter the moment NPCs gain a behavior
+// driver, without GameController needing to change again then.
+//
+// isPositionBlocked is unchanged — still Map-and-TILE_SIZE-driven, no
+// player-specific assumption, shared by player_ and every NPC exactly
+// as before.
 // ---------------------------------------------------------------------------
 class GameController
 {
@@ -41,7 +51,7 @@ public:
                    MapObjectRepository &objectRepository);
 
     World *getWorld() { return &world_; }
-    Player *getPlayer() { return &player_; }
+    Entity *getPlayer() { return &player_; }
     Map *getActiveMap() { return world_.getActiveMap(); }
 
     // Called every frame (not just on keypress) with the currently held
@@ -52,35 +62,13 @@ public:
     // TeleportPoint). Repositions player on the new map.
     void changeMap(int mapId, int newX, int newY);
 
-    void update(float dt)
-    {
-        // Player's own movement input is applied via
-        // updatePlayerMovement (called separately, before this, from
-        // Game::run() — see Game.cpp's existing call order). This loop
-        // only drives NPCs; player_ already got its update() call this
-        // frame via updatePlayerMovement.
-        //
-        // npc->update(dt) — ONE arg, matching the land-now placeholder
-        // Npc.h (see entities/npc/Npc.h comment). When NPCs become real
-        // (behavior-driven movement), this becomes
-        // npc->update(dt, [this](const AABB& box) { return isPositionBlocked(box); })
-        // — that's the one line to change here; nothing else in
-        // GameController needs to.
-        if (Map *activeMap = world_.getActiveMap())
-        {
-            for (auto &npc : activeMap->getNpcs())
-            {
-                npc->update(dt);
-            }
-        }
-    }
+    void update(float dt);
 
 private:
     World world_;
-    Player player_;
+    Entity player_;
 
-    // Builds the AABB-overlap collision query any Entity's
-    // IMovementBehavior needs (player or NPC), backed by the active
-    // map's tile data.
+    // Builds the AABB-overlap collision query any movement component
+    // needs (player or NPC), backed by the active map's tile data.
     bool isPositionBlocked(const AABB &box) const;
 };

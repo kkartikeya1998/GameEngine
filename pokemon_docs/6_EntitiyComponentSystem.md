@@ -1,3 +1,6 @@
 Right now I have weird inheritance in my system with Entity -> FreeEntity -> Player specialization. Inheritance tree growing. Bad bad smell. Need a more generalised behaviour. Also many Player behaviours and attributes are shared by other things like the MapObjects, NPCs (in the future) etc.
 
-Time to adopt Entity-Component part of the Entity-Component system. Components will be the behaviours and attributes grouped by their purpose. For now components can be IRenderState, Movement mechanics. Entities can be Player and NPCs, and mapobjects in the next step. Pros? Swappable behaviour at runtime, reuse of code for different entities (might need some refactoring. 
+Time to adopt Entity-Component part of the Entity-Component system. Components will be the behaviours and attributes grouped by their purpose. For now components can be IRenderState, Movement mechanics. Entities can be Player and NPCs, and mapobjects in the next step. Pros? Swappable behaviour at runtime, reuse of code for different entities (might need some refactoring.
+
+A good read to understand the split better:
+https://www.umlboard.com/design-patterns/entity-component-system.html

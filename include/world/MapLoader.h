@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "world/Map.h"
+#include "entities/Entity.h"
 #include "asset/MapObjectRepository.h"
 
 struct MapMetadata {
@@ -15,22 +16,23 @@ struct MapMetadata {
 // ---------------------------------------------------------------------------
 // MapLoader — builds Map instances from JSON files on disk.
 //
-// CHANGED (this pass): buildNpc's TODO ("GridMovementMechanics
-// constructor signature unconfirmed") is resolved — GridMovementMechanics
-// still takes (x, y, dir), unchanged signature, see
-// GridMovementMechanics.h. What changed is what buildNpc constructs
-// AROUND it: instead of producing an Entity subclass instance, it now
-// assembles an Entity directly from a GridMovementMechanics +
-// AnimationComponentAdapter pair (the grid-movement/grid-render
-// combination, matching "the exact choice GridEntity used to hardcode"
-// — see AnimationComponentAdapter.h), wrapped in an Npc.
+// CHANGED (ECS pass): GridMovementMechanics, FreeMovementMechanics, and
+// AnimationComponentAdapter (referenced in this header's older comment
+// block, now stale) no longer exist as classes — see
+// system/MovementSystem.h and system/RenderStateSystem.h, where their
+// logic moved to. buildNpc's return type changes from
+// std::unique_ptr<Npc> (Npc is also gone — see entities/npc/
+// NpcComponent.h) to std::unique_ptr<Entity>.
 //
-// Movement-family selection still lives here today as a single fixed
-// choice (grid movement, AnimationComponentAdapter render) — not yet
-// branching on any "movement" JSON field. When that's needed, this is
-// still the one function that grows the branch; Map/RenderSystem/
-// GameController do not change — same design intent as before, now
-// just composing two components instead of picking a subclass.
+// IMPORTANT: buildNpc has NO DEFINITION in the .cpp I was given — it's
+// declared here but was never implemented or called anywhere in the
+// loadMapById body shown to me (no "npcs" JSON key is read there
+// either). This is NOT something I ported, because there was no body
+// to port. The declaration below is updated only so this header
+// compiles against the new Entity-based world; if you actually want
+// NPCs loaded from map JSON, this function's BODY still needs to be
+// written from scratch — see the comment on its declaration below for
+// what that body would need to build.
 // ---------------------------------------------------------------------------
 class MapLoader {
 public:
@@ -52,6 +54,11 @@ private:
                          int originX, int originY,
                          int teleportMapId, int teleportX, int teleportY) const;
 
-    std::unique_ptr<Npc> buildNpc(const std::string& typeName,
-                                   int gridX, int gridY) const;
+    // UNIMPLEMENTED — see class comment above. Would need to build an
+    // Entity carrying a movement component (GridMovementComponent for
+    // gridX/gridY), a matching render component (GridRenderComponent),
+    // and an NpcComponent{typeName}, then return it for
+    // loadMapById to pass to map->addNpc(...).
+    std::unique_ptr<Entity> buildNpc(const std::string& typeName,
+                                       int gridX, int gridY) const;
 };

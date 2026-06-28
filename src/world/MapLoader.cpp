@@ -1,7 +1,8 @@
 #include "world/MapLoader.h"
 #include "world/Terrain.h"
 #include "world/Map.h"
-#include "world/MapObject.h"
+#include "entities/Entity.h"
+#include "world/MapObjectRenderComponent.h"
 #include "system/GameConstants.h"
 
 #include <cmath>
@@ -183,16 +184,24 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
             applyFootprint(*map, *meta, originX, originY,
                             teleportMapId, teleportX, teleportY);
 
-            map->addMapObject(
-                std::make_unique<MapObject>(
-                    meta,
-                    originX,
-                    originY,
-                    teleportMapId,
-                    teleportX,
-                    teleportY
-                )
-            );
+            // CHANGED (ECS pass): no more std::make_unique<MapObject>.
+            // MapObject is gone as a class — a MapObject "is" now just
+            // an Entity carrying a MapObjectRenderComponent with
+            // exactly the same fields MapObject's constructor used to
+            // take. See entities/MapObjectRenderComponent.h and
+            // system/MapObjectSystem.h for where its old methods moved
+            // to.
+            auto entity = std::make_unique<Entity>();
+            entity->add<MapObjectRenderComponent>(MapObjectRenderComponent{
+                meta,
+                originX,
+                originY,
+                teleportMapId,
+                teleportX,
+                teleportY
+            });
+
+            map->addMapObject(std::move(entity));
         }
     }
 

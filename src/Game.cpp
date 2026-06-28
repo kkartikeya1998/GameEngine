@@ -90,8 +90,13 @@ void Game::run()
 
             controller_.update(dt);
 
-            // RENDER
-            renderSystem_->render(controller_);
+            // RENDER — now takes dt: RenderSystem steps each entity's
+            // render-state component (lerp progress / walk-cycle
+            // elapsed time) inline as part of drawing, a deliberate
+            // tradeoff made when folding render-state stepping into
+            // render() instead of a separate per-frame system pass.
+            // See RenderSystem.cpp's ECS-ported version.
+            renderSystem_->render(controller_, dt);
         }
 
     } catch (const std::exception& e) {

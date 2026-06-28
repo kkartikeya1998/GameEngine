@@ -1,98 +1,112 @@
 #pragma once
 
 #include <memory>
-
-#include "entities/movement/IMovementBehavior.h"
-#include "render/IRenderState.h"
+#include <typeindex>
+#include <unordered_map>
+#include <utility>
 
 // ---------------------------------------------------------------------------
-// Entity — anything on the map with a position, facing, and a way to be
-// drawn: Player, Npc, and (in the future, once it needs to animate or be
-// queried uniformly) MapObject.
+// Entity — a lightweight, open-ended bag of components, keyed by type.
 //
-// REPLACES the old Entity / GridEntity / FreeEntity / Player inheritance
-// chain. There is now exactly ONE concrete Entity class. What used to be
-// "which subclass do I pick" is now "which TWO components do I inject":
+// REPLACES the previous Entity, which hardcoded exactly two named
+// strategy slots (IMovementBehavior, IRenderState). That shape is what
+// made `Player` need to be a type alias (no room to attach
+// player-only data) and made `MapObject` unable to become an Entity
+// (no movement to inject, but the old constructor required one).
 //
-//   - IMovementBehavior: GridMovementMechanics or FreeMovementMechanics
-//     (or a future third kind) — decides how position changes.
-//   - IRenderState: AnimationComponentAdapter or WalkCycleTimerAdapter
-//     (or a future SCML-backed kind) — decides how logical position
-//     becomes a render position + animation progress.
+// Entity itself holds NO behavior and NO movement/render logic — those
+// now live in free functions / Systems (MovementSystem, RenderSystem)
+// that take an Entity& and look up whichever components they need via
+// get<T>(). Components are pure data (see GridMovementComponent,
+// FreeMovementComponent, GridRenderComponent, FreeRenderComponent,
+// PlayerControlComponent, NpcComponent, etc.) — the logic that used to
+// live inside IMovementBehavior/IRenderState implementations now lives
+// in MovementSystem/RenderSystem instead.
 //
-// These two axes are now INDEPENDENT. A grid-moving NPC can use
-// WalkCycleTimerAdapter, or a future SCML adapter, without anyone
-// writing a new Entity subclass — this is the actual problem the old
-// GridEntity/FreeEntity split could not solve (movement-family and
-// render-family were welded together by which subclass you derived
-// from).
+// add<T>() constructs and stores exactly one T per Entity — adding a
+// second T overwrites/destroys the first, same as an Entity never
+// having had two IMovementBehaviors before. Need two conceptually
+// different "movement kinds" on the table at once? That's two
+// distinct component TYPES (GridMovementComponent vs
+// FreeMovementComponent), not two instances of one type.
 //
-// Player and Npc are no longer types — see Player.h (now a factory
-// function) and Npc.h (now a thin wrapper holding an Entity plus
-// NPC-only data, with the unique_ptr<Entity>-by-pointer indirection
-// removed, since Entity itself can now represent any movement+render
-// combination directly — no Liskov concern remains, since switching
-// "type" was never actually needed at the Entity level once
-// movement/render are swappable members rather than the class itself).
+// get<T>() returns nullptr if the component isn't present. Systems are
+// expected to check before using:
 //
-// update(dt) drives BOTH components every frame: movement first (so its
-// resulting logical position is current), then render state (fed that
-// fresh logical position + isMoving). This ordering matters — render
-// state must always see THIS frame's already-resolved position, never
-// last frame's.
+//   if (auto* m = entity.get<FreeMovementComponent>()) { ... }
+//
+// This is what lets MapObject skip movement entirely, and lets
+// Player/NPC share the same systems despite having different
+// movement-component types attached.
 // ---------------------------------------------------------------------------
 class Entity {
 public:
-    Entity(std::unique_ptr<IMovementBehavior> movement,
-           std::unique_ptr<IRenderState> renderState)
-        : movement_(std::move(movement))
-        , renderState_(std::move(renderState))
+    Entity() = default;
+
+    // Movable, not copyable — each component is owned via a type-erased
+    // owning slot (IComponentHolder below), same single-owner shape the
+    // old unique_ptr<IMovementBehavior>/<IRenderState> members had.
+    Entity(Entity&&) = default;
+    Entity& operator=(Entity&&) = default;
+    Entity(const Entity&) = delete;
+    Entity& operator=(const Entity&) = delete;
+    ~Entity() = default;
+
+    template <typename T, typename... Args>
+    T& add(Args&&... args)
     {
+        auto owned = std::make_unique<T>(std::forward<Args>(args)...);
+        T& ref = *owned;
+        components_[std::type_index(typeid(T))] =
+            std::make_unique<ComponentHolder<T>>(std::move(owned));
+        return ref;
     }
 
-    // Called every frame, unconditionally, for every entity (Player,
-    // every Npc). inputDir is NONE for any entity not currently being
-    // driven by live input this frame — for Player that's "no key
-    // held," for Npc today that's ALWAYS NONE (no behavior driver
-    // exists yet — see Npc.h). isBlocked is built by the caller
-    // (GameController) from the active Map.
-    void update(float dt, Direction inputDir,
-                const std::function<bool(const AABB&)>& isBlocked)
+    template <typename T>
+    T* get()
     {
-        movement_->update(dt, inputDir, isBlocked);
-        renderState_->update(dt, movement_->getX(), movement_->getY(), movement_->isMoving());
+        auto it = components_.find(std::type_index(typeid(T)));
+        if (it == components_.end())
+            return nullptr;
+        return static_cast<ComponentHolder<T>*>(it->second.get())->value.get();
     }
 
-    Direction getDirection() const { return movement_->getFacing(); }
+    template <typename T>
+    const T* get() const
+    {
+        auto it = components_.find(std::type_index(typeid(T)));
+        if (it == components_.end())
+            return nullptr;
+        return static_cast<const ComponentHolder<T>*>(it->second.get())->value.get();
+    }
 
-    float getRenderX() const { return renderState_->getRenderX(); }
-    float getRenderY() const { return renderState_->getRenderY(); }
+    template <typename T>
+    bool has() const
+    {
+        return components_.find(std::type_index(typeid(T))) != components_.end();
+    }
 
-    // Logical (non-interpolated) position — grid index as float for
-    // grid entities, live continuous position for free entities. For
-    // anything that needs the EXACT grid index (footprint/tile logic),
-    // downcast via movement() to the concrete GridMovementMechanics and
-    // call getGridX()/getGridY() instead — same escape-hatch pattern as
-    // before.
-    float getX() const { return movement_->getX(); }
-    float getY() const { return movement_->getY(); }
-
-    AABB getHitbox() const { return movement_->getHitbox(); }
-    bool isMoving() const { return movement_->isMoving(); }
-
-    // 0..1 progress for frame selection — meaning depends on which
-    // IRenderState is active (see IRenderState.h). Replaces the old
-    // split between Entity::getAnimationProgress() (grid) and
-    // FreeEntity::getWalkProgress() (free) with one name.
-    float getAnimProgress() const { return renderState_->getProgress(); }
-
-    IMovementBehavior& movement() { return *movement_; }
-    const IMovementBehavior& movement() const { return *movement_; }
-
-    IRenderState& renderState() { return *renderState_; }
-    const IRenderState& renderState() const { return *renderState_; }
+    template <typename T>
+    void remove()
+    {
+        components_.erase(std::type_index(typeid(T)));
+    }
 
 private:
-    std::unique_ptr<IMovementBehavior> movement_;
-    std::unique_ptr<IRenderState> renderState_;
+    // Type-erased base so ~IComponentHolder() virtual-dispatches to the
+    // right ~ComponentHolder<T>(), which destroys the right T — this is
+    // the standard "type-erased owning slot" pattern, and the whole
+    // reason unique_ptr<void> alone doesn't work here (void has no
+    // destructor to dispatch to).
+    struct IComponentHolder {
+        virtual ~IComponentHolder() = default;
+    };
+
+    template <typename T>
+    struct ComponentHolder : IComponentHolder {
+        explicit ComponentHolder(std::unique_ptr<T> v) : value(std::move(v)) {}
+        std::unique_ptr<T> value;
+    };
+
+    std::unordered_map<std::type_index, std::unique_ptr<IComponentHolder>> components_;
 };

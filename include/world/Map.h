@@ -5,40 +5,49 @@
 #include <vector>
 
 #include "Tile.h"
-#include "MapObject.h"
+#include "Terrain.h"
+#include "entities/Entity.h"
 #include "entities/movement/Position2D.h"
-#include "entities/npc/Npc.h" // NEW
+#include "render/FreeRenderComponent.h"
+#include "system/MapObjectSystem.h"
+#include "system/GameConstants.h"
+
 // ---------------------------------------------------------------------------
 // Map — pure in-memory representation of a loaded map.
 //
-// Holds tiles and placed objects. Knows nothing about laoding from
+// Holds tiles and placed objects. Knows nothing about loading from
 // file. Building a Map from a file is MapLoader's job.
 //
-// Construction:
-//   Map is built empty via the constructor (just dimensions), then filled
-//   in by MapLoader via set_tile() and addMapObject(). This makes Map
-//   trivially testable without ever touching a file.
+// CHANGED (ECS pass): map_objects and npcs_ both become
+// std::vector<std::unique_ptr<Entity>>, collapsed from two separately-
+// typed collections (vector<unique_ptr<MapObject>>,
+// vector<unique_ptr<Npc>>) into one shape. MapObject and Npc are no
+// longer classes — see entities/MapObjectRenderComponent.h and
+// entities/npc/NpcComponent.h. What used to distinguish "this is a
+// MapObject" from "this is an Npc" by TYPE is now distinguished by
+// WHICH COMPONENTS the Entity carries (MapObjectRenderComponent vs.
+// NpcComponent + a movement component) — same data, same two
+// conceptually-different kinds of things, just no longer needing two
+// different container element types to express that difference.
 //
-// ADDED: isAreaBlocked. Map has no concept of pixel sizes anywhere else
-// (tile_at takes grid coordinates throughout) — tileSize is passed in by
-// the caller (the renderer's TILE_SIZE constant) rather than Map owning
-// or knowing about a rendering constant. This is the one query continuous
-// (free) movement needs that grid movement never did: "does this
-// world-space box overlap any blocking tile," rather than "is this one
-// specific grid cell walkable."
+// addMapObject/getMapObjects and addNpc/getNpcs are KEPT AS TWO
+// SEPARATE METHOD PAIRS (not collapsed into one addEntity/getEntities)
+// deliberately — MapLoader's call sites already know which kind of
+// thing they're building, and collapsing the two would just mean every
+// caller needs to re-derive "is this a map object or an npc" from
+// component presence instead of from which method it already called.
+// No second use case has shown up yet that wants a single uniform
+// "all entities on this map" query, so per the linear-curve precedent
+// this stays as two pairs until one does.
 //
-// NEW: npcs_ — a second owned collection, sibling to map_objects, NOT
-// merged into it. MapObject has no update()/movement mechanic/position
-// concept beyond a fixed origin; Npc does. Keeping them as two distinct
-// collections on the same Map reflects that these are two genuinely
-// different kinds of things that happen to both live spatially on a
-// map, rather than forcing one container to serve two contracts.
+// isAreaBlocked is UNCHANGED — pixel-space collision query, no
+// MapObject/Npc-shape dependency.
 // ---------------------------------------------------------------------------
 class Map {
 private:
     std::vector<Tile> tiles;
-    std::vector<std::unique_ptr<MapObject>> map_objects;
-    std::vector<std::unique_ptr<Npc>> npcs_; // NEW
+    std::vector<std::unique_ptr<Entity>> map_objects;
+    std::vector<std::unique_ptr<Entity>> npcs_;
 
     int width{0};
     int height{0};
@@ -56,21 +65,26 @@ public:
     const Tile& tile_at(int x, int y) const;
     void set_tile(int x, int y, Terrain::Type terrain, std::string typeName);
 
-    // Takes ownership of a fully-constructed MapObject (built by MapLoader).
-    void addMapObject(std::unique_ptr<MapObject> obj);
+    // Takes ownership of a fully-constructed MapObject Entity (built by
+    // MapLoader — see MapLoader::buildMapObject, which attaches
+    // MapObjectRenderComponent and optionally ColliderComponent/
+    // TeleportComponent).
+    void addMapObject(std::unique_ptr<Entity> obj) {
+        map_objects.push_back(std::move(obj));
+    }
 
-    const std::vector<std::unique_ptr<MapObject>>& getMapObjects() const {
+    const std::vector<std::unique_ptr<Entity>>& getMapObjects() const {
         return map_objects;
     }
 
-    // NEW — same ownership pattern as addMapObject/getMapObjects above.
-    // A map with no "npcs" entry in its JSON simply never calls this;
-    // npcs_ stays empty, identical to today's behavior.
-    void addNpc(std::unique_ptr<Npc> npc) {
+    // Takes ownership of a fully-constructed NPC Entity (built by
+    // MapLoader::buildNpc, which attaches a movement component +
+    // a render component + NpcComponent).
+    void addNpc(std::unique_ptr<Entity> npc) {
         npcs_.push_back(std::move(npc));
     }
 
-    const std::vector<std::unique_ptr<Npc>>& getNpcs() const {
+    const std::vector<std::unique_ptr<Entity>>& getNpcs() const {
         return npcs_;
     }
 
@@ -80,5 +94,4 @@ public:
     // any specific rendering constant, the caller supplies it.
     bool isAreaBlocked(const AABB& box) const;
 
-    // void render() const;
 };

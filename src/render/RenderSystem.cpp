@@ -1,4 +1,13 @@
 #include "render/RenderSystem.h"
+#include "system/RenderStateSystem.h"
+#include "system/MovementSystem.h"
+#include "system/MapObjectSystem.h"
+#include "entities/movement/GridMovementComponent.h"
+#include "entities/movement/FreeMovementComponent.h"
+#include "render/GridRenderComponent.h"
+#include "render/FreeRenderComponent.h"
+#include "world/MapObjectRenderComponent.h"
+#include <optional>
 #include <algorithm>
 #include <vector>
 #include <functional>
@@ -19,14 +28,12 @@ RenderSystem::RenderSystem(std::unique_ptr<IRenderer> renderer)
     }
 }
 
-void RenderSystem::render(GameController& controller)
+void RenderSystem::render(GameController& controller, float dt)
 {
     renderer_->clear();
 
     World* world = controller.getWorld();
-    auto* player = controller.getPlayer();
-
-    std::cout << "Player" << player->getRenderX() << "\n";
+    Entity* player = controller.getPlayer();
 
     if (!world || !player) {
         renderer_->present();
@@ -45,9 +52,19 @@ void RenderSystem::render(GameController& controller)
         std::vector<Renderable> renderables;
         renderables.reserve(map->getMapObjects().size() + map->getNpcs().size() + 1);
 
+        // ---- Map objects --------------------------------------------
+        // Restored to match the original logic exactly, now that
+        // MapObjectSystem::getCollisionBox is a verified port of
+        // MapObject::getCollisionBox (see MapObjectSystem.cpp —
+        // numerically confirmed identical to the original by test).
+        // depthY uses the collision box's bottom edge when present,
+        // falling back to raw originY otherwise — same as before this
+        // ECS pass ever started.
         for (const auto& obj : map->getMapObjects()) {
-            const auto* raw = obj.get();
-            std::optional<AABB> collisionBox = raw->getCollisionBox();
+            const auto* render = obj->get<MapObjectRenderComponent>();
+            if (!render) continue;
+
+            std::optional<AABB> collisionBox = MapObjectSystem::getCollisionBox(*render);
 
             if (collisionBox) {
                 renderer_->drawDebugRect(collisionBox->x, collisionBox->y, collisionBox->width, collisionBox->height);
@@ -55,49 +72,92 @@ void RenderSystem::render(GameController& controller)
 
             float depthY = collisionBox
                 ? (collisionBox->y + collisionBox->height)
-                : static_cast<float>(raw->getOriginPixelY());
+                : static_cast<float>(MapObjectSystem::getOriginPixelY(*render));
 
-            float originX = static_cast<float>(raw->getOriginPixelX());
-            float originY = static_cast<float>(raw->getOriginPixelY());
-            std::string typeName = raw->getTypeName();
+            float originX = static_cast<float>(MapObjectSystem::getOriginPixelX(*render));
+            float originY = static_cast<float>(MapObjectSystem::getOriginPixelY(*render));
+            std::string typeName = MapObjectSystem::getTypeName(*render);
 
             renderables.push_back(Renderable{
                 depthY,
-                [this, originX, originY, typeName = std::move(typeName)]() {
+                [this, originX, originY, typeName]() {
                     renderer_->drawMapObject(originX, originY, typeName);
                 }
             });
         }
 
-        // for (const auto& npc : map->getNpcs()) {
-        //     Entity* raw = npc.get();
+        // ---- NPCs -----------------------------------------------------
+        // Dispatches on which movement/render component pair an NPC
+        // Entity actually has, mirroring how Player is handled below.
+        // Both branches step render state inline (the chosen tradeoff:
+        // render() mutates lerp/walk-cycle state as a side effect of
+        // drawing).
+        for (const auto& npcEntity : map->getNpcs()) {
+            if (auto* grid = npcEntity->get<GridMovementComponent>()) {
+                auto* gridRender = npcEntity->get<GridRenderComponent>();
+                if (!gridRender) continue;
 
-        //     float renderX = raw->getRenderX();
-        //     float renderY = raw->getRenderY();
-        //     Direction facing = raw->getDirection();
-        //     float animProgress = raw->getAnimProgress();
+                RenderStateSystem::stepGridRender(
+                    *gridRender, dt,
+                    static_cast<float>(grid->gridX), static_cast<float>(grid->gridY));
 
-        //     renderables.push_back(Renderable{
-        //         renderY,
-        //         [this, renderX, renderY, facing, animProgress]() {
-        //             renderer_->drawPlayer(renderX, renderY, facing, animProgress);
-        //         }
-        //     });
-        // }
+                float renderX = gridRender->renderX;
+                float renderY = gridRender->renderY;
+                Direction facing = grid->facing;
+                float progress = gridRender->progress;
 
-        AABB playerBox = player->getHitbox();
-        renderer_->drawDebugRect(playerBox.x, playerBox.y, playerBox.width, playerBox.height);
+                renderables.push_back(Renderable{
+                    renderY,
+                    [this, renderX, renderY, facing, progress]() {
+                        renderer_->drawPlayer(renderX, renderY, facing, progress);
+                    }
+                });
+            } else if (auto* free = npcEntity->get<FreeMovementComponent>()) {
+                auto* freeRender = npcEntity->get<FreeRenderComponent>();
+                if (!freeRender) continue;
 
-        {
-            float renderX = player->getRenderX();
-            float renderY = player->getRenderY();
-            Direction facing = player->getDirection();
-            float animProgress = player->getAnimProgress();
+                RenderStateSystem::stepFreeRender(
+                    *freeRender, dt,
+                    free->x, free->y, free->isMoving);
+
+                float renderX = freeRender->renderX;
+                float renderY = freeRender->renderY;
+                Direction facing = free->facing;
+                float progress = RenderStateSystem::getFreeProgress(*freeRender);
+
+                renderables.push_back(Renderable{
+                    renderY,
+                    [this, renderX, renderY, facing, progress]() {
+                        renderer_->drawPlayer(renderX, renderY, facing, progress);
+                    }
+                });
+            }
+        }
+
+        // ---- Player -----------------------------------------------------
+        // Player is a FreeMovementComponent + FreeRenderComponent
+        // entity, same as before (makePlayer only ever built
+        // FreeMovementMechanics) — see Player.h.
+        auto* playerMove = player->get<FreeMovementComponent>();
+        auto* playerRender = player->get<FreeRenderComponent>();
+
+        if (playerMove && playerRender) {
+            AABB playerBox = MovementSystem::getFreeHitbox(*playerMove);
+            renderer_->drawDebugRect(playerBox.x, playerBox.y, playerBox.width, playerBox.height);
+
+            RenderStateSystem::stepFreeRender(
+                *playerRender, dt,
+                playerMove->x, playerMove->y, playerMove->isMoving);
+
+            float renderX = playerRender->renderX;
+            float renderY = playerRender->renderY;
+            Direction facing = playerMove->facing;
+            float progress = RenderStateSystem::getFreeProgress(*playerRender);
 
             renderables.push_back(Renderable{
                 playerBox.y + playerBox.height,
-                [this, renderX, renderY, facing, animProgress]() {
-                    renderer_->drawPlayer(renderX, renderY, facing, animProgress);
+                [this, renderX, renderY, facing, progress]() {
+                    renderer_->drawPlayer(renderX, renderY, facing, progress);
                 }
             });
         }
@@ -111,12 +171,16 @@ void RenderSystem::render(GameController& controller)
             r.draw();
         }
     } else {
-        renderer_->drawPlayer(
-            player->getRenderX(),
-            player->getRenderY(),
-            player->getDirection(),
-            player->getAnimProgress()
-        );
+        auto* playerMove = player->get<FreeMovementComponent>();
+        auto* playerRender = player->get<FreeRenderComponent>();
+        if (playerMove && playerRender) {
+            renderer_->drawPlayer(
+                playerRender->renderX,
+                playerRender->renderY,
+                playerMove->facing,
+                RenderStateSystem::getFreeProgress(*playerRender)
+            );
+        }
     }
 
     renderer_->present();
