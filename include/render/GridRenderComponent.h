@@ -1,7 +1,13 @@
 #pragma once
 
+#include "entities/Component.h"
+
 // ---------------------------------------------------------------------------
 // GridRenderComponent — pure data for the grid-hop visual slide.
+//
+// CHANGED (Component base pass): now inherits `: public Component` so
+// it can live in Entity's vector<unique_ptr<Component>> storage. No
+// field changes — see Component.h for why this base exists.
 //
 // REPLACES AnimationComponentAdapter (and, underneath it,
 // AnimationComponent) as classes. The logic that used to live in
@@ -24,7 +30,7 @@
 // position change should report "not animating" / "fully settled",
 // same as a freshly constructed AnimationComponent did.
 // ---------------------------------------------------------------------------
-struct GridRenderComponent {
+struct GridRenderComponent : public Component {
     float startX = 0.f;
     float startY = 0.f;
     float targetX = 0.f;

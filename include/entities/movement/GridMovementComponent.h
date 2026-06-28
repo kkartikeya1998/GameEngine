@@ -1,9 +1,14 @@
 #pragma once
 
+#include "entities/Component.h"
 #include "entities/movement/Position2D.h"
 
 // ---------------------------------------------------------------------------
 // GridMovementComponent — pure data for discrete, tile-snapped movement.
+//
+// CHANGED (Component base pass): now inherits `: public Component` so
+// it can live in Entity's vector<unique_ptr<Component>> storage. No
+// field changes — see Component.h for why this base exists.
 //
 // REPLACES GridMovementMechanics as a class. All the logic that used to
 // live in GridMovementMechanics::update() (edge-trigger gate, collision
@@ -19,7 +24,7 @@
 // x/y/dir together but the component exposes them as plain fields since
 // there's no behavior left to encapsulate them behind.
 // ---------------------------------------------------------------------------
-struct GridMovementComponent {
+struct GridMovementComponent : public Component {
     int gridX = 0;
     int gridY = 0;
     Direction facing = Direction::NONE;

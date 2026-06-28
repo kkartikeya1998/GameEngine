@@ -36,19 +36,26 @@ inline Entity makePlayer(
 {
     Entity e;
 
-    e.add<FreeMovementComponent>(FreeMovementComponent{
+    // CHANGED (Component base pass): FreeMovementComponent/
+    // FreeRenderComponent are no longer aggregates (Component's virtual
+    // destructor disqualifies them) — switched from brace-init to a
+    // normal constructor call, same fix already applied to
+    // MapObjectRenderComponent's construction site in MapLoader.cpp.
+    // Same 9/4 values, same order, see each component's added
+    // constructor.
+    e.add<FreeMovementComponent>(
         x, y, dir,
         speed,
         hitboxWidth, hitboxHeight,
         hitboxOffsetX, hitboxOffsetY,
         false // isMoving
-    });
+    );
 
-    e.add<FreeRenderComponent>(FreeRenderComponent{
+    e.add<FreeRenderComponent>(
         walkCyclesPerSecond,
         0.f,  // elapsed
         x, y  // renderX/Y start at spawn position
-    });
+    );
 
     e.add<PlayerControlComponent>();
 

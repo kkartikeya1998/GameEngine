@@ -1,10 +1,15 @@
 #pragma once
 
+#include "entities/Component.h"
 #include "entities/movement/Position2D.h"
 
 // ---------------------------------------------------------------------------
 // FreeMovementComponent — pure data for continuous, axis-separated
 // movement.
+//
+// CHANGED (Component base pass): now inherits `: public Component` so
+// it can live in Entity's vector<unique_ptr<Component>> storage. No
+// field changes — see Component.h for why this base exists.
 //
 // REPLACES FreeMovementMechanics as a class. The logic that used to
 // live in FreeMovementMechanics::update() (per-axis collision-tested
@@ -22,7 +27,15 @@
 // hitboxAt(x, y) (the box-construction helper) is NOT data and moves
 // into MovementSystem as a free function — see MovementSystem.h.
 // ---------------------------------------------------------------------------
-struct FreeMovementComponent {
+// CAVEAT (Component base pass, confirmed by Player.h's build failure):
+// Component's virtual destructor disqualifies this struct from
+// aggregate-init, same issue already fixed once for
+// MapObjectRenderComponent and missed here the first time around —
+// Player.h's makePlayer() brace-initializes this type with 9
+// positional args, which silently kept compiling as default-init +
+// ignored args until the base class changed. Added the constructor
+// below so that call site becomes a normal constructor call instead.
+struct FreeMovementComponent : public Component {
     float x = 0.f;
     float y = 0.f;
     Direction facing = Direction::NONE;
@@ -41,4 +54,20 @@ struct FreeMovementComponent {
     // True only on a frame where at least one axis actually moved
     // (i.e. not fully blocked on both axes).
     bool isMoving = false;
+
+    FreeMovementComponent() = default;
+
+    FreeMovementComponent(
+        float x, float y, Direction facing,
+        float speed,
+        float hitboxWidth, float hitboxHeight,
+        float hitboxOffsetX, float hitboxOffsetY,
+        bool isMoving = false
+    )
+        : x(x), y(y), facing(facing)
+        , speed(speed)
+        , hitboxWidth(hitboxWidth), hitboxHeight(hitboxHeight)
+        , hitboxOffsetX(hitboxOffsetX), hitboxOffsetY(hitboxOffsetY)
+        , isMoving(isMoving)
+    {}
 };

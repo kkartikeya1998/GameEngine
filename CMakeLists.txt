@@ -22,10 +22,10 @@ FetchContent_MakeAvailable(SFML)
 add_executable(PokemonProject
     src/main.cpp
 
-    src/world/Map.cpp
     src/world/World.cpp
     src/world/MapLoader.cpp
-    src/world/MapObject.cpp
+    src/world/Map.cpp
+    # src/world/MapObject.cpp
 
     src/entities/pokemon/Pokemon.cpp
     src/entities/pokemon/Stats.cpp

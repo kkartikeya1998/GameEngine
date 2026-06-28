@@ -1,7 +1,13 @@
 #pragma once
 
+#include "entities/Component.h"
+
 // ---------------------------------------------------------------------------
 // FreeRenderComponent — pure data for the free-movement walk cycle.
+//
+// CHANGED (Component base pass): now inherits `: public Component` so
+// it can live in Entity's vector<unique_ptr<Component>> storage. No
+// field changes — see Component.h for why this base exists.
 //
 // REPLACES WalkCycleTimerAdapter (and, underneath it, WalkCycleTimer) as
 // classes. The logic that used to live in WalkCycleTimer::update()/
@@ -20,7 +26,13 @@
 // no interpolation, so these just echo the logical x/y the system was
 // last given.
 // ---------------------------------------------------------------------------
-struct FreeRenderComponent {
+// CAVEAT (Component base pass, confirmed by Player.h's build failure):
+// same issue as FreeMovementComponent — Component's virtual destructor
+// disqualifies this struct from aggregate-init, and Player.h's
+// makePlayer() brace-initializes it with 4 positional args. Added the
+// constructor below so that call site becomes a normal constructor
+// call instead.
+struct FreeRenderComponent : public Component {
     float cyclesPerSecond = 2.0f;
     float elapsed = 0.f;
 
@@ -29,4 +41,13 @@ struct FreeRenderComponent {
     // WalkCycleTimerAdapter::getRenderX/Y just returning lastLogicalX/Y.
     float renderX = 0.f;
     float renderY = 0.f;
+
+    FreeRenderComponent() = default;
+
+    FreeRenderComponent(float cyclesPerSecond, float elapsed, float renderX, float renderY)
+        : cyclesPerSecond(cyclesPerSecond)
+        , elapsed(elapsed)
+        , renderX(renderX)
+        , renderY(renderY)
+    {}
 };

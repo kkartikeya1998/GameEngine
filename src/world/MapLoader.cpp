@@ -191,15 +191,23 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
             // take. See entities/MapObjectRenderComponent.h and
             // system/MapObjectSystem.h for where its old methods moved
             // to.
+            // CHANGED (Component base pass): MapObjectRenderComponent
+            // is no longer an aggregate (Component's virtual
+            // destructor disqualifies it — confirmed by compiling,
+            // not assumed). add<T>(Args&&...) already forwards to
+            // make_unique<T>(args...), so this becomes a normal
+            // constructor call instead of brace-init; same six values,
+            // same order, see MapObjectRenderComponent.h's added
+            // constructor.
             auto entity = std::make_unique<Entity>();
-            entity->add<MapObjectRenderComponent>(MapObjectRenderComponent{
+            entity->add<MapObjectRenderComponent>(
                 meta,
                 originX,
                 originY,
                 teleportMapId,
                 teleportX,
                 teleportY
-            });
+            );
 
             map->addMapObject(std::move(entity));
         }
