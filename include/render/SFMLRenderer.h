@@ -3,6 +3,7 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <filesystem>
 
 #include "system/GameConstants.h"
 #include "render/IRenderer.h"
@@ -41,9 +42,9 @@ public:
                  const TileRepository& tileRepository,
                  const MapObjectRepository& objectRepository,
                  const SpriteRepository& spriteRepository,
-                 const std::string& tileSpritesheetPath,
-                 const std::string& playerSpritesheetPath,
-                 const std::string& objectSpritesheetPath);
+                 const std::filesystem::path& tileSpritesheetPath,
+                 const std::filesystem::path& playerSpritesheetPath,
+                 const std::filesystem::path& objectSpritesheetPath);
     ~SFMLRenderer() override;
  
 

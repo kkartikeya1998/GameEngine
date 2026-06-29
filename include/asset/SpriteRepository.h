@@ -32,7 +32,7 @@ struct SpriteFrameMetadata {
 // ---------------------------------------------------------------------------
 class SpriteRepository : public IAssetRepository {
 public:
-    explicit SpriteRepository(const std::string& metadataFilePath);
+    explicit SpriteRepository(const std::filesystem::path& metadataFilePath);
 
     // Returns nullptr if the frame name isn't in the catalog.
     const SpriteFrameMetadata* find(const std::string& frameName) const;
@@ -40,5 +40,5 @@ public:
 private:
     std::unordered_map<std::string, SpriteFrameMetadata> frames_;
 
-    void load_from_file(const std::string& path);
+    void load_from_file(const std::filesystem::path& path);
 };

@@ -38,11 +38,9 @@ public:
     void run();
 
 private:
-    // Single source of truth for the asset tree's location on disk.
+    // [TODO] Replace (recursively) this string usage by AssetPaths.h strings across all usages and remove here
     std::string assetsRoot_;
 
-    // Owns and loads every metadata repository. Constructed second, right
-    // after assetsRoot_ is known.
     AssetManager assets_;
 
     GameController controller_;

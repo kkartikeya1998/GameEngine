@@ -1,7 +1,7 @@
 #include "render/MapObjectAtlas.h"
 #include <stdexcept>
 
-MapObjectAtlas::MapObjectAtlas(const std::string& spritesheet_path, const MapObjectRepository& objectRepository)
+MapObjectAtlas::MapObjectAtlas(const std::filesystem::path& spritesheet_path, const MapObjectRepository& objectRepository)
     : Atlas(spritesheet_path)
     , objectRepository_(objectRepository)
 {}

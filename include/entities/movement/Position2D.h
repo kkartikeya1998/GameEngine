@@ -20,12 +20,3 @@ struct Position2D {
 // AABB — axis-aligned bounding box in world (pixel) space. Used for
 // collision queries: an entity's hitbox, or a blocking tile's rectangle.
 // ---------------------------------------------------------------------------
-struct AABB {
-    float x, y; 
-    float width, height;
-
-    bool intersects(const AABB& other) const {
-        return x < other.x + other.width  && x + width  > other.x &&
-               y < other.y + other.height && y + height > other.y;
-    }
-};

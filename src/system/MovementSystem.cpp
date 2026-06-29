@@ -6,11 +6,17 @@ namespace MovementSystem {
 // ---- Grid movement ---------------------------------------------------
 
 namespace {
-    // Same role as GridMovementMechanics::nextPos — ported verbatim,
-    // just taking the component's fields instead of position_.
-    Position nextGridPos(const GridMovementComponent& movement, Direction dir)
+    // Same role as GridMovementMechanics::nextPos — ported onto
+    // PositionComponent. position.x/y arrive as tile-aligned floats;
+    // cast to int here, at the one place this system does tile-index
+    // arithmetic, rather than carrying int math anywhere else.
+    PositionComponent nextGridPos(const PositionComponent& position, Direction dir)
     {
-        Position next{movement.gridX, movement.gridY, movement.facing};
+        PositionComponent next{
+            static_cast<int>(position.x),
+            static_cast<int>(position.y),
+            position.facing
+        };
         switch (dir)
         {
         case Direction::UP:    next.y -= 1; break;
@@ -34,7 +40,8 @@ namespace {
     }
 }
 
-void updateGrid(GridMovementComponent& movement, Direction inputDir,
+void updateGrid(PositionComponent& position, GridMovementComponent& movement,
+                Direction inputDir,
                 const std::function<bool(const AABB&)>& isBlocked)
 {
     // dt is intentionally not a parameter here — a grid hop is
@@ -62,7 +69,7 @@ void updateGrid(GridMovementComponent& movement, Direction inputDir,
 
     movement.lastInputDir = inputDir;
 
-    Position next = nextGridPos(movement, inputDir);
+    PositionComponent next = nextGridPos(position, inputDir);
     AABB destBox = tileBoxAt(next.x, next.y);
 
     if (isBlocked(destBox)) {
@@ -72,15 +79,15 @@ void updateGrid(GridMovementComponent& movement, Direction inputDir,
         return;
     }
 
-    movement.facing = inputDir;
-    movement.gridX = next.x;
-    movement.gridY = next.y;
+    position.facing = inputDir;
+    position.x = static_cast<float>(next.x);
+    position.y = static_cast<float>(next.y);
     movement.isMoving = true;
 }
 
-AABB getGridHitbox(const GridMovementComponent& movement)
+AABB getGridHitbox(const PositionComponent& position)
 {
-    return tileBoxAt(movement.gridX, movement.gridY);
+    return tileBoxAt(static_cast<int>(position.x), static_cast<int>(position.y));
 }
 
 // ---- Free movement ----------------------------------------------------
@@ -98,12 +105,13 @@ AABB freeHitboxAt(const FreeMovementComponent& movement, float x, float y)
     };
 }
 
-AABB getFreeHitbox(const FreeMovementComponent& movement)
+AABB getFreeHitbox(const PositionComponent& position, const FreeMovementComponent& movement)
 {
-    return freeHitboxAt(movement, movement.x, movement.y);
+    return freeHitboxAt(movement, position.x, position.y);
 }
 
-void updateFree(FreeMovementComponent& movement, float dt, Direction inputDir,
+void updateFree(PositionComponent& position, FreeMovementComponent& movement,
+                float dt, Direction inputDir,
                 const std::function<bool(const AABB&)>& isBlocked)
 {
     float dx = 0.f, dy = 0.f;
@@ -122,23 +130,23 @@ void updateFree(FreeMovementComponent& movement, float dt, Direction inputDir,
     // ahead of the dx/dy blocked-checks below, independent of whether
     // either axis's move is actually accepted.
     if (inputDir != Direction::NONE) {
-        movement.facing = inputDir;
+        position.facing = inputDir;
     }
 
     bool moved = false;
 
     if (dx != 0.f) {
-        AABB testX = freeHitboxAt(movement, movement.x + dx, movement.y);
+        AABB testX = freeHitboxAt(movement, position.x + dx, position.y);
         if (!isBlocked(testX)) {
-            movement.x += dx;
+            position.x += dx;
             moved = true;
         }
     }
 
     if (dy != 0.f) {
-        AABB testY = freeHitboxAt(movement, movement.x, movement.y + dy);
+        AABB testY = freeHitboxAt(movement, position.x, position.y + dy);
         if (!isBlocked(testY)) {
-            movement.y += dy;
+            position.y += dy;
             moved = true;
         }
     }

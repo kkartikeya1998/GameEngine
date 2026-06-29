@@ -1,7 +1,7 @@
 #include "render/SpriteAtlas.h"
 #include <stdexcept>
 
-SpriteAtlas::SpriteAtlas(const std::string& spritesheet_path, const SpriteRepository& spriteRepository)
+SpriteAtlas::SpriteAtlas(const std::filesystem::path& spritesheet_path, const SpriteRepository& spriteRepository)
     : Atlas(spritesheet_path)
     , spriteRepository_(spriteRepository)
 {}

@@ -6,11 +6,11 @@
 
 using json = nlohmann::json;
 
-MapObjectRepository::MapObjectRepository(const std::string& metadataFilePath) {
+MapObjectRepository::MapObjectRepository(const std::filesystem::path& metadataFilePath) {
     load_from_file(metadataFilePath);
 }
 
-void MapObjectRepository::load_from_file(const std::string& path) {
+void MapObjectRepository::load_from_file(const std::filesystem::path& path) {
     std::ifstream file(path);
     if (!file) {
         std::cerr << "Failed to open object metadata file: " << path << '\n';

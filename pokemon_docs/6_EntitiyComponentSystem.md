@@ -4,3 +4,8 @@ Time to adopt Entity-Component part of the Entity-Component system. Components w
 
 A good read to understand the split better:
 https://www.umlboard.com/design-patterns/entity-component-system.html
+
+
+Big refactoring incoming.
+
+![[Untitled Diagram.svg]]

@@ -23,17 +23,12 @@ enum class Direction {
     NONE
 };
 
+struct AABB {
+    float x, y; 
+    float width, height;
 
-struct Position {
-    int x;
-    int y;
-    Direction dir = Direction::NONE;
-
-    bool operator==(const Position& other) const {
-        return x == other.x && y == other.y;
-    }
-
-    bool operator!=(const Position& other) const {
-        return !(*this == other);
+    bool intersects(const AABB& other) const {
+        return x < other.x + other.width  && x + width  > other.x &&
+               y < other.y + other.height && y + height > other.y;
     }
 };

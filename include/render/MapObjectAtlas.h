@@ -30,7 +30,7 @@
 // ---------------------------------------------------------------------------
 class MapObjectAtlas : public Atlas {
 public:
-    MapObjectAtlas(const std::string& spritesheet_path, const MapObjectRepository& objectRepository);
+    MapObjectAtlas(const std::filesystem::path& spritesheet_path, const MapObjectRepository& objectRepository);
 
     const sf::Texture& objectTexture() const { return texture(); }
     SpriteRegion getObjectSprite(const std::string& typeName) const;

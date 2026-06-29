@@ -104,9 +104,21 @@
               "icon": "lucide-file",
               "title": "6_EntitiyComponentSystem"
             }
+          },
+          {
+            "id": "e3832c86d5d38e64",
+            "type": "leaf",
+            "state": {
+              "type": "diagram-edit",
+              "state": {
+                "file": "Untitled Diagram.svg"
+              },
+              "icon": "lucide-file",
+              "title": "Untitled Diagram.svg"
+            }
           }
         ],
-        "currentTab": 6
+        "currentTab": 7
       }
     ],
     "direction": "vertical"
@@ -268,12 +280,13 @@
       "bases:Create new base": false
     }
   },
-  "active": "d201995f2f52b2b5",
+  "active": "e3832c86d5d38e64",
   "lastOpenFiles": [
-    "98_Resources.md",
     "6_EntitiyComponentSystem.md",
-    "99_GoodRerences.md",
     "5_FreeMotion.md",
+    "Untitled Diagram.svg",
+    "98_Resources.md",
+    "99_GoodRerences.md",
     "3_RenderComponent.md",
     "3_RenderComponent.svg",
     "4_AssetManager.md",

@@ -1,10 +1,10 @@
 #include "render/Atlas.h"
 
-Atlas::Atlas(const std::string& spritesheet_path)
+Atlas::Atlas(const std::filesystem::path& spritesheet_path)
 {
     texture_ = std::make_unique<sf::Texture>();
     if (!texture_->loadFromFile(spritesheet_path)) {
-        throw std::runtime_error("Failed to load spritesheet: " + spritesheet_path);
+        throw std::runtime_error("Failed to load spritesheet: " + spritesheet_path.string());
     }
 }
 

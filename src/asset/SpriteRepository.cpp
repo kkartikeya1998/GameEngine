@@ -6,11 +6,11 @@
 
 using json = nlohmann::json;
 
-SpriteRepository::SpriteRepository(const std::string& metadataFilePath) {
+SpriteRepository::SpriteRepository(const std::filesystem::path& metadataFilePath) {
     load_from_file(metadataFilePath);
 }
 
-void SpriteRepository::load_from_file(const std::string& path) {
+void SpriteRepository::load_from_file(const std::filesystem::path& path) {
     std::ifstream file(path);
     if (!file) {
         std::cerr << "Failed to open sprite metadata file: " << path << '\n';

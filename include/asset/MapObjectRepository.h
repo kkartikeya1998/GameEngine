@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include "system/GameConstants.h"
 #include "asset/IAssetRepository.h"
+#include "asset/AsssetPaths.h"
 
 // ---------------------------------------------------------------------------
 // FootprintCell / ObjectTypeMetadata — moved here from MapObject.h.
@@ -83,7 +84,7 @@ struct ObjectTypeMetadata {
 
 class MapObjectRepository : public IAssetRepository {
 public:
-    explicit MapObjectRepository(const std::string& metadataFilePath);
+    explicit MapObjectRepository(const std::filesystem::path& metadataFilePath);
 
     // Programmatic registration — distinct from file loading. Useful for
     // tests or hardcoded checks. Unaffected by the constructor
@@ -93,6 +94,6 @@ public:
     const ObjectTypeMetadata* find(const std::string& type) const;
 
 private:
-    void load_from_file(const std::string& path);
+    void load_from_file(const std::filesystem::path& path);
     std::unordered_map<std::string, ObjectTypeMetadata> types_;
 };

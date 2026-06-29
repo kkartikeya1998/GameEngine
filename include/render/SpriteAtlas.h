@@ -19,7 +19,7 @@ enum class WalkFrame {
 
 class SpriteAtlas : public Atlas {
 public:
-    SpriteAtlas(const std::string& spritesheet_path, const SpriteRepository& spriteRepository);
+    SpriteAtlas(const std::filesystem::path& spritesheet_path, const SpriteRepository& spriteRepository);
 
     const sf::Texture& playerTexture() const { return texture(); }
     SpriteRegion getPlayerSprite(Direction facing, WalkFrame frame) const;

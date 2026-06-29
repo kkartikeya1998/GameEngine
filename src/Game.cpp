@@ -7,16 +7,8 @@
 #include <SFML/Window/Keyboard.hpp>
 #include "system/GameConstants.h"
 
-// NOTE: assetsRoot_ should point at the "assets" folder itself (the same
-// folder that directly contains maps/ and sprites/). AssetManager builds
-// its paths as assetsRoot_ + "/maps/...", "/sprites/...", and
-// GameController forwards the same assetsRoot_ to World as
-// assetsRoot_ + "/maps/". If PROJECT_ROOT previously pointed one level
-// above assets/ (the project root, not the assets folder), append
-// "/assets" here once instead of in every downstream consumer.
 Game::Game()
-    : assetsRoot_(std::string(PROJECT_ROOT) + "/assets")
-    , assets_(assetsRoot_)
+    : assets_()
     , controller_(1, 600, 600, assetsRoot_, assets_.get<MapObjectRepository>()) // map ID: 1 main map, 2 asset tuning map
     , renderSystem_(std::make_unique<RenderSystem>(
           std::make_unique<SFMLRenderer>(
@@ -24,9 +16,9 @@ Game::Game()
               assets_.get<TileRepository>(),
               assets_.get<MapObjectRepository>(),
               assets_.get<SpriteRepository>(),
-              assetsRoot_ + "/objects/SimpleSummer_Tiles.png",
-              assetsRoot_ + "/sprites/player_spritesheet.png",
-              assetsRoot_ + "/objects/SimpleSummer_Objects.png"
+              Assets::Objects::SIMPLE_SUMMER_TILES,
+              Assets::Sprites::PLAYER_SPRITESHEET,
+              Assets::Objects::SIMPLE_SUMMER_OBJECTS
           )
       ))
 {

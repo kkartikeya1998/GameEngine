@@ -22,7 +22,7 @@
 // ---------------------------------------------------------------------------
 class TileAtlas : public Atlas {
 public:
-    TileAtlas(const std::string& spritesheet_path, const TileRepository& tileRepository);
+    TileAtlas(const std::filesystem::path& spritesheet_path, const TileRepository& tileRepository);
 
     const sf::Texture& terrainTexture() const { return texture(); }
     SpriteRegion getTerrainSprite(const std::string& typeName) const;

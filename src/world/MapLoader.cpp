@@ -15,30 +15,21 @@
 
 using json = nlohmann::json;
 
-// CHANGED: MapLoader no longer triggers MapObjectRepository's load. The
-// repository now loads itself in its own constructor (called once by
-// AssetManager at startup) — MapLoader receives it already populated and
-// only ever reads from it via find(). This removes a responsibility
-// MapLoader never should have had: deciding when object metadata loads.
-// The old call here (repository_.load_from_file(...)) would no longer even
-// compile, since load_from_file is now a private implementation detail of
-// MapObjectRepository's constructor.
+
 MapLoader::MapLoader(
-    const std::string& mapsFolder,
     MapObjectRepository& repository
-) : repository_(repository),
-    maps_folder_(mapsFolder)
+) : repository_(repository)
 {
-    loadMetadata(mapsFolder);
+    loadMetadata();
 }
 
-void MapLoader::loadMetadata(const std::string& mapsFolder)
+void MapLoader::loadMetadata()
 {
     namespace fs = std::filesystem;
 
     maps_metadata_.clear();
 
-    for (const auto& entry : fs::directory_iterator(mapsFolder))
+    for (const auto& entry : fs::directory_iterator(Assets::MAPS))
     {
         if (entry.path().extension() != ".json")
             continue;
@@ -69,22 +60,11 @@ void MapLoader::applyFootprint(Map& map, const ObjectTypeMetadata& meta,
     const int width = map.getWidth();
     const int height = map.getHeight();
 
-    // originX/originY arrive in PIXEL space (the object's anchor point —
-    // see MapObject's class comment / SFMLRenderer::drawMapObject).
-    // Footprint cells (fc.dx/fc.dy) are tile-offsets and tile_at() takes
-    // tile indices, so the anchor's containing tile is resolved here,
-    // once, before any cell math — std::floor (not truncation) so
-    // negative pixel coordinates round toward the correct tile, same
-    // reasoning as the gridToPixel boundary-check fix elsewhere.
+
     int originTileX = static_cast<int>(std::floor(originX / GameConstants::TILE_SIZE));
     int originTileY = static_cast<int>(std::floor(originY / GameConstants::TILE_SIZE));
 
-    // An object with a precise collisionBox (see CollisionBox in
-    // MapObjectRepository.h) handles its own blocking via
-    // Map::isAreaBlocked's separate object-AABB check — it does NOT
-    // also get whole-tile blocking from its footprint here, or the
-    // whole tile would be blocked anyway, making the precise box
-    // pointless. 
+
     bool hasOwnCollisionBox = meta.collisionBox.has_value();
 
     for (const auto& fc : meta.footprint)
@@ -184,21 +164,7 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
             applyFootprint(*map, *meta, originX, originY,
                             teleportMapId, teleportX, teleportY);
 
-            // CHANGED (ECS pass): no more std::make_unique<MapObject>.
-            // MapObject is gone as a class — a MapObject "is" now just
-            // an Entity carrying a MapObjectRenderComponent with
-            // exactly the same fields MapObject's constructor used to
-            // take. See entities/MapObjectRenderComponent.h and
-            // system/MapObjectSystem.h for where its old methods moved
-            // to.
-            // CHANGED (Component base pass): MapObjectRenderComponent
-            // is no longer an aggregate (Component's virtual
-            // destructor disqualifies it — confirmed by compiling,
-            // not assumed). add<T>(Args&&...) already forwards to
-            // make_unique<T>(args...), so this becomes a normal
-            // constructor call instead of brace-init; same six values,
-            // same order, see MapObjectRenderComponent.h's added
-            // constructor.
+
             auto entity = std::make_unique<Entity>();
             entity->add<MapObjectRenderComponent>(
                 meta,

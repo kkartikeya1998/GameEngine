@@ -7,9 +7,9 @@ SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight,
                             const TileRepository& tileRepository,
                             const MapObjectRepository& objectRepository,
                             const SpriteRepository& spriteRepository,
-                            const std::string& tileSpritesheetPath,
-                            const std::string& playerSpritesheetPath,
-                            const std::string& objectSpritesheetPath)
+                            const std::filesystem::path& tileSpritesheetPath,
+                            const std::filesystem::path& playerSpritesheetPath,
+                            const std::filesystem::path& objectSpritesheetPath)
     : tileAtlas_(tileSpritesheetPath, tileRepository)
     , spriteAtlas_(playerSpritesheetPath, spriteRepository)
     , mapObjAtlas_(objectSpritesheetPath, objectRepository)

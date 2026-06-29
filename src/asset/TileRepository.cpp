@@ -8,11 +8,11 @@
 
 using json = nlohmann::json;
 
-TileRepository::TileRepository(const std::string& metadataFilePath) {
+TileRepository::TileRepository(const std::filesystem::path& metadataFilePath) {
     load_from_file(metadataFilePath);
 }
 
-void TileRepository::load_from_file(const std::string& path) {
+void TileRepository::load_from_file(const std::filesystem::path& path) {
     std::ifstream file(path);
     if (!file) {
         std::cerr << "Failed to open tile metadata file: " << path << '\n';

@@ -15,29 +15,10 @@ struct MapMetadata {
 
 // ---------------------------------------------------------------------------
 // MapLoader — builds Map instances from JSON files on disk.
-//
-// CHANGED (ECS pass): GridMovementMechanics, FreeMovementMechanics, and
-// AnimationComponentAdapter (referenced in this header's older comment
-// block, now stale) no longer exist as classes — see
-// system/MovementSystem.h and system/RenderStateSystem.h, where their
-// logic moved to. buildNpc's return type changes from
-// std::unique_ptr<Npc> (Npc is also gone — see entities/npc/
-// NpcComponent.h) to std::unique_ptr<Entity>.
-//
-// IMPORTANT: buildNpc has NO DEFINITION in the .cpp I was given — it's
-// declared here but was never implemented or called anywhere in the
-// loadMapById body shown to me (no "npcs" JSON key is read there
-// either). This is NOT something I ported, because there was no body
-// to port. The declaration below is updated only so this header
-// compiles against the new Entity-based world; if you actually want
-// NPCs loaded from map JSON, this function's BODY still needs to be
-// written from scratch — see the comment on its declaration below for
-// what that body would need to build.
 // ---------------------------------------------------------------------------
 class MapLoader {
 public:
     MapLoader(
-        const std::string& mapsFolder,
         MapObjectRepository& repository
     );
 
@@ -48,7 +29,7 @@ private:
     std::string maps_folder_;
     std::vector<MapMetadata> maps_metadata_;
 
-    void loadMetadata(const std::string& mapsFolder);
+    void loadMetadata();
 
     void applyFootprint(Map& map, const ObjectTypeMetadata& meta,
                          int originX, int originY,

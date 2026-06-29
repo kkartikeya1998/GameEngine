@@ -6,6 +6,7 @@
 #include <memory>
 #include <stdexcept>
 #include <type_traits>
+#include <filesystem>
 
 #include "system/GameConstants.h"
 
@@ -77,7 +78,7 @@ struct has_source_tile_size<T, std::void_t<decltype(std::declval<T>().sourceTile
 // ---------------------------------------------------------------------------
 class Atlas {
 public:
-    explicit Atlas(const std::string& spritesheet_path);
+    explicit Atlas(const std::filesystem::path& spritesheet_path);
     virtual ~Atlas() = default;
 
     const sf::Texture& texture() const { return *texture_; }

@@ -3,7 +3,7 @@
 #include <functional>
 
 #include "entities/Entity.h"
-#include "entities/movement/Position2D.h"
+#include "entities/movement/PositionComponent.h"
 #include "entities/movement/GridMovementComponent.h"
 #include "entities/movement/FreeMovementComponent.h"
 
@@ -14,43 +14,42 @@
 // to, ported field-for-field onto GridMovementComponent/
 // FreeMovementComponent.
 //
+// CHANGED (PositionComponent pass): every function here now takes a
+// PositionComponent& as an additional parameter — position used to be
+// inlined on GridMovementComponent (gridX/gridY/facing) and
+// FreeMovementComponent (x/y/facing); both now hold a sibling
+// PositionComponent on the same Entity instead (see
+// PositionComponent.h). Callers fetch both components before calling:
+//
+//   auto* pos = entity.get<PositionComponent>();
+//   if (auto* g = entity.get<GridMovementComponent>())
+//       MovementSystem::updateGrid(*pos, *g, inputDir, isBlocked);
+//   else if (auto* f = entity.get<FreeMovementComponent>())
+//       MovementSystem::updateFree(*pos, *f, dt, inputDir, isBlocked);
+//
 // Per the "collision check belongs in the mechanic" principle (kept
 // deliberately — see existing project notes), the collision check
 // still lives HERE, inside the movement-stepping logic, not in
-// GameController. Only the OWNERSHIP shape changed (free function over
-// a component, not a virtual method on a polymorphic mechanic) — the
-// actual SOLID boundary (GameController stays collision-agnostic, just
-// supplies isBlocked) is unchanged.
-//
-// Callers (GameController, and later an NPC behavior driver) dispatch
-// by which movement component an Entity actually has:
-//
-//   if (auto* g = entity.get<GridMovementComponent>())
-//       MovementSystem::updateGrid(*g, inputDir, isBlocked);
-//   else if (auto* f = entity.get<FreeMovementComponent>())
-//       MovementSystem::updateFree(*f, dt, inputDir, isBlocked);
-//
-// getHitbox()/getX()/getY()/isMoving() etc. that used to be uniform
-// IMovementBehavior methods are now small free functions per component
-// type (no shared interface needed — callers already know which
-// component type they're holding, since they just branched on it to
-// call the right update function).
+// GameController.
 // ---------------------------------------------------------------------------
 namespace MovementSystem {
 
 // ---- Grid movement -------------------------------------------------------
 
-// Ported verbatim from GridMovementMechanics::update(). dt is unused —
-// a grid hop is logically instantaneous; the visual lerp over time is
+// Ported from GridMovementMechanics::update(). dt is unused — a grid
+// hop is logically instantaneous; the visual lerp over time is
 // RenderSystem's job (see GridRenderComponent), not this system's.
 // Edge-trigger gate and all-or-nothing facing+position commit on a
-// refused move are preserved exactly as before.
-void updateGrid(GridMovementComponent& movement, Direction inputDir,
+// refused move are preserved exactly as before. position.x/y are
+// tile-aligned floats (e.g. 3.0f) — cast to int at the point they're
+// used as a tile index (see MovementSystem.cpp's nextGridPos).
+void updateGrid(PositionComponent& position, GridMovementComponent& movement,
+                 Direction inputDir,
                  const std::function<bool(const AABB&)>& isBlocked);
 
-// World-pixel-space TILE_SIZE x TILE_SIZE rect at the component's
-// CURRENT grid cell. Same role as GridMovementMechanics::getHitbox().
-AABB getGridHitbox(const GridMovementComponent& movement);
+// World-pixel-space TILE_SIZE x TILE_SIZE rect at position's CURRENT
+// grid cell. Same role as GridMovementMechanics::getHitbox().
+AABB getGridHitbox(const PositionComponent& position);
 
 // ---- Free movement --------------------------------------------------------
 
@@ -59,12 +58,13 @@ AABB getGridHitbox(const GridMovementComponent& movement);
 // regardless of whether that axis's move is actually accepted (matches
 // original: `if (inputDir != Direction::NONE) position_.dir =
 // inputDir;` ran before either axis's collision test).
-void updateFree(FreeMovementComponent& movement, float dt, Direction inputDir,
+void updateFree(PositionComponent& position, FreeMovementComponent& movement,
+                 float dt, Direction inputDir,
                  const std::function<bool(const AABB&)>& isBlocked);
 
-// World-pixel-space hitbox at the component's CURRENT position. Same
-// role as FreeMovementMechanics::getHitbox() / hitboxAt(x, y).
-AABB getFreeHitbox(const FreeMovementComponent& movement);
+// World-pixel-space hitbox at position's CURRENT x/y. Same role as
+// FreeMovementMechanics::getHitbox() / hitboxAt(x, y).
+AABB getFreeHitbox(const PositionComponent& position, const FreeMovementComponent& movement);
 
 // Hitbox the component WOULD have at an arbitrary (x, y) — exposed
 // because updateFree's per-axis collision test needs to probe a

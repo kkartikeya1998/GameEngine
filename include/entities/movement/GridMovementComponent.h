@@ -1,34 +1,30 @@
 #pragma once
 
 #include "entities/Component.h"
-#include "entities/movement/Position2D.h"
+#include "entities/movement/Position.h"
 
 // ---------------------------------------------------------------------------
 // GridMovementComponent — pure data for discrete, tile-snapped movement.
 //
-// CHANGED (Component base pass): now inherits `: public Component` so
-// it can live in Entity's vector<unique_ptr<Component>> storage. No
-// field changes — see Component.h for why this base exists.
+// CHANGED (PositionComponent pass): gridX, gridY, facing are GONE from
+// this struct — they now live on a sibling PositionComponent (as
+// floats — see PositionComponent.h's "GRID ENTITIES" note). This
+// struct keeps only the edge-trigger gate and the moved-this-frame
+// flag, neither of which is positional.
 //
-// REPLACES GridMovementMechanics as a class. All the logic that used to
-// live in GridMovementMechanics::update() (edge-trigger gate, collision
-// check against the destination tile, all-or-nothing position+facing
-// commit) now lives in MovementSystem::updateGrid() instead — this
-// struct only holds the state that logic reads and writes.
+// MovementSystem::updateGrid/getGridHitbox now take a
+// PositionComponent& alongside this component — see MovementSystem.h.
+// Anywhere that read movement.gridX/gridY as an int (tile-index math
+// in MovementSystem.cpp's nextGridPos/tileBoxAt) now reads
+// position.x/y as float and casts explicitly at the point it's used
+// as a tile index.
 //
-// Field-for-field, this is GridMovementMechanics' old private section:
-//   position_ (grid-space int)   -> gridX, gridY
-//   lastInputDir_ (edge gate)     -> lastInputDir
-//   wasMoving_                   -> isMoving
-// position_.dir is split out as `facing`, matching how Position2D bundles
-// x/y/dir together but the component exposes them as plain fields since
-// there's no behavior left to encapsulate them behind.
+// Field-for-field, this is what survives from the previous version:
+//   lastInputDir -> lastInputDir
+//   isMoving     -> isMoving
+// (gridX, gridY, facing moved out to PositionComponent.)
 // ---------------------------------------------------------------------------
 struct GridMovementComponent : public Component {
-    int gridX = 0;
-    int gridY = 0;
-    Direction facing = Direction::NONE;
-
     // Edge-trigger gate — see MovementSystem::updateGrid. Cleared back to
     // NONE the frame inputDir is released, so the same direction can
     // re-trigger a hop later. Without this, a held key would cause a

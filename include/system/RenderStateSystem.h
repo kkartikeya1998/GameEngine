@@ -2,6 +2,7 @@
 
 #include "render/GridRenderComponent.h"
 #include "render/FreeRenderComponent.h"
+#include "entities/movement/PositionComponent.h"
 
 // ---------------------------------------------------------------------------
 // RenderStateSystem — free functions holding the logic that used to

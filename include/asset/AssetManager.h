@@ -11,30 +11,19 @@
 #include "asset/TileRepository.h"
 #include "asset/MapObjectRepository.h"
 #include "asset/SpriteRepository.h"
+#include "asset/AsssetPaths.h"
 
 // ---------------------------------------------------------------------------
 // AssetManager — single owner of every metadata repository.
-//
-// Loads all metadata once at construction (see AssetManager.cpp) and serves
-// it out by type at runtime via get<T>(). Repositories are stored behind
-// IAssetRepository and keyed by std::type_index, so the set of asset
-// categories AssetManager knows about is never hardcoded into its public
-// interface — only into its constructor body.
-//
-// Open/Closed in practice: adding a new asset category (e.g.
-// AnimationRepository) means writing that repository class and adding one
-// emplace<AnimationRepository>(...) line inside AssetManager's constructor.
-// AssetManager.h itself — this file — never needs to change.
-//
-// AssetManager owns metadata only (parsed JSON describing what assets
-// exist and their properties). It deliberately does not own textures,
-// sounds, or other backend/GPU resources — those stay a renderer-side
-// concern (see SFMLRenderer's atlases), so this class has no dependency
-// on any particular rendering backend.
 // ---------------------------------------------------------------------------
 class AssetManager {
 public:
-    explicit AssetManager(const std::string& assetsRoot);
+    // All metadata loaded at intialization
+    AssetManager() {
+        emplace<TileRepository>(Assets::Maps::TILESET_METADATA);
+        emplace<MapObjectRepository>(Assets::Maps::OBJECT_METADATA);
+        emplace<SpriteRepository>(Assets::Sprites::SPRITE_METADATA);
+    }
 
     // Retrieves a previously loaded repository by its concrete type.
     // Throws std::runtime_error if T was never registered in the

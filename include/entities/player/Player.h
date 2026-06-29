@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entities/Entity.h"
+#include "entities/movement/PositionComponent.h"
 #include "entities/movement/FreeMovementComponent.h"
 #include "render/FreeRenderComponent.h"
 #include "entities/player/PlayerControlComponent.h"
@@ -8,23 +9,20 @@
 // ---------------------------------------------------------------------------
 // makePlayer — builds the one player-controlled Entity.
 //
-// REPLACES `using Player = Entity;`. There is no more Player TYPE —
-// only this factory, which builds a plain Entity carrying:
-//   - FreeMovementComponent  (position, speed, hitbox, facing)
+// CHANGED (PositionComponent pass): builds a PositionComponent
+// alongside FreeMovementComponent now that FreeMovementComponent no
+// longer carries x/y/facing itself. Spawn x/y/dir go onto
+// PositionComponent; FreeMovementComponent gets only the
+// movement-specific fields (speed, hitbox*).
+//
+// Builds a plain Entity carrying:
+//   - PositionComponent      (x, y, facing — NEW, see above)
+//   - FreeMovementComponent  (speed, hitbox)
 //   - FreeRenderComponent    (walk-cycle render state)
 //   - PlayerControlComponent (empty tag — marks this as the player)
 //
 // Everywhere that used to take/return `Player&` or `Player*` now takes/
 // returns `Entity&`/`Entity*` — GameController::getPlayer() included.
-// The PlayerControlComponent tag is what lets code that genuinely needs
-// to distinguish "the player" from "an NPC" do so
-// (entity.has<PlayerControlComponent>()), without a separate type.
-//
-// Signature matches the values GameController::GameController already
-// passes in (see GameController.cpp): x, y in pixel space, speed and
-// hitbox dimensions from GameConstants. No movement-strategy object is
-// injected anymore (FreeMovementMechanics is gone) — this just
-// populates a FreeMovementComponent's fields directly.
 // ---------------------------------------------------------------------------
 inline Entity makePlayer(
     float x, float y,
@@ -36,15 +34,9 @@ inline Entity makePlayer(
 {
     Entity e;
 
-    // CHANGED (Component base pass): FreeMovementComponent/
-    // FreeRenderComponent are no longer aggregates (Component's virtual
-    // destructor disqualifies them) — switched from brace-init to a
-    // normal constructor call, same fix already applied to
-    // MapObjectRenderComponent's construction site in MapLoader.cpp.
-    // Same 9/4 values, same order, see each component's added
-    // constructor.
+    e.add<PositionComponent>(x, y, dir);
+
     e.add<FreeMovementComponent>(
-        x, y, dir,
         speed,
         hitboxWidth, hitboxHeight,
         hitboxOffsetX, hitboxOffsetY,

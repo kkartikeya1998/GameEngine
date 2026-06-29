@@ -36,7 +36,7 @@
 // ---------------------------------------------------------------------------
 class World {
 public:
-    World(const std::string& mapsFolder, MapObjectRepository& objectRepository);
+    World(MapObjectRepository& objectRepository);
 
     Map* getActiveMap() const;
 

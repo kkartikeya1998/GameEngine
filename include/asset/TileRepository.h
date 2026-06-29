@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <filesystem>
 #include <unordered_map>
 
 #include <SFML/Graphics.hpp>
@@ -52,11 +53,11 @@ struct TileTypeMetadata {
 // ---------------------------------------------------------------------------
 class TileRepository : public IAssetRepository {
 public:
-    explicit TileRepository(const std::string& metadataFilePath);
+    explicit TileRepository(const std::filesystem::path& metadataFilePath);
 
     const TileTypeMetadata* find(const std::string& type) const;
 
 private:
-    void load_from_file(const std::string& path);
+    void load_from_file(const std::filesystem::path& path);
     std::unordered_map<std::string, TileTypeMetadata> types_;
 };

@@ -1,7 +1,7 @@
 #include "world/World.h"
 
-World::World(const std::string& mapsFolder, MapObjectRepository& objectRepository)
-    : loader_(mapsFolder, objectRepository)
+World::World(MapObjectRepository& objectRepository)
+    : loader_(objectRepository)
 {
 }
 
