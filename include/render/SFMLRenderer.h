@@ -50,8 +50,8 @@ public:
 
     void clear() override;
     void drawTile(int gridX, int gridY, const std::string& typeName) override;
-    void drawPlayer(float gridX, float gridY, Direction facing, float animProgress) override;
-    void drawMapObject(float originPixelX, float originPixelY, const std::string& typeName) override;
+    void drawPlayer(const PositionComponent& playerPos, const DirectionComponent& facing, float animProgress) override;
+    void drawMapObject(const PositionComponent& objectPos, const std::string& typeName) override;
     void drawDebugRect(float x, float y, float width, float height) override;    void present() override;
     bool isOpen() const override;
 
@@ -76,11 +76,9 @@ private:
     };
     std::map<Terrain::Type, TerrainColor> terrainColors_;
 
-    void initTerrainColors();
-    // int screenX(int gridX) const { return gridX * TILE_SIZE; }
-    // int screenY(int gridY) const { return gridY * TILE_SIZE; }
+    // for tiles
     float screenX(float gridX) const { return gridX * TILE_SIZE; }
     float screenY(float gridY) const { return gridY * TILE_SIZE; }
+    // for players/npcs
     float spriteScale(float width, float height) { return std::min( static_cast<float>(TILE_SIZE) / width, static_cast<float>(TILE_SIZE) / height); }
-    // void drawDirectionIndicator(float screenX, float screenY, Direction facing);
 };

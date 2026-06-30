@@ -1,55 +1,29 @@
 #pragma once
-
 #include "entities/Entity.h"
 #include "entities/movement/PositionComponent.h"
+#include "entities/movement/VelocityComponent.h"
+#include "entities/movement/DirectionComponent.h"
 #include "entities/movement/FreeMovementComponent.h"
 #include "render/FreeRenderComponent.h"
 #include "entities/player/PlayerControlComponent.h"
+#include "system/GameConstants.h"
 
-// ---------------------------------------------------------------------------
-// makePlayer — builds the one player-controlled Entity.
-//
-// CHANGED (PositionComponent pass): builds a PositionComponent
-// alongside FreeMovementComponent now that FreeMovementComponent no
-// longer carries x/y/facing itself. Spawn x/y/dir go onto
-// PositionComponent; FreeMovementComponent gets only the
-// movement-specific fields (speed, hitbox*).
-//
-// Builds a plain Entity carrying:
-//   - PositionComponent      (x, y, facing — NEW, see above)
-//   - FreeMovementComponent  (speed, hitbox)
-//   - FreeRenderComponent    (walk-cycle render state)
-//   - PlayerControlComponent (empty tag — marks this as the player)
-//
-// Everywhere that used to take/return `Player&` or `Player*` now takes/
-// returns `Entity&`/`Entity*` — GameController::getPlayer() included.
-// ---------------------------------------------------------------------------
 inline Entity makePlayer(
     float x, float y,
-    float speed,
-    float hitboxWidth, float hitboxHeight,
-    float hitboxOffsetX, float hitboxOffsetY,
-    float walkCyclesPerSecond = 4.0f,
-    Direction dir = Direction::NONE)
+    float movement_speed = GameConstants::PLAYER_SPEED,
+    float walkCyclesPerSecond = 4.0f)
 {
     Entity e;
-
-    e.add<PositionComponent>(x, y, dir);
-
+    e.add<PositionComponent>(x, y);
+    e.add<VelocityComponent>();
+    e.add<DirectionComponent>(Direction::DOWN);
     e.add<FreeMovementComponent>(
-        speed,
-        hitboxWidth, hitboxHeight,
-        hitboxOffsetX, hitboxOffsetY,
-        false // isMoving
-    );
-
-    e.add<FreeRenderComponent>(
-        walkCyclesPerSecond,
-        0.f,  // elapsed
-        x, y  // renderX/Y start at spawn position
-    );
-
+        movement_speed,
+        GameConstants::PLAYER_HITBOX_WIDTH,
+        GameConstants::PLAYER_HITBOX_HEIGHT,
+        GameConstants::PLAYER_HITBOX_OFFSET_X,
+        GameConstants::PLAYER_HITBOX_OFFSET_Y, false);
+    e.add<FreeRenderComponent>(walkCyclesPerSecond, 0.f, x, y);
     e.add<PlayerControlComponent>();
-
     return e;
 }

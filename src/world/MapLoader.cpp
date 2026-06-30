@@ -166,6 +166,8 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
 
 
             auto entity = std::make_unique<Entity>();
+
+            entity->add<PositionComponent>(originX, originY);
             entity->add<MapObjectRenderComponent>(
                 meta,
                 originX,
@@ -174,6 +176,14 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
                 teleportX,
                 teleportY
             );
+
+            // entity->add<PositionComponent>(
+            //     originX,
+            //     originY
+            // );
+            // entity.add<FreeMovementComponent>(
+                
+            // );
 
             map->addMapObject(std::move(entity));
         }

@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Game.h"
+#include "render/RenderSystem.h"
 #include "render/SFMLRenderer.h"
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>

@@ -5,8 +5,9 @@
 #include <vector>
 
 #include "world/MapObjectRenderComponent.h"
-#include "entities/movement/Position2D.h"
 #include "asset/MapObjectRepository.h"
+// for AABB and direction juagad
+#include "entities/movement/PositionComponent.h"
 
 // ---------------------------------------------------------------------------
 // MapObjectSystem — free functions holding the logic that used to live

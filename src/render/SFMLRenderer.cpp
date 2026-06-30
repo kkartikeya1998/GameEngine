@@ -27,16 +27,6 @@ SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight,
 
 SFMLRenderer::~SFMLRenderer() = default;
 
-void SFMLRenderer::initTerrainColors() {
-    // terrainColors_[Terrain::Type::Grass1]    = {34, 139, 34};
-    // terrainColors_[Terrain::Type::Sand]     = {210, 180, 140};
-    // terrainColors_[Terrain::Type::Water]    = {30, 144, 255};
-    // terrainColors_[Terrain::Type::Ice]      = {173, 216, 230};
-    // terrainColors_[Terrain::Type::Cave]     = {105, 105, 105};
-    // terrainColors_[Terrain::Type::Building] = {128, 128, 128};
-    // terrainColors_[Terrain::Type::Tree]     = {0, 100, 0};
-}
-
 void SFMLRenderer::clear() {
     window_->clear(sf::Color::Black);
 }
@@ -72,7 +62,7 @@ void SFMLRenderer::drawTile(int gridX, int gridY, const std::string& typeName) {
     window_->draw(sprite);
 }
 
-void SFMLRenderer::drawMapObject(float originPixelX, float originPixelY, const std::string& typeName) {
+void SFMLRenderer::drawMapObject(const PositionComponent& objectPos, const std::string& typeName) {
     SpriteRegion region = mapObjAtlas_.getObjectSprite(typeName);
 
     // Each object type can point at its own texture (or share one with
@@ -83,15 +73,7 @@ void SFMLRenderer::drawMapObject(float originPixelX, float originPixelY, const s
     sf::Sprite sprite(tex);
     sprite.setTextureRect(region.subrect);
 
-    // Scale BOTH axes independently using this object's own
-    // sourceTileSize (pixels-per-tile in ITS source art), read from
-    // metadata rather than assumed as a fixed constant. This makes the
-    // scale factor resolution-independent: a tileset re-exported at
-    // 128px/tile, or an object sheet at some other density, just needs
-    // its JSON's "tile_size" updated — no renderer code change. A 96x32
-    // House at sourceTileSize 32 renders 3 tiles wide; the same House
-    // re-exported at 96x96px with sourceTileSize 32 would still render
-    // 3 tiles wide, just with 3x the source detail per tile.
+
     float sourceTileSize = static_cast<float>(region.sourceTileSize);
     float scale = TILE_SIZE / sourceTileSize;
     // float scaleY = TILE_SIZE / sourceTileSize;
@@ -106,8 +88,8 @@ void SFMLRenderer::drawMapObject(float originPixelX, float originPixelY, const s
     // float anchorY = static_cast<float>(gridY);
 
     sprite.setPosition(sf::Vector2f(
-        originPixelX - spriteWidth / 2.f,
-        originPixelY - spriteHeight
+        objectPos.x - spriteWidth / 2.f,
+        objectPos.y - spriteHeight
     ));
 
     window_->draw(sprite);
@@ -148,9 +130,9 @@ void SFMLRenderer::drawDebugRect(float x, float y, float width, float height) {
     }
 }
 
-void SFMLRenderer::drawPlayer(float worldX, float worldY, Direction facing, float animProgress) {
+void SFMLRenderer::drawPlayer(const PositionComponent& playerPos, const DirectionComponent& playerDir, float animProgress) {
     WalkFrame frame = SpriteAtlas::frameFromProgress(animProgress);
-    SpriteRegion region = spriteAtlas_.getPlayerSprite(facing, frame);
+    SpriteRegion region = spriteAtlas_.getPlayerSprite(playerDir.facing, frame);
     const sf::Texture& tex = spriteAtlas_.playerTexture();
 
     sf::Sprite sprite(tex);
@@ -178,8 +160,8 @@ void SFMLRenderer::drawPlayer(float worldX, float worldY, Direction facing, floa
     // worldY - its full height) to make the visible sprite line up with
     // where collision is actually computed, instead of the sprite's
     // top-left sitting directly on the feet position.
-    float drawX = worldX - spriteWidth / 2.f;
-    float drawY = worldY - spriteHeight;
+    float drawX = playerPos.x - spriteWidth / 2.f;
+    float drawY = playerPos.y - spriteHeight;
 
     sprite.setPosition(sf::Vector2f(drawX, drawY));
 
