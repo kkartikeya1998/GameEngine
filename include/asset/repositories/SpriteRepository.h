@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include "system/GameConstants.h"
-#include "asset/IAssetRepository.h"
+#include "asset/repositories/IAssetRepository.h"
 
 // ---------------------------------------------------------------------------
 // SpriteFrameMetadata — where one named animation frame lives on the

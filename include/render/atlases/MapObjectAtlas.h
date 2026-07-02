@@ -1,7 +1,7 @@
 #pragma once
 
-#include "render/Atlas.h"
-#include "asset/MapObjectRepository.h"
+#include "render/atlases/Atlas.h"
+#include "asset/repositories/MapObjectRepository.h"
 #include <string>
 #include <unordered_map>
 
@@ -34,7 +34,10 @@ public:
 
     const sf::Texture& objectTexture() const { return texture(); }
     SpriteRegion getObjectSprite(const std::string& typeName) const;
-
+    
+    const sf::Texture& resolveTexture(const std::string& texturePath) const {
+        return getOrLoadTexture(texturePath);
+    }
 private:
     const MapObjectRepository& objectRepository_;
 

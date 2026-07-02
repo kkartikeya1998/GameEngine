@@ -1,7 +1,7 @@
 #pragma once
 
-#include "render/Atlas.h"
-#include "asset/TileRepository.h"
+#include "render/atlases/Atlas.h"
+#include "asset/repositories/TileRepository.h"
 #include <string>
 
 // ---------------------------------------------------------------------------

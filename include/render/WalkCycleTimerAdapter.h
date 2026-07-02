@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entities/animation/WalkCycleTimer.h"
+#include "tmp/animation/WalkCycleTimer.h"
 #include "render/IRenderState.h"
 
 // ---------------------------------------------------------------------------

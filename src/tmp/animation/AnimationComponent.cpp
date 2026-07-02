@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "entities/animation/AnimationComponent.h"
+#include "tmp/animation/AnimationComponent.h"
 
 AnimationComponent::AnimationComponent(float speed)
     : speed_(speed)

@@ -27,38 +27,38 @@ add_executable(PokemonProject
     src/world/Map.cpp
     # src/world/MapObject.cpp
 
-    src/entities/pokemon/Pokemon.cpp
-    src/entities/pokemon/Stats.cpp
-    src/entities/pokemon/WildPokemon.cpp
-    src/entities/pokemon/WildPokemonFactory.cpp
-    src/entities/pokemon/CapturedPokemon.cpp
-    src/entities/pokemon/CapturedPokemonFactory.cpp
-    src/entities/pokemon/PokemonSpeciesRepository.cpp
+    # src/entities/pokemon/Pokemon.cpp
+    # src/entities/pokemon/Stats.cpp
+    # src/entities/pokemon/WildPokemon.cpp
+    # src/entities/pokemon/WildPokemonFactory.cpp
+    # src/entities/pokemon/CapturedPokemon.cpp
+    # src/entities/pokemon/CapturedPokemonFactory.cpp
+    # src/entities/pokemon/PokemonSpeciesRepository.cpp
     
 
     
-    # src/entities/movement/GridMovementMechanics.cpp
-    # src/entities/movement/FreeMovementMechanics.cpp
+    # src/tmp/movement/GridMovementMechanics.cpp
+    # src/tmp/movement/FreeMovementMechanics.cpp
     src/system/MovementSystem.cpp
     src/system/RenderStateSystem.cpp
     src/system/MapObjectSystem.cpp
 
-    src/entities/animation/AnimationComponent.cpp
+    src/tmp/animation/AnimationComponent.cpp
 
 
     src/system/GameController.cpp
     
     src/render/RenderSystem.cpp
     src/render/SFMLRenderer.cpp
-    src/render/Atlas.cpp
-    src/render/TileAtlas.cpp
-    src/render/SpriteAtlas.cpp
-    src/render/MapObjectAtlas.cpp
+    src/render/atlases/Atlas.cpp
+    src/render/atlases/TileAtlas.cpp
+    src/render/atlases/SpriteAtlas.cpp
+    src/render/atlases/MapObjectAtlas.cpp
 
     src/asset/AssetManager.cpp
-    src/asset/MapObjectRepository.cpp
-    src/asset/TileRepository.cpp
-    src/asset/SpriteRepository.cpp
+    src/asset/repositories/MapObjectRepository.cpp
+    src/asset/repositories/TileRepository.cpp
+    src/asset/repositories/SpriteRepository.cpp
     
     src/Game.cpp
     )

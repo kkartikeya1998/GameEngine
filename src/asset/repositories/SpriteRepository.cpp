@@ -1,4 +1,4 @@
-#include "asset/SpriteRepository.h"
+#include "asset/repositories/SpriteRepository.h"
 
 #include <fstream>
 #include <iostream>

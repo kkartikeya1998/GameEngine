@@ -5,7 +5,7 @@
 
 #include "world/Map.h"
 #include "world/MapLoader.h"
-#include "asset/MapObjectRepository.h"
+#include "asset/repositories/MapObjectRepository.h"
 #include "entities/Entity.h"
 
 // ---------------------------------------------------------------------------

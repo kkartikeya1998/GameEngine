@@ -1,4 +1,4 @@
-#include "asset/MapObjectRepository.h"
+#include "asset/repositories/MapObjectRepository.h"
 
 #include <fstream>
 #include <iostream>

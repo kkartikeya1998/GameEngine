@@ -1,9 +1,9 @@
 #pragma once
 
-#include "render/Atlas.h"
-#include "asset/SpriteRepository.h"
+#include "render/atlases/Atlas.h"
+#include "asset/repositories/SpriteRepository.h"
 // for direction only
-#include "entities/movement/DirectionComponent.h"
+#include "tmp/movement/DirectionComponent.h"
 
 // ---------------------------------------------------------------------------
 // SpriteAtlas — player walk-cycle sprite lookup.

@@ -1,4 +1,4 @@
-#include "entities/movement/GridMovementMechanics.h"
+#include "tmp/movement/GridMovementMechanics.h"
 #include "system/GameConstants.h"
 
 GridMovementMechanics::GridMovementMechanics(int x, int y, Direction dir)

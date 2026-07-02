@@ -1,9 +1,9 @@
 #include "system/GameController.h"
 #include "system/GameConstants.h"
 #include "system/MovementSystem.h"
-#include "entities/movement/PositionComponent.h"
-#include "entities/movement/FreeMovementComponent.h"
-#include "entities/movement/GridMovementComponent.h"
+#include "tmp/movement/PositionComponent.h"
+#include "tmp/movement/FreeMovementComponent.h"
+#include "tmp/movement/GridMovementComponent.h"
 
 GameController::GameController(int startMapId, int playerX, int playerY,
                                  const std::string& assetsRoot,
@@ -55,20 +55,13 @@ void GameController::update(float dt)
     // }
 }
 
-void GameController::changeMap(int mapId, int newX, int newY)
+void GameController::changeMap(int mapId, float newX, float newY)
 {
     world_.loadMap(mapId);
 
-    // CHANGED (PositionComponent pass): writes through
-    // PositionComponent now — position->x/y replaces the old
-    // movement->x/y direct write, since FreeMovementComponent no
-    // longer holds position fields at all.
     auto* position = player_.get<PositionComponent>();
     if (!position) return;
 
-    // Same unit assumption as before (INFERRED, not confirmed against
-    // real call sites — flagged previously): newX/newY arrive as
-    // grid cells, converted to pixels here via TILE_SIZE.
-    position->x = static_cast<float>(newX) * GameConstants::TILE_SIZE;
-    position->y = static_cast<float>(newY) * GameConstants::TILE_SIZE;
+    position->x = newX;
+    position->y = newY;
 }

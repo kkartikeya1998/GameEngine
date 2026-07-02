@@ -7,7 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "system/GameConstants.h"
-#include "asset/IAssetRepository.h"
+#include "asset/repositories/IAssetRepository.h"
 #include "asset/AsssetPaths.h"
 
 // ---------------------------------------------------------------------------

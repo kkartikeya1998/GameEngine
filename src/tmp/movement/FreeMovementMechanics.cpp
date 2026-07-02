@@ -1,4 +1,4 @@
-#include "entities/movement/FreeMovementMechanics.h"
+#include "tmp/movement/FreeMovementMechanics.h"
 
 FreeMovementMechanics::FreeMovementMechanics(float x, float y,
                                               float speed,

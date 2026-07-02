@@ -7,12 +7,12 @@
 
 #include "system/GameConstants.h"
 #include "render/IRenderer.h"
-#include "render/TileAtlas.h"
-#include "render/SpriteAtlas.h"
-#include "render/MapObjectAtlas.h"
-#include "asset/TileRepository.h"
-#include "asset/MapObjectRepository.h"
-#include "asset/SpriteRepository.h"
+#include "render/atlases/TileAtlas.h"
+#include "render/atlases/SpriteAtlas.h"
+#include "render/atlases/MapObjectAtlas.h"
+#include "asset/repositories/TileRepository.h"
+#include "asset/repositories/MapObjectRepository.h"
+#include "asset/repositories/SpriteRepository.h"
 
 namespace sf {
     class RenderWindow;
@@ -51,7 +51,7 @@ public:
     void clear() override;
     void drawTile(int gridX, int gridY, const std::string& typeName) override;
     void drawPlayer(const PositionComponent& playerPos, const DirectionComponent& facing, float animProgress) override;
-    void drawMapObject(const PositionComponent& objectPos, const std::string& typeName) override;
+    void drawMapObject(const PositionComponent& objectPos, const MapObjectRenderComponent& objectRender) override;
     void drawDebugRect(float x, float y, float width, float height) override;    void present() override;
     bool isOpen() const override;
 

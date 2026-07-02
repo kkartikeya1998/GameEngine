@@ -2,6 +2,8 @@
 #include "world/Terrain.h"
 #include "world/Map.h"
 #include "entities/Entity.h"
+#include "tmp/movement/PositionComponent.h"
+#include "tmp/movement/CollisionComponent.h"
 #include "world/MapObjectRenderComponent.h"
 #include "system/GameConstants.h"
 
@@ -15,10 +17,8 @@
 
 using json = nlohmann::json;
 
-
 MapLoader::MapLoader(
-    MapObjectRepository& repository
-) : repository_(repository)
+    MapObjectRepository &repository) : repository_(repository)
 {
     loadMetadata();
 }
@@ -29,7 +29,7 @@ void MapLoader::loadMetadata()
 
     maps_metadata_.clear();
 
-    for (const auto& entry : fs::directory_iterator(Assets::MAPS))
+    for (const auto &entry : fs::directory_iterator(Assets::MAPS))
     {
         if (entry.path().extension() != ".json")
             continue;
@@ -46,53 +46,43 @@ void MapLoader::loadMetadata()
 
         int id = j.value("id", -1);
 
-        maps_metadata_.push_back({
-            id,
-            entry.path().string()
-        });
+        maps_metadata_.push_back({id,
+                                  entry.path().string()});
     }
 }
 
-void MapLoader::applyFootprint(Map& map, const ObjectTypeMetadata& meta,
-                                int originX, int originY,
-                                int teleportMapId, int teleportX, int teleportY) const
-{
-    const int width = map.getWidth();
-    const int height = map.getHeight();
+// void MapLoader::applyFootprint(Map& map, const ObjectTypeMetadata& meta,
+//                                 int originX, int originY) const
+// {
+//     const int width = map.getWidth();
+//     const int height = map.getHeight();
 
+//     int originTileX = static_cast<int>(std::floor(originX / GameConstants::TILE_SIZE));
+//     int originTileY = static_cast<int>(std::floor(originY / GameConstants::TILE_SIZE));
 
-    int originTileX = static_cast<int>(std::floor(originX / GameConstants::TILE_SIZE));
-    int originTileY = static_cast<int>(std::floor(originY / GameConstants::TILE_SIZE));
+//     bool hasOwnCollisionBox = meta.collisionBox.has_value();
 
+//     for (const auto& fc : meta.footprint)
+//     {
+//         int tileX = originTileX + fc.dx;
+//         int tileY = originTileY + fc.dy;
 
-    bool hasOwnCollisionBox = meta.collisionBox.has_value();
+//         if (tileX < 0 || tileX >= width || tileY < 0 || tileY >= height)
+//             continue;
 
-    for (const auto& fc : meta.footprint)
-    {
-        int tileX = originTileX + fc.dx;
-        int tileY = originTileY + fc.dy;
+//         Tile& tile = map.tile_at(tileX, tileY);
 
-        if (tileX < 0 || tileX >= width || tileY < 0 || tileY >= height)
-            continue;
-
-        Tile& tile = map.tile_at(tileX, tileY);
-
-        if (fc.blocking && !hasOwnCollisionBox) {
-            tile.setWalkable(std::make_unique<NoWalkable>());
-        }
-
-        if (fc.isTeleportTile) {
-            tile.setTeleportable(
-                std::make_unique<StaticTeleport>(teleportMapId, teleportX, teleportY));
-        }
-    }
-}
+//         if (fc.blocking && !hasOwnCollisionBox) {
+//             tile.setWalkable(std::make_unique<NoWalkable>());
+//         }
+//     }
+// }
 
 std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
 {
     std::string mapPath;
 
-    for (const auto& meta : maps_metadata_)
+    for (const auto &meta : maps_metadata_)
     {
         if (meta.id == mapId)
         {
@@ -114,9 +104,10 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
 
     auto map = std::make_unique<Map>(width, height);
 
-    const auto& tiles_json = j["tiles"];
+    const auto &tiles_json = j["tiles"];
 
-    if (tiles_json.size() != static_cast<std::size_t>(width * height)) {
+    if (tiles_json.size() != static_cast<std::size_t>(width * height))
+    {
         throw std::runtime_error("Tile count does not match width * height");
     }
 
@@ -131,59 +122,48 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
                 x,
                 y,
                 Terrain::terrain_from_string(typeName),
-                typeName
-            );
+                typeName);
         }
     }
 
     if (j.contains("map_objects"))
     {
-        for (const auto& entry : j["map_objects"])
+        for (const auto &entry : j["map_objects"])
         {
             std::string type = entry["type"];
 
-            const ObjectTypeMetadata* meta = repository_.find(type);
+            const ObjectTypeMetadata *meta = repository_.find(type);
             if (!meta)
                 continue;
 
-            int originX = entry["origin"]["x"];
-            int originY = entry["origin"]["y"];
+            float originX = entry["origin"]["x"];
+            float originY = entry["origin"]["y"];
 
-            int teleportMapId = -1;
-            int teleportX = 0;
-            int teleportY = 0;
-
-            if (entry.contains("teleport_target"))
-            {
-                auto tt = entry["teleport_target"];
-                teleportMapId = tt["map_id"];
-                teleportX = tt["x"];
-                teleportY = tt["y"];
-            }
-
-            applyFootprint(*map, *meta, originX, originY,
-                            teleportMapId, teleportX, teleportY);
-
+            // Remenent from the grid based maps implementation
+            // applyFootprint(*map, *meta, originX, originY);
 
             auto entity = std::make_unique<Entity>();
 
-            entity->add<PositionComponent>(originX, originY);
+            entity->add<PositionComponent>(
+                originX,
+                originY);
+
             entity->add<MapObjectRenderComponent>(
                 meta,
                 originX,
-                originY,
-                teleportMapId,
-                teleportX,
-                teleportY
-            );
+                originY);
 
-            // entity->add<PositionComponent>(
-            //     originX,
-            //     originY
-            // );
-            // entity.add<FreeMovementComponent>(
-                
-            // );
+            if (meta->collisionBox.has_value())
+            {
+                const CollisionBox &cb = *meta->collisionBox;
+                float scale = static_cast<float>(GameConstants::TILE_SIZE) / static_cast<float>(meta->sourceTileSize);
+
+                entity->add<CollisionComponent>(
+                    cb.offsetX * scale,
+                    cb.offsetY * scale,
+                    cb.width * scale,
+                    cb.height * scale);
+            }
 
             map->addMapObject(std::move(entity));
         }

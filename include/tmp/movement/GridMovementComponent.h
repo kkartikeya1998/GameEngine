@@ -1,7 +1,7 @@
 #pragma once
 
 #include "entities/Component.h"
-// #include "entities/movement/Position.h"
+// #include "tmp/movement/Position.h"
 
 // ---------------------------------------------------------------------------
 // GridMovementComponent — pure data for discrete, tile-snapped movement.

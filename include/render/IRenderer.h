@@ -3,8 +3,9 @@
 #include <optional>
 #include <string>
 #include <SFML/Window/Event.hpp>
-#include "entities/movement/DirectionComponent.h"
-#include "entities/movement/PositionComponent.h"
+#include "tmp/movement/DirectionComponent.h"
+#include "tmp/movement/PositionComponent.h"
+#include "world/MapObjectRenderComponent.h"
 
 // ---------------------------------------------------------------------------
 // IRenderer — abstract interface for rendering.
@@ -41,7 +42,7 @@ public:
     // origin grid position. typeName is the object's catalog key (e.g.
     // "tree", "house") — used to look up its sprite region, the same way
     // drawTile uses Terrain::Type to look up a tile's sprite region.
-    virtual void drawMapObject(const PositionComponent& objectPos, const std::string& typeName) = 0;
+    virtual void drawMapObject(const PositionComponent& objectPos, const MapObjectRenderComponent& objRender) = 0;
     
     // Debug-only: draws an unfilled rectangle outline at world-pixel
     // coordinates (x, y = top-left), given width/height in pixels. Not

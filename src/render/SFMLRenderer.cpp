@@ -21,8 +21,7 @@ SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight,
         sf::VideoMode(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT), 32),
         "Pokemon Game"
     );
-    window_->setFramerateLimit(60);
-    // initTerrainColors();
+    window_->setFramerateLimit(GameConstants::FRAME_RATE);
 }
 
 SFMLRenderer::~SFMLRenderer() = default;
@@ -61,40 +60,29 @@ void SFMLRenderer::drawTile(int gridX, int gridY, const std::string& typeName) {
 
     window_->draw(sprite);
 }
+void SFMLRenderer::drawMapObject(const PositionComponent& objectPos,
+                                 const MapObjectRenderComponent& objectRender)
+{
+    const auto& metadata = *objectRender.metadata;
 
-void SFMLRenderer::drawMapObject(const PositionComponent& objectPos, const std::string& typeName) {
-    SpriteRegion region = mapObjAtlas_.getObjectSprite(typeName);
+    const sf::Texture& texture = mapObjAtlas_.resolveTexture(metadata.texturePath);
+    sf::Sprite sprite(texture);
+    sprite.setTextureRect(metadata.textureRect);
 
-    // Each object type can point at its own texture (or share one with
-    // other types) — region.texture is set by MapObjectAtlas per lookup.
-    // Falling back to objectTexture() is defensive only
-    const sf::Texture& tex = region.texture ? *region.texture : mapObjAtlas_.objectTexture();
+    const float sourceTileSize = static_cast<float>(metadata.sourceTileSize);
+    const float scale          = TILE_SIZE / sourceTileSize;
+    sprite.setScale({scale, scale});
 
-    sf::Sprite sprite(tex);
-    sprite.setTextureRect(region.subrect);
+    const float spriteWidth  = metadata.textureRect.size.x * scale;
+    const float spriteHeight = metadata.textureRect.size.y * scale;
 
-
-    float sourceTileSize = static_cast<float>(region.sourceTileSize);
-    float scale = TILE_SIZE / sourceTileSize;
-    // float scaleY = TILE_SIZE / sourceTileSize;
-
-    sprite.setScale(sf::Vector2f(scale, scale));
-
-    float spriteWidth = region.tile_size.x * scale;
-    float spriteHeight = region.tile_size.y * scale;
-
-
-    // float anchorX = static_cast<float>(gridX);
-    // float anchorY = static_cast<float>(gridY);
-
-    sprite.setPosition(sf::Vector2f(
-        objectPos.x - spriteWidth / 2.f,
+    sprite.setPosition({
+        objectPos.x - spriteWidth * 0.5f,
         objectPos.y - spriteHeight
-    ));
+    });
 
     window_->draw(sprite);
 }
-
 
 void SFMLRenderer::drawDebugRect(float x, float y, float width, float height) {
     // Innermost ring (margin 0, the actual box) is solid red; each

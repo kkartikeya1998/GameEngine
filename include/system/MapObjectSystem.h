@@ -5,9 +5,9 @@
 #include <vector>
 
 #include "world/MapObjectRenderComponent.h"
-#include "asset/MapObjectRepository.h"
+#include "asset/repositories/MapObjectRepository.h"
 // for AABB and direction juagad
-#include "entities/movement/PositionComponent.h"
+#include "tmp/movement/PositionComponent.h"
 
 // ---------------------------------------------------------------------------
 // MapObjectSystem — free functions holding the logic that used to live
@@ -40,19 +40,6 @@ const std::string& getTexturePath(const MapObjectRenderComponent& component);
 
 const std::vector<FootprintCell>& getFootprint(const MapObjectRenderComponent& component);
 
-int getOriginPixelX(const MapObjectRenderComponent& component);
-int getOriginPixelY(const MapObjectRenderComponent& component);
-
-int getTeleportTargetMapId(const MapObjectRenderComponent& component);
-void getTeleportTarget(const MapObjectRenderComponent& component, int& x, int& y);
-
-// Ported verbatim from MapObject::getCollisionBox(). Resolves the
-// metadata's collisionBox (if present) into a world-space AABB:
-// scales native-pixel-space offset/width/height by
-// TILE_SIZE/sourceTileSize, then converts from the bottom-center
-// anchor (matching origin's own anchor convention) to a top-left AABB.
-// Returns nullopt if metadata has no collisionBox set — same contract
-// as before.
 std::optional<AABB> getCollisionBox(const MapObjectRenderComponent& component);
 
 } // namespace MapObjectSystem

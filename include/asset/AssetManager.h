@@ -7,10 +7,10 @@
 #include <unordered_map>
 #include <utility>
 
-#include "asset/IAssetRepository.h"
-#include "asset/TileRepository.h"
-#include "asset/MapObjectRepository.h"
-#include "asset/SpriteRepository.h"
+#include "asset/repositories/IAssetRepository.h"
+#include "asset/repositories/TileRepository.h"
+#include "asset/repositories/MapObjectRepository.h"
+#include "asset/repositories/SpriteRepository.h"
 #include "asset/AsssetPaths.h"
 
 // ---------------------------------------------------------------------------

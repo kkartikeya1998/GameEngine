@@ -15,32 +15,6 @@ const std::string& getTexturePath(const MapObjectRenderComponent& component)
     return component.metadata->texturePath;
 }
 
-const std::vector<FootprintCell>& getFootprint(const MapObjectRenderComponent& component)
-{
-    return component.metadata->footprint;
-}
-
-int getOriginPixelX(const MapObjectRenderComponent& component)
-{
-    return component.originX;
-}
-
-int getOriginPixelY(const MapObjectRenderComponent& component)
-{
-    return component.originY;
-}
-
-int getTeleportTargetMapId(const MapObjectRenderComponent& component)
-{
-    return component.teleportTargetMapId;
-}
-
-void getTeleportTarget(const MapObjectRenderComponent& component, int& x, int& y)
-{
-    x = component.teleportTargetX;
-    y = component.teleportTargetY;
-}
-
 std::optional<AABB> getCollisionBox(const MapObjectRenderComponent& component)
 {
     if (!component.metadata->collisionBox)

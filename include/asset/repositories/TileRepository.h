@@ -6,7 +6,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "asset/IAssetRepository.h"
+#include "asset/repositories/IAssetRepository.h"
 #include "world/Terrain.h"
 #include "system/GameConstants.h"
 // ---------------------------------------------------------------------------

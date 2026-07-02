@@ -6,7 +6,7 @@
 
 #include "world/Map.h"
 #include "entities/Entity.h"
-#include "asset/MapObjectRepository.h"
+#include "asset/repositories/MapObjectRepository.h"
 
 struct MapMetadata {
     int id;
@@ -31,9 +31,8 @@ private:
 
     void loadMetadata();
 
-    void applyFootprint(Map& map, const ObjectTypeMetadata& meta,
-                         int originX, int originY,
-                         int teleportMapId, int teleportX, int teleportY) const;
+    // void applyFootprint(Map& map, const ObjectTypeMetadata& meta,
+    //                      int originX, int originY) const;
 
     // UNIMPLEMENTED — see class comment above. Would need to build an
     // Entity carrying a movement component (GridMovementComponent for

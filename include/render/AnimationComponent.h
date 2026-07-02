@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entities/animation/AnimationComponent.h"
+#include "tmp/animation/AnimationComponent.h"
 #include "render/IRenderState.h"
 
 // ---------------------------------------------------------------------------

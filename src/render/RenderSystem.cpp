@@ -2,8 +2,8 @@
 #include "system/RenderStateSystem.h"
 #include "system/MovementSystem.h"
 #include "system/MapObjectSystem.h"
-#include "entities/movement/GridMovementComponent.h"
-#include "entities/movement/FreeMovementComponent.h"
+#include "tmp/movement/GridMovementComponent.h"
+#include "tmp/movement/FreeMovementComponent.h"
 #include "render/GridRenderComponent.h"
 #include "render/FreeRenderComponent.h"
 #include "world/MapObjectRenderComponent.h"
@@ -89,9 +89,9 @@ void RenderSystem::render(GameController &controller, float dt)
 
             renderables.push_back(Renderable{
                 depthY,
-                [this, mapObjPos = *mapObjPos, typeName]()
+                [this, mapObjPos = *mapObjPos, mapObjRender = *mapObjRender]()
                 {
-                    renderer_->drawMapObject(mapObjPos, typeName);
+                    renderer_->drawMapObject(mapObjPos, mapObjRender);
                 }});
         }
 

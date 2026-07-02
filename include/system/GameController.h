@@ -4,7 +4,7 @@
 #include <string>
 
 #include "world/World.h"
-#include "asset/MapObjectRepository.h"
+#include "asset/repositories/MapObjectRepository.h"
 #include "entities/Entity.h"
 #include "entities/player/Player.h"
 
@@ -60,7 +60,7 @@ public:
 
     // Switch to a new map (called when Player's hitbox overlaps a
     // TeleportPoint). Repositions player on the new map.
-    void changeMap(int mapId, int newX, int newY);
+    void changeMap(int mapId, float newX, float newY);
 
     void update(float dt);
 

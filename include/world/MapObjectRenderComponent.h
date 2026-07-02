@@ -1,7 +1,7 @@
 #pragma once
 
 #include "entities/Component.h"
-#include "asset/MapObjectRepository.h"
+#include "asset/repositories/MapObjectRepository.h"
 
 // ---------------------------------------------------------------------------
 // MapObjectRenderComponent — replaces the MapObject class as the holder
@@ -42,25 +42,16 @@ struct MapObjectRenderComponent : public Component {
     const ObjectTypeMetadata* metadata = nullptr;
     int originX = 0;
     int originY = 0;
-    int teleportTargetMapId = -1;
-    int teleportTargetX = 0;
-    int teleportTargetY = 0;
 
     MapObjectRenderComponent() = default;
 
     MapObjectRenderComponent(
         const ObjectTypeMetadata* metadata,
         int originX,
-        int originY,
-        int teleportTargetMapId = -1,
-        int teleportTargetX = 0,
-        int teleportTargetY = 0
+        int originY
     )
         : metadata(metadata)
         , originX(originX)
         , originY(originY)
-        , teleportTargetMapId(teleportTargetMapId)
-        , teleportTargetX(teleportTargetX)
-        , teleportTargetY(teleportTargetY)
     {}
 };

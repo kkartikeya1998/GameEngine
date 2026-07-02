@@ -1,11 +1,11 @@
 #pragma once
 #include <functional>
 #include "entities/Entity.h"
-#include "entities/movement/PositionComponent.h"
-#include "entities/movement/VelocityComponent.h"
-#include "entities/movement/DirectionComponent.h"
-#include "entities/movement/GridMovementComponent.h"
-#include "entities/movement/FreeMovementComponent.h"
+#include "tmp/movement/PositionComponent.h"
+#include "tmp/movement/VelocityComponent.h"
+#include "tmp/movement/DirectionComponent.h"
+#include "tmp/movement/GridMovementComponent.h"
+#include "tmp/movement/FreeMovementComponent.h"
 
 namespace MovementSystem {
 
