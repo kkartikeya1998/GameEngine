@@ -15,11 +15,12 @@ Game::Game()
               assets_.get<CharacterRepository>(),
               Assets::Objects::SIMPLE_SUMMER_TILES,
               Assets::Sprites::PLAYER_SPRITESHEET,
-              Assets::Objects::SIMPLE_SUMMER_OBJECTS)))
+              Assets::Objects::SIMPLE_SUMMER_OBJECTS))),
+            animationSystem_(assets_.get<CharacterRepository>())
 {
     // Goes straight to gameplay for now — swap for pushing a
     // MainMenuState once one exists; this is the only line that changes.
-    states_.Push(std::make_unique<GameplayState>(input_, assets_, states_));
+    states_.Push(std::make_unique<GameplayState>(input_, assets_, states_, animationSystem_));
 }
 
 void Game::Update(float dt)

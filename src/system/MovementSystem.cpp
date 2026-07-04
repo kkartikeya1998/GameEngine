@@ -3,7 +3,7 @@
 
 namespace MovementSystem {
 
-void updateFree(PositionComponent& position, VelocityComponent& velocity,
+void update(PositionComponent& position, VelocityComponent& velocity,
                 DirectionComponent& direction, FreeMovementComponent& movement,
                 CollisionComponent& collision, MovementStateComponent& state,
                 float dt, Direction inputDir, bool sprintRequested,

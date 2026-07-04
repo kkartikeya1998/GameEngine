@@ -30,7 +30,13 @@ inline Entity makePlayer(
         GameConstants::PLAYER_HITBOX_HEIGHT);
     e.add<MovementStateComponent>();
     e.add<WalkCycleTimer>(walkCyclesPerSecond);
-    e.add<RenderComponent>(/* texturePath, textureRect, sourceTileSize, x, y */);
+    e.add<RenderComponent>(
+        "player_walk_down_0", // initial frame name
+        Assets::Sprites::PLAYER_SPRITESHEET.string(),
+        sf::IntRect{{0, 0}, {32, 32}},
+        GameConstants::TILE_SIZE,
+        x, y);
+         // initial texture rectangle
 
     // e.add<PlayerControlComponent>();
     return e;

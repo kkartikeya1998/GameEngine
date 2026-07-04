@@ -1,34 +1,15 @@
 #include "render/atlases/SpriteAtlas.h"
 #include <stdexcept>
+#include <iostream>
 
 SpriteAtlas::SpriteAtlas(const std::filesystem::path& spritesheet_path, const CharacterRepository& characterRepository)
     : Atlas(spritesheet_path)
     , characterRepository_(characterRepository)
 {}
 
-static std::string dirToString(Direction facing)
+SpriteRegion SpriteAtlas::getCharacterSprite(const std::string& spriteName) const
 {
-    switch (facing) {
-        case Direction::UP: return "up";
-        case Direction::DOWN: return "down";
-        case Direction::LEFT: return "left";
-        case Direction::RIGHT: return "right";
-        default: return "down";
-    }
-}
-
-SpriteRegion SpriteAtlas::getPlayerSprite(Direction facing, WalkFrame frame) const
-{
-    std::string dir = dirToString(facing);
-    int idx = 0;
-
-    switch (frame) {
-        case WalkFrame::Standing: idx = 0; break;
-        case WalkFrame::StepA:    idx = 1; break;
-        case WalkFrame::StepB:    idx = 2; break;
-    }
-
-    std::string key = "player_" + dir + "_" + std::to_string(idx);
-
-    return regionFromRepository(characterRepository_, key, key);
+    // std::cout << "[SpriteAtlas] getCharacterSprite: " << spriteName << std::endl;
+    return regionFromRepository(characterRepository_, spriteName, spriteName);
+    // std::cout << "[SpriteAtlas] getCharacterSprite: " << spriteName << "retrieved" << std::endl;
 }

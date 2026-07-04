@@ -35,7 +35,7 @@ namespace Assets
             SPRITES / "sprite_metadata.json";
 
         inline const std::filesystem::path PLAYER_SPRITESHEET =
-            SPRITES / "player_spritesheet.png";
+            SPRITES / "player.png";
     }
 
     namespace Objects

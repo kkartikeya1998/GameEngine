@@ -13,7 +13,7 @@
 namespace MovementSystem {
 
 // velocity is now genuine units/second; dt is applied once here.
-void updateFree(PositionComponent& position, VelocityComponent& velocity,
+void update(PositionComponent& position, VelocityComponent& velocity,
                 DirectionComponent& direction, FreeMovementComponent& movement,
                 CollisionComponent& collision, MovementStateComponent& state,
                 float dt, Direction inputDir, bool sprintRequested,

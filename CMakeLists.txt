@@ -50,7 +50,6 @@ add_executable(PokemonProject
     src/render/atlases/SpriteAtlas.cpp
     src/render/atlases/MapObjectAtlas.cpp
 
-    src/asset/AssetManager.cpp
     src/asset/repositories/MapObjectRepository.cpp
     src/asset/repositories/TileRepository.cpp
     src/asset/repositories/CharacterRepository.cpp

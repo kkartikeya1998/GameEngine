@@ -12,19 +12,27 @@
 #include "asset/metadata/RenderBox.h"
 #include "asset/repositories/IAssetRepository.h"
 
+// CharacterRepository.h
 struct CharacterMetadata : public AssetMetadata {
     RenderBox renderBox;
-
     std::optional<CollisionBox> collisionBox;
+
+    std::string characterName;
+    std::string state;
+    std::string direction;
+    int frameIndex = 0;
 };
+
 class CharacterRepository : public IAssetRepository {
 public:
     explicit CharacterRepository(const std::filesystem::path& metadataFilePath);
 
     const CharacterMetadata* find(const std::string& frameName) const;
+    int frameCount(const std::string& character, const std::string& state, const std::string& direction) const;
 
 private:
     std::unordered_map<std::string, CharacterMetadata> frames_;
+    std::unordered_map<std::string, int> frameCounts_;
 
     void load_from_file(const std::filesystem::path& path);
 };

@@ -4,8 +4,8 @@
 #include "render/RenderSystem.h"
 #include "state/PauseState.h"
 
-GameplayState::GameplayState(InputManager& input, AssetManager& assets, StateMachine<IGameState>& stateMachine)
-    : input_(input), assets_(assets), stateMachine_(stateMachine)
+GameplayState::GameplayState(InputManager& input, AssetManager& assets, StateMachine<IGameState>& stateMachine, AnimationSystem& animationSystem)
+    : input_(input), assets_(assets), stateMachine_(stateMachine), animationSystem_(animationSystem)
 {
     auto up = std::make_shared<MoveCommand>(Direction::UP);
     auto down = std::make_shared<MoveCommand>(Direction::DOWN);
@@ -54,5 +54,6 @@ void GameplayState::Update(float dt)
 
 void GameplayState::Render(RenderSystem& renderSystem, float dt)
 {
+    animationSystem_.update(*controller_, dt);
     renderSystem.render(*controller_, dt);
 }

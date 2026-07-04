@@ -12,15 +12,11 @@ CharacterRepository::CharacterRepository(const std::filesystem::path &metadataFi
     load_from_file(metadataFilePath);
 }
 
-void CharacterRepository::load_from_file(
-    const std::filesystem::path &path)
+void CharacterRepository::load_from_file(const std::filesystem::path &path)
 {
     std::ifstream file(path);
-
-    if (!file)
-    {
-        std::cerr << "Failed to open character metadata: "
-                  << path << '\n';
+    if (!file) {
+        std::cerr << "Failed to open character metadata: " << path << '\n';
         return;
     }
 
@@ -29,68 +25,62 @@ void CharacterRepository::load_from_file(
 
     const auto &characters = j.at("characters");
 
-    for (auto charIt = characters.begin();
-         charIt != characters.end();
-         ++charIt)
+    for (auto charIt = characters.begin(); charIt != characters.end(); ++charIt)
     {
         const std::string characterName = charIt.key();
         const json &character = charIt.value();
 
-        std::string texturePath =
-            character.value("texture", "");
-
-        int tileSize =
-            character.value("tile_size",
-                            GameConstants::TILE_SIZE);
+        std::string texturePath = character.value("texture", "");
+        int tileSize = character.value("tile_size", GameConstants::TILE_SIZE);
 
         std::optional<CollisionBox> collision;
-
-        if (character.contains("collision_component"))
-        {
-            collision =
-                MetadataParser::parse_collision_box(
-                    character.at("collision_component"));
+        if (character.contains("collision_component")) {
+            collision = MetadataParser::parse_collision_box(character.at("collision_component"));
         }
 
-        const auto &frames =
-            character.at("character_frames");
+        const auto &states = character.at("character_frames");
 
-        for (auto it = frames.begin();
-             it != frames.end();
-             ++it)
+        for (auto stateIt = states.begin(); stateIt != states.end(); ++stateIt)
         {
-            const std::string rawKey = it.key();
-            const json &def = it.value();
+            const std::string state = stateIt.key();
+            const json &frames = stateIt.value();
 
-            // --------------------------------------------------
-            // Expect format: direction_index (e.g. "down_0")
-            // --------------------------------------------------
-            auto underscorePos = rawKey.find('_');
+            for (auto it = frames.begin(); it != frames.end(); ++it)
+            {
+                const std::string rawKey = it.key();
+                const json &def = it.value();
 
-            std::string direction = rawKey.substr(0, underscorePos);
-            std::string frameIndex = rawKey.substr(underscorePos + 1);
+                // Expect format: direction_index (e.g. "down_0")
+                auto underscorePos = rawKey.find('_');
+                std::string direction = rawKey.substr(0, underscorePos);
+                std::string frameIndexStr = rawKey.substr(underscorePos + 1);
+                int frameIndex = std::stoi(frameIndexStr);
 
-            std::string finalName =
-                characterName + "_" +
-                direction + "_" +
-                frameIndex;
+                std::string finalName = characterName + "_" + state + "_" + direction + "_" + frameIndexStr;
 
-            CharacterMetadata meta;
-            meta.name = finalName;
+                CharacterMetadata meta;
+                meta.name = finalName;
+                meta.characterName = characterName;
+                meta.state = state;
+                meta.direction = direction;
+                meta.frameIndex = frameIndex;
+                meta.collisionBox = collision;
 
-            meta.collisionBox = collision;
+                const auto& render = def.at("render_component");
+                meta.renderBox.name = finalName;
+                meta.renderBox.textureRect = sf::IntRect{
+                    { render.value("x", 0), render.value("y", 0) },
+                    { render.value("w", 0), render.value("h", 0) }
+                };
+                meta.renderBox.texturePath = texturePath;
+                meta.renderBox.sourceTileSize = tileSize;
 
-            const auto& render = def.at("render_component");
+                std::string countKey = characterName + "_" + state + "_" + direction;
+                auto& count = frameCounts_[countKey];
+                count = std::max(count, frameIndex + 1);
 
-            meta.renderBox.name = finalName;
-            meta.renderBox.textureRect = sf::IntRect{
-                { render.value("x", 0), render.value("y", 0) },
-                { render.value("w", 0), render.value("h", 0) }
-            };
-            meta.renderBox.texturePath = texturePath;
-            meta.renderBox.sourceTileSize = tileSize;
-
-            frames_.emplace(finalName, std::move(meta));
+                frames_.emplace(finalName, std::move(meta));
+            }
         }
     }
 }
@@ -99,4 +89,10 @@ const CharacterMetadata *CharacterRepository::find(const std::string &frameName)
 {
     auto it = frames_.find(frameName);
     return it == frames_.end() ? nullptr : &it->second;
+}
+
+int CharacterRepository::frameCount(const std::string& character, const std::string& state, const std::string& direction) const
+{
+    auto it = frameCounts_.find(character + "_" + state + "_" + direction);
+    return it == frameCounts_.end() ? 0 : it->second;
 }

@@ -13,13 +13,11 @@ SpriteRegion MapObjectAtlas::getObjectSprite(const std::string& typeName) const
         throw std::runtime_error("No metadata found for: " + typeName);
     }
 
-    const auto& rect = meta->renderBox.textureRect;
-
     SpriteRegion region;
-    region.subrect = rect;
+    region.subrect = meta->renderBox.textureRect;
     region.tile_size = sf::Vector2f(
-        static_cast<float>(rect.size.x),
-        static_cast<float>(rect.size.y)
+        static_cast<float>(meta->renderBox.textureRect.size.x),
+        static_cast<float>(meta->renderBox.textureRect.size.y)
     );
     region.sourceTileSize = meta->renderBox.sourceTileSize;
     region.texture = &getOrLoadTexture(meta->renderBox.texturePath);

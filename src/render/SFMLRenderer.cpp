@@ -112,8 +112,8 @@ void SFMLRenderer::drawDebugRect(float x, float y, float width, float height) {
 }
 
 void SFMLRenderer::drawPlayer(const PositionComponent& playerPos, const DirectionComponent& playerDir, const RenderComponent& playerRender, float animProgress) {
-    WalkFrame frame = SpriteAtlas::frameFromProgress(animProgress);
-    SpriteRegion region = spriteAtlas_.getPlayerSprite(playerDir.facing, frame);
+    // std::cout << "[SFMLRenderer] drawPlayer: pos(" << playerPos.x << ", " << playerPos.y << ")" << std::endl;
+    SpriteRegion region = spriteAtlas_.getCharacterSprite(playerRender.name);
     const sf::Texture& tex = spriteAtlas_.playerTexture();
 
     sf::Sprite sprite(tex);

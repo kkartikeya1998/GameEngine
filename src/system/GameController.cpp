@@ -3,6 +3,7 @@
 #include "system/GameController.h"
 #include "system/GameConstants.h"
 #include "system/MovementSystem.h"
+#include "system/AnimationSystem.h"
 #include "tmp/movement/PositionComponent.h"
 #include "tmp/movement/FreeMovementComponent.h"
 #include "tmp/movement/CollisionComponent.h"
@@ -38,17 +39,17 @@ void GameController::update(float dt, const PlayerControlComponent &input)
     if (!position || !velocity || !direction || !movement || !collision || !movementState)
         return;
 
-    MovementSystem::updateFree(*position, *velocity, *direction, *movement, *collision,
+    MovementSystem::update(*position, *velocity, *direction, *movement, *collision,
                                *movementState, dt, input.direction, input.sprinting,
                                [this](const AABB &box)
                                { return isPositionBlocked(box); });
+
 
     if (walkCycle) {
         bool isMoving = movementState->current != MovementState::Idle;
         float speedScale = (movementState->current == MovementState::Sprinting) ? 1.5f : 1.f;
         walkCycle->update(dt, isMoving, speedScale);
     }
-
 }
 
 void GameController::changeMap(int mapId, float newX, float newY)
