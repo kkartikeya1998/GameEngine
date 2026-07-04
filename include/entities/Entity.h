@@ -83,8 +83,8 @@ public:
 
     // Exposes every component on this entity as base-class pointers,
     // for callers that need to iterate without knowing concrete types
-    // up front (e.g. World::view<T>() built on top of this — see
-    // World.h). Returns non-owning raw pointers; lifetime stays tied
+    // up front (e.g. World::view<T>() built on top of this. 
+    // Returns non-owning raw pointers; lifetime stays tied
     // to this Entity.
     std::vector<Component*> getAllComponents()
     {

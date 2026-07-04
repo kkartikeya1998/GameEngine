@@ -12,7 +12,8 @@
 #include "render/atlases/MapObjectAtlas.h"
 #include "asset/repositories/TileRepository.h"
 #include "asset/repositories/MapObjectRepository.h"
-#include "asset/repositories/SpriteRepository.h"
+#include "asset/repositories/CharacterRepository.h"
+#include "tmp/movement/RenderComponent.h"
 
 namespace sf {
     class RenderWindow;
@@ -24,7 +25,7 @@ namespace sf {
 // SFMLRenderer — SFML-based concrete implementation of IRenderer.
 //
 // CHANGED: no longer owns repositories by value. TileRepository,
-// MapObjectRepository, and SpriteRepository are now single shared instances
+// MapObjectRepository, and CharacterRepository are now single shared instances
 // owned by Game (via AssetManager) and passed in here by reference. This
 // removes the duplication that existed when SFMLRenderer parsed the same
 // JSON files into its own private copies, separate from World's.
@@ -41,7 +42,7 @@ public:
     SFMLRenderer(int windowWidth, int windowHeight,
                  const TileRepository& tileRepository,
                  const MapObjectRepository& objectRepository,
-                 const SpriteRepository& spriteRepository,
+                 const CharacterRepository& characterRepository,
                  const std::filesystem::path& tileSpritesheetPath,
                  const std::filesystem::path& playerSpritesheetPath,
                  const std::filesystem::path& objectSpritesheetPath);
@@ -49,9 +50,9 @@ public:
  
 
     void clear() override;
-    void drawTile(int gridX, int gridY, const std::string& typeName) override;
-    void drawPlayer(const PositionComponent& playerPos, const DirectionComponent& facing, float animProgress) override;
-    void drawMapObject(const PositionComponent& objectPos, const MapObjectRenderComponent& objectRender) override;
+    void drawTile(int gridX, int gridY, const RenderComponent& tileRender) override;
+    void drawPlayer(const PositionComponent& playerPos, const DirectionComponent& facing, const RenderComponent& playerRender, float animProgress) override;
+    void drawMapObject(const RenderComponent& objectRender) override;
     void drawDebugRect(float x, float y, float width, float height) override;    void present() override;
     bool isOpen() const override;
 
@@ -70,11 +71,6 @@ private:
 
     // SFML resources.
     std::unique_ptr<sf::RenderWindow> window_;
-
-    struct TerrainColor {
-        unsigned char r, g, b;
-    };
-    std::map<Terrain::Type, TerrainColor> terrainColors_;
 
     // for tiles
     float screenX(float gridX) const { return gridX * TILE_SIZE; }

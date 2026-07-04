@@ -18,6 +18,7 @@ struct CollisionComponent : public Component {
         : offsetX(offsetX), offsetY(offsetY), width(width), height(height)
     {}
 
+    // make-do converter for AABB component in debug rendering
     // worldX/worldY = the entity's PositionComponent.
     AABB resolve(float worldX, float worldY) const {
         return AABB{

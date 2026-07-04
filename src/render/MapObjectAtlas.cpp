@@ -14,13 +14,13 @@ SpriteRegion MapObjectAtlas::getObjectSprite(const std::string& typeName) const
     }
 
     SpriteRegion region;
-    region.subrect = meta->textureRect;
+    region.subrect = meta->renderBox.textureRect;
     region.tile_size = sf::Vector2f(
-        static_cast<float>(meta->textureRect.size.x),
-        static_cast<float>(meta->textureRect.size.y)
+        static_cast<float>(meta->renderBox.textureRect.size.x),
+        static_cast<float>(meta->renderBox.textureRect.size.y)
     );
-    region.sourceTileSize = meta->sourceTileSize;
-    region.texture = &getOrLoadTexture(meta->texturePath);
+    region.sourceTileSize = meta->renderBox.sourceTileSize;
+    region.texture = &getOrLoadTexture(meta->renderBox.texturePath);
     return region;
 }
 

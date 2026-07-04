@@ -2,58 +2,82 @@
 
 #include <fstream>
 #include <iostream>
-#include <stdexcept>
 
 #include "external/json.hpp"
+#include "asset/metadata/MetadataParser.h"
 
 using json = nlohmann::json;
 
-TileRepository::TileRepository(const std::filesystem::path& metadataFilePath) {
+TileRepository::TileRepository(
+    const std::filesystem::path& metadataFilePath)
+{
     load_from_file(metadataFilePath);
 }
 
-void TileRepository::load_from_file(const std::filesystem::path& path) {
+void TileRepository::load_from_file(
+    const std::filesystem::path& path)
+{
     std::ifstream file(path);
-    if (!file) {
-        std::cerr << "Failed to open tile metadata file: " << path << '\n';
+
+    if (!file)
+    {
+        std::cerr << "Failed to open tile metadata file: "
+                  << path << '\n';
         return;
     }
 
     json j;
     file >> j;
 
-    const auto& tile_types = j.at("tile_types");
-    for (auto it = tile_types.begin(); it != tile_types.end(); ++it) {
-        const std::string& typeName = it.key();
-        const json& def = it.value();
+    const auto& tilesets = j.at("tilesets");
 
-        TileTypeMetadata meta;
-        meta.name = typeName;
-        meta.texturePath = def.value("texture", "");
+    for (auto tilesetIt = tilesets.begin();
+         tilesetIt != tilesets.end();
+         ++tilesetIt)
+    {
+        const std::string tilesetName = tilesetIt.key();
+        const json& tileset = tilesetIt.value();
 
-        int x = def.value("x", 0);
-        int y = def.value("y", 0);
-        int w = def.value("w", 0);
-        int h = def.value("h", 0);
+        const std::string texture =
+            tileset.value("texture", "");
 
-        meta.textureRect = sf::IntRect(
-            sf::Vector2<int>(x, y),
-            sf::Vector2<int>(w, h)
-        );
+        int tileSize =
+            tileset.value("tile_size",
+                GameConstants::TILE_SIZE);
 
-        meta.terrainType = def.value("terrain", "Grass");
+        const auto& tileTypes =
+            tileset.at("tile_types");
 
-        // Defaults to w (the region's own width) if not explicitly given —
-        // for a tile, "pixels per tile" and "this region's width" are the
-        // same thing unless you say otherwise. Falls back further to GameConstants::TILE_SIZE
-        // only if w itself was never set (malformed/legacy entry).
-        meta.sourceTileSize = def.value("tile_size", w > 0 ? w : GameConstants::TILE_SIZE);
+        for (auto it = tileTypes.begin();
+             it != tileTypes.end();
+             ++it)
+        {
+            const std::string tileType = it.key();
+            const json& def = it.value();
 
-        types_.emplace(typeName, std::move(meta));
+            TileTypeMetadata meta;
+
+            meta.name =
+                tilesetName + "_" + tileType;
+            
+            const auto& render = def.at("render_component");
+            meta.renderBox.textureRect = sf::IntRect{
+                { render.value("x", 0), render.value("y", 0) },
+                { render.value("w", 0), render.value("h", 0) }
+            };
+            meta.renderBox.texturePath = texture;
+            meta.renderBox.sourceTileSize = tileSize;
+
+            types_.emplace(meta.name, std::move(meta));
+        }
     }
 }
 
-const TileTypeMetadata* TileRepository::find(const std::string& type) const {
+const TileTypeMetadata* TileRepository::find(
+    const std::string& type) const
+{
+    std::cout << "[TileRepository]: Searching for tile type: " << type << "\n";
     auto it = types_.find(type);
+    std::cout << "[TileRepository]: Search result: " << (it == types_.end() ? "not found" : "found") << "\n";
     return it == types_.end() ? nullptr : &it->second;
 }

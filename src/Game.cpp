@@ -9,25 +9,26 @@
 #include "system/GameConstants.h"
 
 Game::Game()
-    : assets_()
-    , controller_(1, 600, 600, assetsRoot_, assets_.get<MapObjectRepository>()) // map ID: 1 main map, 2 asset tuning map
-    , renderSystem_(std::make_unique<RenderSystem>(
+    : assets_(),
+      controller_(1, 600, 600, // map ID: 1 main map, 2 asset tuning map
+                  assetsRoot_, assets_.get<MapObjectRepository>(),
+                  assets_.get<TileRepository>()),
+      renderSystem_(std::make_unique<RenderSystem>(
           std::make_unique<SFMLRenderer>(
               GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H,
               assets_.get<TileRepository>(),
               assets_.get<MapObjectRepository>(),
-              assets_.get<SpriteRepository>(),
+              assets_.get<CharacterRepository>(),
               Assets::Objects::SIMPLE_SUMMER_TILES,
               Assets::Sprites::PLAYER_SPRITESHEET,
-              Assets::Objects::SIMPLE_SUMMER_OBJECTS
-          )
-      ))
+              Assets::Objects::SIMPLE_SUMMER_OBJECTS)))
 {
 }
 
 void Game::run()
 {
-    try {
+    try
+    {
         while (renderSystem_->isOpen())
         {
             float dt = gameClock_.restart().asSeconds();
@@ -39,18 +40,17 @@ void Game::run()
             // should keep moving the player every frame it's held).
             while (auto eventOpt = renderSystem_->pollEvent())
             {
-                const sf::Event& event = *eventOpt;
+                const sf::Event &event = *eventOpt;
 
                 if (event.is<sf::Event::Closed>())
                     return;
 
-                if (const auto* key = event.getIf<sf::Event::KeyPressed>())
+                if (const auto *key = event.getIf<sf::Event::KeyPressed>())
                 {
                     if (key->code == sf::Keyboard::Key::Escape)
                         return;
                 }
             }
-
 
             // NOTE: this picks one direction per frame (last-checked-wins
             // if multiple keys are held, since these are plain ifs, not a
@@ -79,7 +79,9 @@ void Game::run()
             // isAnimating()-gate is gone: that existed to stop a new
             // discrete hop from interrupting an in-progress one, which
             // has no equivalent for continuous movement.
+            std::cout << "[Game]: Updating player movement with input dir: " << static_cast<int>(dir) << "\n"; 
             controller_.updatePlayerMovement(dt, dir);
+            std::cout << "[Game]: Player movement updated.\n";
 
             controller_.update(dt);
 
@@ -89,10 +91,13 @@ void Game::run()
             // tradeoff made when folding render-state stepping into
             // render() instead of a separate per-frame system pass.
             // See RenderSystem.cpp's ECS-ported version.
+            std::cout << "[Game]: Rendering frame with dt: " << dt << "\n";
             renderSystem_->render(controller_, dt);
+            std::cout << "[Game]: Frame rendered.\n";
         }
-
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception &e)
+    {
         std::cout << "Error: " << e.what() << "\n";
     }
 }

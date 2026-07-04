@@ -5,7 +5,8 @@
 #include "tmp/movement/VelocityComponent.h"
 #include "tmp/movement/DirectionComponent.h"
 #include "tmp/movement/FreeMovementComponent.h"
-#include "render/FreeRenderComponent.h"
+#include "tmp/movement/WalkCycleTimer.h"
+#include "tmp/movement/RenderComponent.h"
 #include "entities/player/PlayerControlComponent.h"
 #include "system/GameConstants.h"
 
@@ -24,7 +25,9 @@ inline Entity makePlayer(
         GameConstants::PLAYER_HITBOX_HEIGHT,
         GameConstants::PLAYER_HITBOX_OFFSET_X,
         GameConstants::PLAYER_HITBOX_OFFSET_Y, false);
-    e.add<FreeRenderComponent>(walkCyclesPerSecond, 0.f, x, y);
-    e.add<PlayerControlComponent>();
+    e.add<WalkCycleTimer>(walkCyclesPerSecond);
+    e.add<RenderComponent>(/* texturePath, textureRect, sourceTileSize, x, y */);
+    
+    // e.add<PlayerControlComponent>();
     return e;
 }

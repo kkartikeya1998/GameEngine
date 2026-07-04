@@ -12,7 +12,7 @@
 // Game — top-level owner of the game loop.
 //
 // CHANGED: Game no longer owns TileRepository, MapObjectRepository, and
-// SpriteRepository as three separate members. It owns one AssetManager,
+// CharacterRepository as three separate members. It owns one AssetManager,
 // which loads and owns all three internally (see AssetManager.cpp for the
 // full list of what gets loaded at startup). Game pulls individual
 // repository references back out via assets_.get<T>() wherever a

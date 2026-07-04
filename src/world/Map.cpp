@@ -28,8 +28,8 @@ const Tile& Map::tile_at(int x, int y) const {
     return tiles[index(x, y)];
 }
 
-void Map::set_tile(int x, int y, Terrain::Type terrain, std::string typeName) {
-    tiles[index(x, y)] = Tile(terrain, std::move(typeName));
+void Map::set_tile(int x, int y, Tile tile) {
+    tiles[index(x, y)] = Tile(std::move(tile));
 }
 
 bool Map::isAreaBlocked(const AABB& box) const {
@@ -38,27 +38,7 @@ bool Map::isAreaBlocked(const AABB& box) const {
     int maxTileX = static_cast<int>(std::floor((box.x + box.width) / GameConstants::TILE_SIZE));
     int minTileY = static_cast<int>(std::floor(box.y / GameConstants::TILE_SIZE));
     int maxTileY = static_cast<int>(std::floor((box.y + box.height) / GameConstants::TILE_SIZE));
-
-    for (int ty = minTileY; ty <= maxTileY; ++ty) {
-        for (int tx = minTileX; tx <= maxTileX; ++tx) {
-            if (tx < 0 || ty < 0 || tx >= width || ty >= height) {
-                return true; // out of bounds counts as blocked
-            }
-            if (!tile_at(tx, ty).isWalkable()) {
-                AABB tileBox{
-                    static_cast<float>(tx) * GameConstants::TILE_SIZE,
-                    static_cast<float>(ty) * GameConstants::TILE_SIZE,
-                    GameConstants::TILE_SIZE,
-                    GameConstants::TILE_SIZE
-                };
-                if (box.intersects(tileBox)) {
-                    return true;
-                }
-            }
-        }
-    }
-
-    // Second, independent collision source: objects with a precise
+    // independent collision source: objects with a precise
     // collisionBox (see CollisionBox in MapObjectRepository.h). This is
     // deliberately separate from the tile-grid check above — an object
     // with a collisionBox does NOT also mark its tile as blocking via
@@ -69,10 +49,11 @@ bool Map::isAreaBlocked(const AABB& box) const {
     // flag — exactly as before this method existed.
     for (const auto& obj : map_objects) {
         
-        const auto* render = obj->get<MapObjectRenderComponent>();
-        if (!render) continue;
+        const auto* objCollision = obj->get<CollisionComponent>();
+        const auto* objPosition = obj->get<PositionComponent>();
+        if (!objCollision) continue;
 
-        std::optional<AABB> objBox = MapObjectSystem::getCollisionBox(*render);
+        std::optional<AABB> objBox = objCollision->resolve(objPosition->x, objPosition->y);
 
         if (objBox && box.intersects(*objBox)) {
             return true;
@@ -81,12 +62,3 @@ bool Map::isAreaBlocked(const AABB& box) const {
 
     return false;
 }
-
-// void Map::render() const {
-//     for (int y = 0; y < height; ++y) {
-//         for (int x = 0; x < width; ++x) {
-//             std::cout << tile_at(x, y).render_char();
-//         }
-//         std::cout << '\n';
-//     }
-// }

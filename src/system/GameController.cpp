@@ -1,22 +1,26 @@
+#include <iostream>
+
 #include "system/GameController.h"
 #include "system/GameConstants.h"
 #include "system/MovementSystem.h"
 #include "tmp/movement/PositionComponent.h"
 #include "tmp/movement/FreeMovementComponent.h"
-#include "tmp/movement/GridMovementComponent.h"
+#include "tmp/movement/WalkCycleTimer.h"
 
 GameController::GameController(int startMapId, int playerX, int playerY,
-                                 const std::string& assetsRoot,
-                                 MapObjectRepository& objectRepository)
-    : world_(objectRepository)
-    , player_(makePlayer(static_cast<float>(playerX), static_cast<float>(playerY)))
+                               const std::string &assetsRoot,
+                               MapObjectRepository &objectRepository,
+                               TileRepository &tileRepository)
+    : world_(objectRepository, tileRepository), player_(makePlayer(static_cast<float>(playerX), static_cast<float>(playerY)))
 {
+    std::cout << "[GameController]: Loading map with ID: " << startMapId << "\n";
     world_.loadMap(startMapId);
+    std::cout << "[GameController]: Map loaded with ID: " << startMapId << "\n";
 }
 
-bool GameController::isPositionBlocked(const AABB& box) const
+bool GameController::isPositionBlocked(const AABB &box) const
 {
-    Map* activeMap = world_.getActiveMap();
+    Map *activeMap = world_.getActiveMap();
     if (!activeMap)
         return true; // no map loaded -> nowhere is walkable
 
@@ -25,20 +29,29 @@ bool GameController::isPositionBlocked(const AABB& box) const
 
 void GameController::updatePlayerMovement(float dt, Direction inputDir)
 {
-    auto* position  = player_.get<PositionComponent>();
-    auto* velocity  = player_.get<VelocityComponent>();
-    auto* direction = player_.get<DirectionComponent>();
-    auto* movement  = player_.get<FreeMovementComponent>();
-    if (!position || !velocity || !direction || !movement) return;
+    auto *position = player_.get<PositionComponent>();
+    auto *velocity = player_.get<VelocityComponent>();
+    auto *direction = player_.get<DirectionComponent>();
+    auto *movement = player_.get<FreeMovementComponent>();
+    auto *walkCycle = player_.get<WalkCycleTimer>();
+    if (!position || !velocity || !direction || !movement)
+        return;
 
+    if(movement && walkCycle){
+        walkCycle->update(dt, movement->isMoving);
+    }
     MovementSystem::updateFree(*position, *velocity, *direction, *movement, dt, inputDir,
-                               [this](const AABB& box) { return isPositionBlocked(box); });
+                               [this](const AABB &box)
+                               { return isPositionBlocked(box); });// GameController::updatePlayerMovement(dt, inputDir), after calling updateFree:
+    bool isMoving = (inputDir != Direction::NONE);
+    player_.get<WalkCycleTimer>()->update(dt, isMoving);
 }
 
 void GameController::update(float dt)
 {
-    Map* activeMap = world_.getActiveMap();
-    if (!activeMap) return;
+    Map *activeMap = world_.getActiveMap();
+    if (!activeMap)
+        return;
 
     // NPC and other animates update
     // auto isBlocked = [this](const AABB& box) { return isPositionBlocked(box); };
@@ -59,8 +72,9 @@ void GameController::changeMap(int mapId, float newX, float newY)
 {
     world_.loadMap(mapId);
 
-    auto* position = player_.get<PositionComponent>();
-    if (!position) return;
+    auto *position = player_.get<PositionComponent>();
+    if (!position)
+        return;
 
     position->x = newX;
     position->y = newY;

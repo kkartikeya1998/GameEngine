@@ -36,7 +36,7 @@
 // ---------------------------------------------------------------------------
 class World {
 public:
-    World(MapObjectRepository& objectRepository);
+    World(MapObjectRepository& objectRepository, TileRepository& tileRepository);
 
     Map* getActiveMap() const;
 

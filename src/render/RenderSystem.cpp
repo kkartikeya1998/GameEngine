@@ -1,12 +1,8 @@
 #include "render/RenderSystem.h"
-#include "system/RenderStateSystem.h"
 #include "system/MovementSystem.h"
-#include "system/MapObjectSystem.h"
-#include "tmp/movement/GridMovementComponent.h"
 #include "tmp/movement/FreeMovementComponent.h"
-#include "render/GridRenderComponent.h"
-#include "render/FreeRenderComponent.h"
-#include "world/MapObjectRenderComponent.h"
+#include "tmp/movement/RenderComponent.h"
+#include "tmp/movement/CollisionComponent.h"
 #include <optional>
 #include <algorithm>
 #include <vector>
@@ -52,126 +48,68 @@ void RenderSystem::render(GameController &controller, float dt)
         {
             for (int x = 0; x < map->getWidth(); ++x)
             {
-                renderer_->drawTile(x, y, map->tile_at(x, y).typeName());
+                std::cout << "[RenderSystem]: Drawing tile at (" << x << ", " << y << ")\n";
+                renderer_->drawTile(x, y, map->tile_at(x, y).getRenderComponent());
+                std::cout << "[RenderSystem]: Finished drawing tile at (" << x << ", " << y << ")\n";
             }
         }
 
         std::vector<Renderable> renderables;
         renderables.reserve(map->getMapObjects().size() + map->getNpcs().size() + 1);
 
-        // ---- Map objects --------------------------------------------
-        // Restored to match the original logic exactly, now that
-        // MapObjectSystem::getCollisionBox is a verified port of
-        // MapObject::getCollisionBox (see MapObjectSystem.cpp —
-        // numerically confirmed identical to the original by test).
-        // depthY uses the collision box's bottom edge when present,
-        // falling back to raw originY otherwise — same as before this
-        // ECS pass ever started.
+
         for (const auto &mapObj : map->getMapObjects())
         {
-            const auto *mapObjRender = mapObj->get<MapObjectRenderComponent>();
+            const auto *mapObjRender = mapObj->get<RenderComponent>();
             const auto *mapObjPos = mapObj->get<PositionComponent>();
             if (!mapObjRender || !mapObjPos)
                 continue;
 
-            std::optional<AABB> collisionBox = MapObjectSystem::getCollisionBox(*mapObjRender);
-
-            if (collisionBox)
+            const auto *mapObjCollision = mapObj->get<CollisionComponent>();
+            
+            if (mapObjCollision)
             {
-                renderer_->drawDebugRect(collisionBox->x, collisionBox->y, collisionBox->width, collisionBox->height);
+                auto debugRect = mapObjCollision->resolve(mapObjPos->x, mapObjPos->y);
+                renderer_->drawDebugRect(debugRect.x, debugRect.y, debugRect.width, debugRect.height);
             }
 
-            float depthY = collisionBox
-                               ? (collisionBox->y + collisionBox->height)
+            float depthY = mapObjCollision
+                               ? (mapObjCollision->resolve(mapObjPos->x, mapObjPos->y).y + mapObjCollision->resolve(mapObjPos->x, mapObjPos->y).height)
                                : static_cast<float>(mapObjPos->y);
 
-            std::string typeName = MapObjectSystem::getTypeName(*mapObjRender);
 
             renderables.push_back(Renderable{
                 depthY,
                 [this, mapObjPos = *mapObjPos, mapObjRender = *mapObjRender]()
                 {
-                    renderer_->drawMapObject(mapObjPos, mapObjRender);
+                    renderer_->drawMapObject(mapObjRender);
                 }});
         }
 
-        // ---- NPCs -----------------------------------------------------
-        // Dispatches on which movement/render component pair an NPC
-        // Entity actually has, mirroring how Player is handled below.
-        // Both branches step render state inline (the chosen tradeoff:
-        // render() mutates lerp/walk-cycle state as a side effect of
-        // drawing).
-        // for (const auto& npcEntity : map->getNpcs()) {
-        //     if (auto* grid = npcEntity->get<GridMovementComponent>()) {
-        //         auto* gridRender = npcEntity->get<GridRenderComponent>();
-        //         if (!gridRender) continue;
-
-        //         RenderStateSystem::stepGridRender(
-        //             *gridRender, dt,
-        //             static_cast<float>(grid->gridX), static_cast<float>(grid->gridY));
-
-        //         float renderX = gridRender->renderX;
-        //         float renderY = gridRender->renderY;
-        //         Direction facing = grid->facing;
-        //         float progress = gridRender->progress;
-
-        //         renderables.push_back(Renderable{
-        //             renderY,
-        //             [this, renderX, renderY, facing, progress]() {
-        //                 renderer_->drawPlayer(renderX, renderY, facing, progress);
-        //             }
-        //         });
-        //     } else if (auto* free = npcEntity->get<FreeMovementComponent>()) {
-        //         auto* freeRender = npcEntity->get<FreeRenderComponent>();
-        //         if (!freeRender) continue;
-
-        //         RenderStateSystem::stepFreeRender(
-        //             *freeRender, dt,
-        //             free->x, free->y, free->isMoving);
-
-        //         float renderX = freeRender->renderX;
-        //         float renderY = freeRender->renderY;
-        //         Direction facing = free->facing;
-        //         float progress = RenderStateSystem::getFreeProgress(*freeRender);
-
-        //         renderables.push_back(Renderable{
-        //             renderY,
-        //             [this, renderX, renderY, facing, progress]() {
-        //                 renderer_->drawPlayer(renderX, renderY, facing, progress);
-        //             }
-        //         });
-        //     }
-        // }
-
         // ---- Player -----------------------------------------------------
-        // Player is a FreeMovementComponent + FreeRenderComponent
+        // Player is a FreeMovementComponent + RenderComponent
         // entity, same as before (makePlayer only ever built
         // FreeMovementMechanics) — see Player.h.
 
         const auto *playerPos = player->get<PositionComponent>();
         const auto *playerMove = player->get<FreeMovementComponent>();
-        auto *playerRender = player->get<FreeRenderComponent>();
+        const auto *playerRender = player->get<RenderComponent>();
         const auto *playerDirection = player->get<DirectionComponent>();
+        const auto *playerTimer = player->get<WalkCycleTimer>();
 
         if (playerPos && playerMove && playerRender && playerDirection)
         {
             AABB playerBox = MovementSystem::getFreeHitbox(*playerPos, *playerMove);
             renderer_->drawDebugRect(playerBox.x, playerBox.y, playerBox.width, playerBox.height);
 
-            RenderStateSystem::stepFreeRender(
-                *playerRender, dt,
-                playerPos->x, playerPos->y, playerMove->isMoving);
-
-            float renderX = playerRender->renderX;
-            float renderY = playerRender->renderY;
-            Direction facing = playerDirection->facing;
-            float progress = RenderStateSystem::getFreeProgress(*playerRender);
+            float animProgress = playerTimer ? playerTimer->getProgress() : 0.f;
 
             renderables.push_back(Renderable{
                 playerBox.y + playerBox.height,
-                [this, playerPos = *playerPos, playerDirection = *playerDirection, progress]()
+                [this, playerPos = *playerPos, playerDirection = *playerDirection,
+                playerRender = *playerRender, animProgress]()
                 {
-                    renderer_->drawPlayer(playerPos, playerDirection, progress);
+                    renderer_->drawPlayer(playerPos, playerDirection, playerRender, animProgress);
                 }});
         }
 
@@ -190,13 +128,14 @@ void RenderSystem::render(GameController &controller, float dt)
     {
         const auto *playerPos = player->get<PositionComponent>();
         const auto *playerMove = player->get<FreeMovementComponent>();
-        const auto *playerRender = player->get<FreeRenderComponent>();
+        const auto *playerRender = player->get<RenderComponent>();
         const auto *playerDir = player->get<DirectionComponent>();
         if (playerPos && playerMove && playerRender)
         {
             renderer_->drawPlayer(
                 *playerPos,*playerDir,
-                RenderStateSystem::getFreeProgress(*playerRender));
+                *playerRender,
+                0.f); // fix
         }
     }
 

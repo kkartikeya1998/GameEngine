@@ -5,7 +5,7 @@
 #include <SFML/Window/Event.hpp>
 #include "tmp/movement/DirectionComponent.h"
 #include "tmp/movement/PositionComponent.h"
-#include "world/MapObjectRenderComponent.h"
+#include "tmp/movement/RenderComponent.h"
 
 // ---------------------------------------------------------------------------
 // IRenderer — abstract interface for rendering.
@@ -26,23 +26,12 @@ public:
     // Clear the screen for a new frame
     virtual void clear() = 0;
 
-    // Draw a single tile at grid position (x, y). typeName is the tile's
-    // catalog key (e.g. "Grass2", "Sand") — used to look up its sprite
-    // region directly, the same way drawMapObject already does for
-    // object type names. CHANGED from Terrain::Type: the renderer no
-    // longer needs to know about Terrain::Type at all, since rendering
-    // and gameplay-terrain-category are now separate concerns (see
-    // Tile.h for why).
-    virtual void drawTile(int gridX, int gridY, const std::string& typeName) = 0;
+    virtual void drawTile(int gridX, int gridY, const RenderComponent& tileRender) = 0;
 
     // Entities can be drawn at fractional grid positions for smooth animation
-    virtual void drawPlayer(const PositionComponent& playerPos, const DirectionComponent& playerDir, float animProgress) = 0;
+    virtual void drawPlayer(const PositionComponent& playerPos, const DirectionComponent& playerDir, const RenderComponent& playerRender, float animProgress) = 0;
 
-    // Draw a single placed map object (tree, house, sign, ...) at its
-    // origin grid position. typeName is the object's catalog key (e.g.
-    // "tree", "house") — used to look up its sprite region, the same way
-    // drawTile uses Terrain::Type to look up a tile's sprite region.
-    virtual void drawMapObject(const PositionComponent& objectPos, const MapObjectRenderComponent& objRender) = 0;
+    virtual void drawMapObject(const RenderComponent& objRender) = 0;
     
     // Debug-only: draws an unfilled rectangle outline at world-pixel
     // coordinates (x, y = top-left), given width/height in pixels. Not

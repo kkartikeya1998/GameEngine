@@ -1,7 +1,7 @@
 #include "world/World.h"
 
-World::World(MapObjectRepository& objectRepository)
-    : loader_(objectRepository)
+World::World(MapObjectRepository& objectRepository, TileRepository& tileRepository)
+    : loader_(objectRepository, tileRepository)
 {
 }
 
@@ -27,14 +27,6 @@ std::vector<Entity*> World::getAllEntities() const
 
     result.reserve(objects.size() + npcs.size());
 
-    // Same const-unique_ptr-still-gives-mutable-pointee pattern
-    // RenderSystem.cpp already relies on today (getNpcs()/
-    // getMapObjects() are const accessors returning const
-    // vector<unique_ptr<Entity>>&, but unique_ptr's operator->() on a
-    // const unique_ptr still yields a non-const Entity*) — callers
-    // get mutable Entity* here for the same reason RenderStateSystem's
-    // stepGridRender/stepFreeRender calls already compile against
-    // npcEntity->get<T>() today.
     for (const auto& obj : objects)
         result.push_back(obj.get());
 

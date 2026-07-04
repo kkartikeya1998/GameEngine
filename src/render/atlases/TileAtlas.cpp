@@ -7,7 +7,7 @@ TileAtlas::TileAtlas(const std::filesystem::path& spritesheet_path, const TileRe
 {
 }
 
-SpriteRegion TileAtlas::getTerrainSprite(const std::string& typeName) const
+SpriteRegion TileAtlas::getTileSprite(const std::string& typeName) const
 {
     return regionFromRepository(tileRepository_, typeName, typeName);
 }

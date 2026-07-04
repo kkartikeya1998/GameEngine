@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "Tile.h"
-#include "Terrain.h"
+#include "world/Tile.h"
 #include "entities/Entity.h"
-// #include "tmp/movement/Position2D.h"
-#include "render/FreeRenderComponent.h"
-#include "system/MapObjectSystem.h"
+// for AABB
+#include "tmp/movement/PositionComponent.h"
+#include "tmp/movement/RenderComponent.h"
+#include "tmp/movement/CollisionComponent.h"
 #include "system/GameConstants.h"
 
 // ---------------------------------------------------------------------------
@@ -18,30 +18,6 @@
 // Holds tiles and placed objects. Knows nothing about loading from
 // file. Building a Map from a file is MapLoader's job.
 //
-// CHANGED (ECS pass): map_objects and npcs_ both become
-// std::vector<std::unique_ptr<Entity>>, collapsed from two separately-
-// typed collections (vector<unique_ptr<MapObject>>,
-// vector<unique_ptr<Npc>>) into one shape. MapObject and Npc are no
-// longer classes — see entities/MapObjectRenderComponent.h and
-// entities/npc/NpcComponent.h. What used to distinguish "this is a
-// MapObject" from "this is an Npc" by TYPE is now distinguished by
-// WHICH COMPONENTS the Entity carries (MapObjectRenderComponent vs.
-// NpcComponent + a movement component) — same data, same two
-// conceptually-different kinds of things, just no longer needing two
-// different container element types to express that difference.
-//
-// addMapObject/getMapObjects and addNpc/getNpcs are KEPT AS TWO
-// SEPARATE METHOD PAIRS (not collapsed into one addEntity/getEntities)
-// deliberately — MapLoader's call sites already know which kind of
-// thing they're building, and collapsing the two would just mean every
-// caller needs to re-derive "is this a map object or an npc" from
-// component presence instead of from which method it already called.
-// No second use case has shown up yet that wants a single uniform
-// "all entities on this map" query, so per the linear-curve precedent
-// this stays as two pairs until one does.
-//
-// isAreaBlocked is UNCHANGED — pixel-space collision query, no
-// MapObject/Npc-shape dependency.
 // ---------------------------------------------------------------------------
 class Map {
 private:
@@ -63,7 +39,7 @@ public:
 
     Tile& tile_at(int x, int y);
     const Tile& tile_at(int x, int y) const;
-    void set_tile(int x, int y, Terrain::Type terrain, std::string typeName);
+    void set_tile(int x, int y, Tile tile);
 
     // Takes ownership of a fully-constructed MapObject Entity (built by
     // MapLoader — see MapLoader::buildMapObject, which attaches
@@ -90,8 +66,7 @@ public:
 
     // True if box (world/pixel space) overlaps any non-walkable tile, or
     // falls outside the map's bounds. tileSize is the caller's render
-    // tile size (e.g. SFMLRenderer::TILE_SIZE) — Map stays agnostic of
-    // any specific rendering constant, the caller supplies it.
+    // tile size (e.g. SFMLRenderer::TILE_SIZE).
     bool isAreaBlocked(const AABB& box) const;
 
 };

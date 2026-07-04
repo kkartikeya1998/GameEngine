@@ -25,7 +25,6 @@ add_executable(PokemonProject
     src/world/World.cpp
     src/world/MapLoader.cpp
     src/world/Map.cpp
-    # src/world/MapObject.cpp
 
     # src/entities/pokemon/Pokemon.cpp
     # src/entities/pokemon/Stats.cpp
@@ -35,16 +34,7 @@ add_executable(PokemonProject
     # src/entities/pokemon/CapturedPokemonFactory.cpp
     # src/entities/pokemon/PokemonSpeciesRepository.cpp
     
-
-    
-    # src/tmp/movement/GridMovementMechanics.cpp
-    # src/tmp/movement/FreeMovementMechanics.cpp
     src/system/MovementSystem.cpp
-    src/system/RenderStateSystem.cpp
-    src/system/MapObjectSystem.cpp
-
-    src/tmp/animation/AnimationComponent.cpp
-
 
     src/system/GameController.cpp
     
@@ -58,7 +48,7 @@ add_executable(PokemonProject
     src/asset/AssetManager.cpp
     src/asset/repositories/MapObjectRepository.cpp
     src/asset/repositories/TileRepository.cpp
-    src/asset/repositories/SpriteRepository.cpp
+    src/asset/repositories/CharacterRepository.cpp
     
     src/Game.cpp
     )

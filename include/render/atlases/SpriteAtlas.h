@@ -1,7 +1,7 @@
 #pragma once
 
 #include "render/atlases/Atlas.h"
-#include "asset/repositories/SpriteRepository.h"
+#include "asset/repositories/CharacterRepository.h"
 // for direction only
 #include "tmp/movement/DirectionComponent.h"
 
@@ -20,7 +20,7 @@ enum class WalkFrame {
 
 class SpriteAtlas : public Atlas {
 public:
-    SpriteAtlas(const std::filesystem::path& spritesheet_path, const SpriteRepository& spriteRepository);
+    SpriteAtlas(const std::filesystem::path& spritesheet_path, const CharacterRepository& characterRepository);
 
     const sf::Texture& playerTexture() const { return texture(); }
     SpriteRegion getPlayerSprite(Direction facing, WalkFrame frame) const;
@@ -35,5 +35,5 @@ public:
     }
 
 private:
-    const SpriteRepository& spriteRepository_;
+    const CharacterRepository& characterRepository_;
 };

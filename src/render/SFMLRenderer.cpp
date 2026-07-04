@@ -6,12 +6,12 @@
 SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight,
                             const TileRepository& tileRepository,
                             const MapObjectRepository& objectRepository,
-                            const SpriteRepository& spriteRepository,
+                            const CharacterRepository& characterRepository,
                             const std::filesystem::path& tileSpritesheetPath,
                             const std::filesystem::path& playerSpritesheetPath,
                             const std::filesystem::path& objectSpritesheetPath)
     : tileAtlas_(tileSpritesheetPath, tileRepository)
-    , spriteAtlas_(playerSpritesheetPath, spriteRepository)
+    , spriteAtlas_(playerSpritesheetPath, characterRepository)
     , mapObjAtlas_(objectSpritesheetPath, objectRepository)
 {
     (void)windowWidth;
@@ -43,9 +43,9 @@ std::optional<sf::Event> SFMLRenderer::pollEvent()
     return window_->pollEvent();
 }
 
-void SFMLRenderer::drawTile(int gridX, int gridY, const std::string& typeName) {
-    SpriteRegion region = tileAtlas_.getTerrainSprite(typeName);
-    const sf::Texture& tex = tileAtlas_.terrainTexture();
+void SFMLRenderer::drawTile(int gridX, int gridY, const RenderComponent& tileRender) {
+    SpriteRegion region = tileAtlas_.getTileSprite(tileRender.name);
+    const sf::Texture& tex = tileAtlas_.getTileTexture();
 
     sf::Sprite sprite(tex);
     sprite.setTextureRect(region.subrect);
@@ -60,25 +60,23 @@ void SFMLRenderer::drawTile(int gridX, int gridY, const std::string& typeName) {
 
     window_->draw(sprite);
 }
-void SFMLRenderer::drawMapObject(const PositionComponent& objectPos,
-                                 const MapObjectRenderComponent& objectRender)
+
+void SFMLRenderer::drawMapObject(const RenderComponent& objectRender)
 {
-    const auto& metadata = *objectRender.metadata;
-
-    const sf::Texture& texture = mapObjAtlas_.resolveTexture(metadata.texturePath);
+    const sf::Texture& texture = mapObjAtlas_.resolveTexture(objectRender.texturePath);
     sf::Sprite sprite(texture);
-    sprite.setTextureRect(metadata.textureRect);
+    sprite.setTextureRect(objectRender.textureRect);
 
-    const float sourceTileSize = static_cast<float>(metadata.sourceTileSize);
+    const float sourceTileSize = static_cast<float>(objectRender.sourceTileSize);
     const float scale          = TILE_SIZE / sourceTileSize;
     sprite.setScale({scale, scale});
 
-    const float spriteWidth  = metadata.textureRect.size.x * scale;
-    const float spriteHeight = metadata.textureRect.size.y * scale;
+    const float spriteWidth  = objectRender.textureRect.size.x * scale;
+    const float spriteHeight = objectRender.textureRect.size.y * scale;
 
     sprite.setPosition({
-        objectPos.x - spriteWidth * 0.5f,
-        objectPos.y - spriteHeight
+        objectRender.renderX - spriteWidth * 0.5f,
+        objectRender.renderY - spriteHeight
     });
 
     window_->draw(sprite);
@@ -118,7 +116,7 @@ void SFMLRenderer::drawDebugRect(float x, float y, float width, float height) {
     }
 }
 
-void SFMLRenderer::drawPlayer(const PositionComponent& playerPos, const DirectionComponent& playerDir, float animProgress) {
+void SFMLRenderer::drawPlayer(const PositionComponent& playerPos, const DirectionComponent& playerDir, const RenderComponent& playerRender, float animProgress) {
     WalkFrame frame = SpriteAtlas::frameFromProgress(animProgress);
     SpriteRegion region = spriteAtlas_.getPlayerSprite(playerDir.facing, frame);
     const sf::Texture& tex = spriteAtlas_.playerTexture();

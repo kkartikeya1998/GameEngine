@@ -10,7 +10,7 @@
 #include "asset/repositories/IAssetRepository.h"
 #include "asset/repositories/TileRepository.h"
 #include "asset/repositories/MapObjectRepository.h"
-#include "asset/repositories/SpriteRepository.h"
+#include "asset/repositories/CharacterRepository.h"
 #include "asset/AsssetPaths.h"
 
 // ---------------------------------------------------------------------------
@@ -22,7 +22,7 @@ public:
     AssetManager() {
         emplace<TileRepository>(Assets::Maps::TILESET_METADATA);
         emplace<MapObjectRepository>(Assets::Maps::OBJECT_METADATA);
-        emplace<SpriteRepository>(Assets::Sprites::SPRITE_METADATA);
+        emplace<CharacterRepository>(Assets::Sprites::SPRITE_METADATA);
     }
 
     // Retrieves a previously loaded repository by its concrete type.

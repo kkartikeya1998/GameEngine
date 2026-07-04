@@ -1,23 +1,220 @@
 {
-  "tile_size" : 480,
-  "frames": {
-    "player_down_0":  { "x": 0, "y": 0, "w": 480, "h": 480 },
-    "player_down_1":  { "x": 1920,  "y": 0, "w": 480, "h": 480 },
-    "player_down_2":  { "x": 8160, "y": 0, "w": 480, "h": 480 },
-
-    "player_right_0":  { "x": 0, "y": 480, "w": 480, "h": 480 },
-    "player_right_1":  { "x": 1920, "y": 480, "w": 480, "h": 480 },
-    "player_right_2":  { "x": 8160, "y": 480, "w": 480, "h": 480 },
-
-    "player_up_0": { "x": 0, "y": 960, "w": 480, "h": 480 },
-    "player_up_1": { "x": 1920, "y": 960, "w": 480, "h": 480 },
-    "player_up_2": { "x": 8160, "y": 960, "w": 480, "h": 480 },
-
-    
-    "player_left_0": { "x": 0, "y": 1440, "w": 480, "h": 480 },
-    "player_left_1": { "x": 1920, "y": 1440, "w": 480, "h": 480 },
-    "player_left_2": { "x": 8160, "y": 1440, "w": 480, "h": 480 }
-
-    
+  "characters": {
+    "player": {
+      "texture": "assets/characters/SimpleSummer_Player.png",
+      "tile_size": 480,
+      "collision_component": {
+        "offset_x": 0,
+        "offset_y": -25,
+        "width": 25,
+        "height": 15
+      },
+      "character_frames": {
+        "down_0": {
+          "render_component": {
+            "x": 0,
+            "y": 0,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "down_1": {
+          "render_component": {
+            "x": 1920,
+            "y": 0,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "down_2": {
+          "render_component": {
+            "x": 8160,
+            "y": 0,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "right_0": {
+          "render_component": {
+            "x": 0,
+            "y": 480,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "right_1": {
+          "render_component": {
+            "x": 1920,
+            "y": 480,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "right_2": {
+          "render_component": {
+            "x": 8160,
+            "y": 480,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "up_0": {
+          "render_component": {
+            "x": 0,
+            "y": 960,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "up_1": {
+          "render_component": {
+            "x": 1920,
+            "y": 960,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "up_2": {
+          "render_component": {
+            "x": 8160,
+            "y": 960,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "left_0": {
+          "render_component": {
+            "x": 0,
+            "y": 1440,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "left_1": {
+          "render_component": {
+            "x": 1920,
+            "y": 1440,
+            "w": 480,
+            "h": 480
+          }
+        },
+        "left_2": {
+          "render_component": {
+            "x": 8160,
+            "y": 1440,
+            "w": 480,
+            "h": 480
+          }
+        }
+      }
+    },
+    "fox": {
+      "texture": "assets/characters/player_spritesheet_fox.png",
+      "tile_size": 480,
+      "collision_component": {
+        "offset_x": 0,
+        "offset_y": -25,
+        "width": 25,
+        "height": 15
+      },
+      "character_frames": {
+        "down_0": {
+          "render_component": {
+            "x": 320,
+            "y": 0,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "down_1": {
+          "render_component": {
+            "x": 160,
+            "y": 0,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "down_2": {
+          "render_component": {
+            "x": 800,
+            "y": 0,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "left_0": {
+          "render_component": {
+            "x": 320,
+            "y": 738,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "left_1": {
+          "render_component": {
+            "x": 80,
+            "y": 738,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "left_2": {
+          "render_component": {
+            "x": 560,
+            "y": 738,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "right_0": {
+          "render_component": {
+            "x": 320,
+            "y": 246,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "right_1": {
+          "render_component": {
+            "x": 0,
+            "y": 246,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "right_2": {
+          "render_component": {
+            "x": 560,
+            "y": 246,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "up_0": {
+          "render_component": {
+            "x": 320,
+            "y": 492,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "up_1": {
+          "render_component": {
+            "x": 0,
+            "y": 492,
+            "w": 80,
+            "h": 123
+          }
+        },
+        "up_2": {
+          "render_component": {
+            "x": 480,
+            "y": 492,
+            "w": 80,
+            "h": 123
+          }
+        }
+      }
+    }
   }
 }

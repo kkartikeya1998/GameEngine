@@ -1,9 +1,9 @@
 #include "render/atlases/SpriteAtlas.h"
 #include <stdexcept>
 
-SpriteAtlas::SpriteAtlas(const std::filesystem::path& spritesheet_path, const SpriteRepository& spriteRepository)
+SpriteAtlas::SpriteAtlas(const std::filesystem::path& spritesheet_path, const CharacterRepository& characterRepository)
     : Atlas(spritesheet_path)
-    , spriteRepository_(spriteRepository)
+    , characterRepository_(characterRepository)
 {}
 
 static std::string dirToString(Direction facing)
@@ -30,5 +30,5 @@ SpriteRegion SpriteAtlas::getPlayerSprite(Direction facing, WalkFrame frame) con
 
     std::string key = "player_" + dir + "_" + std::to_string(idx);
 
-    return regionFromRepository(spriteRepository_, key, key);
+    return regionFromRepository(characterRepository_, key, key);
 }

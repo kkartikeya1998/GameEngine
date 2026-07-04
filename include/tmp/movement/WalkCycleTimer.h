@@ -1,25 +1,13 @@
 #pragma once
 
+#include "entities/Component.h"
+
 // ---------------------------------------------------------------------------
 // WalkCycleTimer — minimal time-based walk-cycle progress for continuous
-// (free) movement.
-//
-// AnimationComponent is NOT reused here. Its entire model is "interpolate
-// from a known start position to a known target position" (begin(), then
-// progress 0->1 over time) — that fits grid movement (a move always has
-// a discrete start and end tile) but has no equivalent in continuous
-// movement, where position IS the live value already, with no "target"
-// to lerp toward. Forcing FreeEntity through AnimationComponent would
-// mean faking a target every frame for no benefit.
-//
-// What free movement actually needs from "animation" is much smaller:
-// a repeating 0->1 progress value while moving, used the same way
-// SpriteAtlas::frameFromProgress already consumes AnimationComponent's
-// progress today — just driven by elapsed time instead of distance
-// covered toward a destination.
+// (free) movement. Attached as a component; owns its own tiny update logic
+// the same way CollisionComponent owns resolve().
 // ---------------------------------------------------------------------------
-class WalkCycleTimer {
-public:
+struct WalkCycleTimer : public Component {
     explicit WalkCycleTimer(float cyclesPerSecond = 2.0f)
         : cyclesPerSecond_(cyclesPerSecond) {}
 

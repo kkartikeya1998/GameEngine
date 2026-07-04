@@ -7,17 +7,6 @@
 // AnimationComponentAdapter — wraps the EXISTING, UNCHANGED
 // AnimationComponent to satisfy IRenderState.
 //
-// AnimationComponent itself is not modified at all — it has no concept
-// of "did position change," it only knows begin(start, target) and
-// update(dt)/getProgress(). This adapter is what detects a logical
-// position change frame-to-frame and translates that into a begin()
-// call — that detection used to live inside GridEntity::move() (which
-// called animation_.begin() directly at the moment a hop committed).
-// Now that GridMovementMechanics commits hops inside its own update()
-// rather than a separate move() entry point Entity can hook, detecting
-// "did the hop happen" has to happen here instead, by comparing this
-// frame's logicalX/Y against last frame's.
-//
 // This is the ONLY new logic introduced for grid rendering — everything
 // else (the lerp math, getProgress, isAnimating) is the original
 // AnimationComponent, untouched.
