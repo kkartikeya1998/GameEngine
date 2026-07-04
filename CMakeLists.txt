@@ -38,6 +38,10 @@ add_executable(PokemonProject
 
     src/system/GameController.cpp
     
+    src/input/InputManager.cpp
+
+    src/state/GameplayState.cpp
+
     src/render/RenderSystem.cpp
     src/render/SFMLRenderer.cpp
     src/render/atlases/Atlas.cpp

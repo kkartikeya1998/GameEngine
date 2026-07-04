@@ -1,18 +1,12 @@
 #include <iostream>
 
 #include "Game.h"
-#include "render/RenderSystem.h"
 #include "render/SFMLRenderer.h"
-#include <SFML/System/Clock.hpp>
-#include <SFML/System/Time.hpp>
-#include <SFML/Window/Keyboard.hpp>
+#include "state/GameplayState.h"
 #include "system/GameConstants.h"
 
 Game::Game()
     : assets_(),
-      controller_(1, 600, 600, // map ID: 1 main map, 2 asset tuning map
-                  assetsRoot_, assets_.get<MapObjectRepository>(),
-                  assets_.get<TileRepository>()),
       renderSystem_(std::make_unique<RenderSystem>(
           std::make_unique<SFMLRenderer>(
               GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H,
@@ -23,74 +17,43 @@ Game::Game()
               Assets::Sprites::PLAYER_SPRITESHEET,
               Assets::Objects::SIMPLE_SUMMER_OBJECTS)))
 {
+    // Goes straight to gameplay for now — swap for pushing a
+    // MainMenuState once one exists; this is the only line that changes.
+    states_.Push(std::make_unique<GameplayState>(input_, assets_, assetsRoot_));
 }
 
-void Game::run()
+void Game::Update(float dt)
+{
+    states_.Update(dt);
+}
+
+void Game::Render()
+{
+    states_.Render(*renderSystem_, lastDt_);
+}
+
+void Game::Run()
 {
     try
     {
         while (renderSystem_->isOpen())
         {
-            float dt = gameClock_.restart().asSeconds();
+            lastDt_ = gameClock_.restart().asSeconds();
 
-            // EVENTS — kept for one-shot, edge-triggered things only:
-            // window close, Escape-to-quit. Movement no longer reacts to
-            // KeyPressed events (that only fires once per physical press,
-            // which is wrong for continuous movement — holding a key
-            // should keep moving the player every frame it's held).
+            // Window-close stays here rather than in InputManager —
+            // the SFML event queue is owned by SFMLRenderer's window,
+            // which I don't have direct access to without
+            // SFMLRenderer.h. InputManager stays a pure key/mouse
+            // poller per the design.
             while (auto eventOpt = renderSystem_->pollEvent())
             {
-                const sf::Event &event = *eventOpt;
-
-                if (event.is<sf::Event::Closed>())
+                if (eventOpt->is<sf::Event::Closed>())
                     return;
-
-                if (const auto *key = event.getIf<sf::Event::KeyPressed>())
-                {
-                    if (key->code == sf::Keyboard::Key::Escape)
-                        return;
-                }
             }
 
-            // NOTE: this picks one direction per frame (last-checked-wins
-            // if multiple keys are held, since these are plain ifs, not a
-            // combined vector). If you want true 8-directional/diagonal
-            // movement, this would need to combine multiple held keys
-            // into one input vector instead of picking a single
-            // Direction
-            Direction dir = Direction::NONE;
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-                dir = Direction::UP;
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) ||
-                     sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
-                dir = Direction::DOWN;
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
-                     sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-                dir = Direction::LEFT;
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ||
-                     sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-                dir = Direction::RIGHT;
-
-            // UPDATE — called every frame regardless of whether dir is
-            // NONE, so the player can decelerate/stop cleanly (handled
-            // inside FreeMovementMechanics::update). The old
-            // isAnimating()-gate is gone: that existed to stop a new
-            // discrete hop from interrupting an in-progress one, which
-            // has no equivalent for continuous movement.
-            
-            controller_.updatePlayerMovement(dt, dir);
-            
-            controller_.update(dt);
-
-            // RENDER — now takes dt: RenderSystem steps each entity's
-            // render-state component (lerp progress / walk-cycle
-            // elapsed time) inline as part of drawing, a deliberate
-            // tradeoff made when folding render-state stepping into
-            // render() instead of a separate per-frame system pass.
-            // See RenderSystem.cpp's ECS-ported version.
-            renderSystem_->render(controller_, dt);
+            input_.PollEvents();
+            Update(lastDt_);
+            Render();
         }
     }
     catch (const std::exception &e)

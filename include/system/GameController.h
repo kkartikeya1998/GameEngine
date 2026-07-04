@@ -7,6 +7,7 @@
 #include "asset/repositories/MapObjectRepository.h"
 #include "entities/Entity.h"
 #include "entities/player/Player.h"
+#include "tmp/movement/PlayerControlComponent.h"
 
 // ---------------------------------------------------------------------------
 // GameController — manages World and Player lifecycle.
@@ -23,9 +24,8 @@ public:
     Entity *getPlayer() { return &player_; }
     Map *getActiveMap() { return world_.getActiveMap(); }
 
-    // Called every frame (not just on keypress) with the currently held
-    // movement input. NONE if no movement key is held this frame.
-    void updatePlayerMovement(float dt, Direction inputDir);
+    // Called every frame with the current player input snapshot.
+    void updatePlayerMovement(float dt, const PlayerControlComponent &input);
 
     // Switch to a new map (called when Player's hitbox overlaps a
     // TeleportPoint). Repositions player on the new map.
@@ -37,7 +37,5 @@ private:
     World world_;
     Entity player_;
 
-    // Builds the AABB-overlap collision query any movement component
-    // needs (player or NPC), backed by the active map's tile data.
     bool isPositionBlocked(const AABB &box) const;
 };

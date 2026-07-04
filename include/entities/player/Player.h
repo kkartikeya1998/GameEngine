@@ -7,7 +7,7 @@
 #include "tmp/movement/FreeMovementComponent.h"
 #include "tmp/movement/WalkCycleTimer.h"
 #include "tmp/movement/RenderComponent.h"
-#include "entities/player/PlayerControlComponent.h"
+#include "tmp/movement/PlayerControlComponent.h"
 #include "system/GameConstants.h"
 
 inline Entity makePlayer(
