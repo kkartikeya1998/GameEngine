@@ -87,8 +87,6 @@ void MapObjectRepository::load_from_file(
 const ObjectTypeMetadata* MapObjectRepository::find(
     const std::string& type) const
 {
-    std::cout << "[MapObjectRepository]: Searching for object type: " << type << "\n";
     auto it = types_.find(type);
-    std::cout << "[MapObjectRepository]: Search result: " << (it == types_.end() ? "not found" : "found") << "\n";
     return it == types_.end() ? nullptr : &it->second;
 }

@@ -13,9 +13,7 @@ GameController::GameController(int startMapId, int playerX, int playerY,
                                TileRepository &tileRepository)
     : world_(objectRepository, tileRepository), player_(makePlayer(static_cast<float>(playerX), static_cast<float>(playerY)))
 {
-    std::cout << "[GameController]: Loading map with ID: " << startMapId << "\n";
     world_.loadMap(startMapId);
-    std::cout << "[GameController]: Map loaded with ID: " << startMapId << "\n";
 }
 
 bool GameController::isPositionBlocked(const AABB &box) const

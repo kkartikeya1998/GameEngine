@@ -97,8 +97,6 @@ void CharacterRepository::load_from_file(
 
 const CharacterMetadata *CharacterRepository::find(const std::string &frameName) const
 {
-    std::cout << "[CharacterRepository]: Searching for character frame: " << frameName << "\n";
     auto it = frames_.find(frameName);
-    std::cout << "[CharacterRepository]: Search result: " << (it == frames_.end() ? "not found" : "found") << "\n";
     return it == frames_.end() ? nullptr : &it->second;
 }

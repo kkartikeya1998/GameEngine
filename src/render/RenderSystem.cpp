@@ -48,9 +48,7 @@ void RenderSystem::render(GameController &controller, float dt)
         {
             for (int x = 0; x < map->getWidth(); ++x)
             {
-                std::cout << "[RenderSystem]: Drawing tile at (" << x << ", " << y << ")\n";
                 renderer_->drawTile(x, y, map->tile_at(x, y).getRenderComponent());
-                std::cout << "[RenderSystem]: Finished drawing tile at (" << x << ", " << y << ")\n";
             }
         }
 

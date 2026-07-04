@@ -54,7 +54,6 @@ void MapLoader::loadMetadata()
 
 std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
 {
-    std::cout << "[MapLoader]: Loading map with ID: " << mapId << "\n";
     std::string mapPath;
 
     for (const auto &meta : maps_metadata_)
@@ -76,7 +75,6 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
 
     int width = j["width"];
     int height = j["height"];
-    std::cout << "[MapLoader]: Map dimensions: " << width << "x" << height << "\n";
     auto map = std::make_unique<Map>(width, height);
 
     const auto &tiles_json = j["tiles"];
@@ -112,7 +110,6 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
         }
     }
 
-    std::cout << "[MapLoader]: Map tiles loaded.\n";
     if (j.contains("map_objects"))
     {
         for (const auto &entry : j["map_objects"])

@@ -76,8 +76,6 @@ void TileRepository::load_from_file(
 const TileTypeMetadata* TileRepository::find(
     const std::string& type) const
 {
-    std::cout << "[TileRepository]: Searching for tile type: " << type << "\n";
     auto it = types_.find(type);
-    std::cout << "[TileRepository]: Search result: " << (it == types_.end() ? "not found" : "found") << "\n";
     return it == types_.end() ? nullptr : &it->second;
 }

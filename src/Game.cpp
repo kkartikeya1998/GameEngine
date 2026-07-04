@@ -79,10 +79,9 @@ void Game::run()
             // isAnimating()-gate is gone: that existed to stop a new
             // discrete hop from interrupting an in-progress one, which
             // has no equivalent for continuous movement.
-            std::cout << "[Game]: Updating player movement with input dir: " << static_cast<int>(dir) << "\n"; 
+            
             controller_.updatePlayerMovement(dt, dir);
-            std::cout << "[Game]: Player movement updated.\n";
-
+            
             controller_.update(dt);
 
             // RENDER — now takes dt: RenderSystem steps each entity's
@@ -91,9 +90,7 @@ void Game::run()
             // tradeoff made when folding render-state stepping into
             // render() instead of a separate per-frame system pass.
             // See RenderSystem.cpp's ECS-ported version.
-            std::cout << "[Game]: Rendering frame with dt: " << dt << "\n";
             renderSystem_->render(controller_, dt);
-            std::cout << "[Game]: Frame rendered.\n";
         }
     }
     catch (const std::exception &e)
