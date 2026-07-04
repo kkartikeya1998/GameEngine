@@ -1,12 +1,5 @@
 #include "input/InputManager.h"
 
-void InputManager::PollEvents()
-{
-    previousKeys_ = currentKeys_;
-    for (int i = 0; i < kKeyCount; ++i)
-        currentKeys_[i] = sf::Keyboard::isKeyPressed(static_cast<Key>(i));
-}
-
 bool InputManager::IsKeyDown(Key key) const
 {
     return currentKeys_[static_cast<int>(key)];
@@ -24,4 +17,23 @@ Vec2 InputManager::MousePosition() const
     // window reference I don't have without SFMLRenderer.h.
     auto pos = sf::Mouse::getPosition();
     return { static_cast<float>(pos.x), static_cast<float>(pos.y) };
+}
+
+void InputManager::PollEvents()
+{
+    previousKeys_ = currentKeys_;
+
+    for (int i = 0; i < kKeyCount; ++i)
+    {
+        currentKeys_[i] =
+            sf::Keyboard::isKeyPressed(static_cast<Key>(i));
+    }
+}
+
+void InputManager::ProcessEvent(const sf::Event& event)
+{
+    if (event.is<sf::Event::Closed>())
+    {
+        shouldQuit_ = true;
+    }
 }

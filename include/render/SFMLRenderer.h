@@ -23,19 +23,6 @@ namespace sf {
 
 // ---------------------------------------------------------------------------
 // SFMLRenderer — SFML-based concrete implementation of IRenderer.
-//
-// CHANGED: no longer owns repositories by value. TileRepository,
-// MapObjectRepository, and CharacterRepository are now single shared instances
-// owned by Game (via AssetManager) and passed in here by reference. This
-// removes the duplication that existed when SFMLRenderer parsed the same
-// JSON files into its own private copies, separate from World's.
-//
-// TileRepository was renamed from MapRepository — same class, name only.
-//
-// SFMLRenderer still owns its three atlases by value — atlases are
-// rendering-only concerns (texture + region lookup), genuinely private to
-// this renderer, unlike the metadata repositories which are shared facts
-// used by both gameplay (MapLoader) and rendering (the atlases).
 // ---------------------------------------------------------------------------
 class SFMLRenderer : public IRenderer {
 public:
@@ -55,7 +42,6 @@ public:
     void drawMapObject(const RenderComponent& objectRender) override;
     void drawDebugRect(float x, float y, float width, float height) override;    void present() override;
     bool isOpen() const override;
-
     std::optional<sf::Event> pollEvent() override;
 
 private:

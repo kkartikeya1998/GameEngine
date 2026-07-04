@@ -7,12 +7,13 @@
 #include "tmp/movement/PlayerControlComponent.h"
 #include "asset/AssetManager.h"
 #include "system/GameController.h"
+#include "state/StateMachine.h"
 
 class InputManager;
 
 class GameplayState : public IGameState {
 public:
-    GameplayState(InputManager& input, AssetManager& assets, const std::string& assetsRoot);
+    GameplayState(InputManager& input, AssetManager& assets, StateMachine& stateMachine);
 
     void OnEnter() override;
     void OnExit() override;
@@ -22,7 +23,7 @@ public:
 private:
     InputManager& input_;
     AssetManager& assets_;
-    std::string assetsRoot_;
+    StateMachine& stateMachine_;
 
     KeyBindings<PlayerControlComponent> bindings_;
     std::unique_ptr<GameController> controller_;

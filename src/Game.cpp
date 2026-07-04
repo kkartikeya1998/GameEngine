@@ -19,7 +19,7 @@ Game::Game()
 {
     // Goes straight to gameplay for now — swap for pushing a
     // MainMenuState once one exists; this is the only line that changes.
-    states_.Push(std::make_unique<GameplayState>(input_, assets_, assetsRoot_));
+    states_.Push(std::make_unique<GameplayState>(input_, assets_, states_));
 }
 
 void Game::Update(float dt)
@@ -36,22 +36,22 @@ void Game::Run()
 {
     try
     {
-        while (renderSystem_->isOpen())
-        {
+        while (renderSystem_->isOpen()){
             lastDt_ = gameClock_.restart().asSeconds();
 
-            // Window-close stays here rather than in InputManager —
-            // the SFML event queue is owned by SFMLRenderer's window,
-            // which I don't have direct access to without
-            // SFMLRenderer.h. InputManager stays a pure key/mouse
-            // poller per the design.
-            while (auto eventOpt = renderSystem_->pollEvent())
+            // first check for qindow close events before polling input, so we don't miss a quit request
+            while (auto event = renderSystem_->pollEvent())
             {
-                if (eventOpt->is<sf::Event::Closed>())
-                    return;
+                input_.ProcessEvent(*event);
+            }
+            
+            if (input_.ShouldQuit())
+            {
+                return;
             }
 
             input_.PollEvents();
+
             Update(lastDt_);
             Render();
         }

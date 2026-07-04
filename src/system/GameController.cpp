@@ -8,7 +8,6 @@
 #include "tmp/movement/WalkCycleTimer.h"
 
 GameController::GameController(int startMapId, int playerX, int playerY,
-                               const std::string &assetsRoot,
                                MapObjectRepository &objectRepository,
                                TileRepository &tileRepository)
     : world_(objectRepository, tileRepository), player_(makePlayer(static_cast<float>(playerX), static_cast<float>(playerY)))
@@ -25,7 +24,7 @@ bool GameController::isPositionBlocked(const AABB &box) const
     return activeMap->isAreaBlocked(box);
 }
 
-void GameController::updatePlayerMovement(float dt, const PlayerControlComponent &input)
+void GameController::update(float dt, const PlayerControlComponent &input)
 {
     auto *position = player_.get<PositionComponent>();
     auto *velocity = player_.get<VelocityComponent>();
@@ -47,13 +46,6 @@ void GameController::updatePlayerMovement(float dt, const PlayerControlComponent
 
     // input.sprinting / input.jumpRequested aren't consumed yet —
     // this is the seam for PlayerStateSystem/PlayerStateComponent.
-}
-
-void GameController::update(float dt)
-{
-    Map *activeMap = world_.getActiveMap();
-    if (!activeMap)
-        return;
 }
 
 void GameController::changeMap(int mapId, float newX, float newY)

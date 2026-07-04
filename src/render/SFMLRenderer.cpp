@@ -38,11 +38,6 @@ bool SFMLRenderer::isOpen() const {
     return window_ && window_->isOpen();
 }
 
-std::optional<sf::Event> SFMLRenderer::pollEvent()
-{
-    return window_->pollEvent();
-}
-
 void SFMLRenderer::drawTile(int gridX, int gridY, const RenderComponent& tileRender) {
     SpriteRegion region = tileAtlas_.getTileSprite(tileRender.name);
     const sf::Texture& tex = tileAtlas_.getTileTexture();
@@ -152,5 +147,9 @@ void SFMLRenderer::drawPlayer(const PositionComponent& playerPos, const Directio
     sprite.setPosition(sf::Vector2f(drawX, drawY));
 
     window_->draw(sprite);
-    // drawDirectionIndicator(drawX, drawY, facing);
+}
+
+std::optional<sf::Event> SFMLRenderer::pollEvent()
+{
+    return window_->pollEvent();
 }

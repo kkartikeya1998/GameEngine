@@ -3,6 +3,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <array>
+#include <SFML/Window/Event.hpp>
 
 using Key = sf::Keyboard::Key;
 
@@ -15,6 +16,9 @@ struct Vec2 { float x = 0.f; float y = 0.f; };
 class InputManager {
 public:
     void PollEvents();
+    void ProcessEvent(const sf::Event& event);
+
+    bool ShouldQuit() const{ return shouldQuit_; }
 
     bool IsKeyDown(Key key) const;
     bool WasKeyPressed(Key key) const;
@@ -22,7 +26,10 @@ public:
     Vec2 MousePosition() const;
 
 private:
-    static constexpr std::size_t kKeyCount = sf::Keyboard::KeyCount;
+    bool shouldQuit_ = false;
+
+    static constexpr int kKeyCount = sf::Keyboard::KeyCount;
+    
     std::array<bool, kKeyCount> currentKeys_{};
     std::array<bool, kKeyCount> previousKeys_{};
 };

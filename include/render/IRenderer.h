@@ -44,7 +44,5 @@ public:
     // Check if the window should close
     virtual bool isOpen() const = 0;
 
-    // Handle input events (keyboard, window close, etc.)
-    // Returns true if a quit event was triggered
     virtual std::optional<sf::Event> pollEvent() = 0;
 };

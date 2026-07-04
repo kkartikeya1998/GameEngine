@@ -16,7 +16,6 @@ class GameController
 {
 public:
     GameController(int startMapId, int playerX, int playerY,
-                   const std::string &assetsRoot,
                    MapObjectRepository &objectRepository,
                    TileRepository &tileRepository);
 
@@ -25,13 +24,11 @@ public:
     Map *getActiveMap() { return world_.getActiveMap(); }
 
     // Called every frame with the current player input snapshot.
-    void updatePlayerMovement(float dt, const PlayerControlComponent &input);
+    void update(float dt, const PlayerControlComponent &input);
 
     // Switch to a new map (called when Player's hitbox overlaps a
     // TeleportPoint). Repositions player on the new map.
     void changeMap(int mapId, float newX, float newY);
-
-    void update(float dt);
 
 private:
     World world_;
