@@ -55,7 +55,6 @@ void RenderSystem::render(GameController &controller, float dt)
         std::vector<Renderable> renderables;
         renderables.reserve(map->getMapObjects().size() + map->getNpcs().size() + 1);
 
-
         for (const auto &mapObj : map->getMapObjects())
         {
             const auto *mapObjRender = mapObj->get<RenderComponent>();
@@ -64,7 +63,7 @@ void RenderSystem::render(GameController &controller, float dt)
                 continue;
 
             const auto *mapObjCollision = mapObj->get<CollisionComponent>();
-            
+
             if (mapObjCollision)
             {
                 auto debugRect = mapObjCollision->resolve(mapObjPos->x, mapObjPos->y);
@@ -75,7 +74,6 @@ void RenderSystem::render(GameController &controller, float dt)
                                ? (mapObjCollision->resolve(mapObjPos->x, mapObjPos->y).y + mapObjCollision->resolve(mapObjPos->x, mapObjPos->y).height)
                                : static_cast<float>(mapObjPos->y);
 
-
             renderables.push_back(Renderable{
                 depthY,
                 [this, mapObjPos = *mapObjPos, mapObjRender = *mapObjRender]()
@@ -85,19 +83,16 @@ void RenderSystem::render(GameController &controller, float dt)
         }
 
         // ---- Player -----------------------------------------------------
-        // Player is a FreeMovementComponent + RenderComponent
-        // entity, same as before (makePlayer only ever built
-        // FreeMovementMechanics) — see Player.h.
 
         const auto *playerPos = player->get<PositionComponent>();
-        const auto *playerMove = player->get<FreeMovementComponent>();
+        const auto *playerCollision = player->get<CollisionComponent>();
         const auto *playerRender = player->get<RenderComponent>();
         const auto *playerDirection = player->get<DirectionComponent>();
         const auto *playerTimer = player->get<WalkCycleTimer>();
 
-        if (playerPos && playerMove && playerRender && playerDirection)
+        if (playerPos && playerCollision && playerRender && playerDirection)
         {
-            AABB playerBox = MovementSystem::getFreeHitbox(*playerPos, *playerMove);
+            AABB playerBox = playerCollision->resolve(playerPos->x, playerPos->y);
             renderer_->drawDebugRect(playerBox.x, playerBox.y, playerBox.width, playerBox.height);
 
             float animProgress = playerTimer ? playerTimer->getProgress() : 0.f;
@@ -105,7 +100,7 @@ void RenderSystem::render(GameController &controller, float dt)
             renderables.push_back(Renderable{
                 playerBox.y + playerBox.height,
                 [this, playerPos = *playerPos, playerDirection = *playerDirection,
-                playerRender = *playerRender, animProgress]()
+                 playerRender = *playerRender, animProgress]()
                 {
                     renderer_->drawPlayer(playerPos, playerDirection, playerRender, animProgress);
                 }});
@@ -131,7 +126,7 @@ void RenderSystem::render(GameController &controller, float dt)
         if (playerPos && playerMove && playerRender)
         {
             renderer_->drawPlayer(
-                *playerPos,*playerDir,
+                *playerPos, *playerDir,
                 *playerRender,
                 0.f); // fix
         }

@@ -4,11 +4,13 @@
 #include <vector>
 #include <cassert>
 
-#include "IGameState.h"
+#include "render/RenderSystem.h"
 
+
+template <typename State>
 class StateMachine {
 public:
-    void Push(std::unique_ptr<IGameState> state)
+    void Push(std::unique_ptr<State> state)
     {
         pending_.push_back(
             { Operation::Push, std::move(state) });
@@ -20,7 +22,7 @@ public:
             { Operation::Pop, nullptr });
     }
 
-    void Replace(std::unique_ptr<IGameState> state)
+    void Replace(std::unique_ptr<State> state)
     {
         pending_.push_back(
             { Operation::Replace, std::move(state) });
@@ -41,7 +43,7 @@ public:
 
     void Render(RenderSystem& renderSystem, float dt)
     {
-        std::vector<IGameState*> toRender;
+        std::vector<State*> toRender;
 
         for (auto it = states_.rbegin(); it != states_.rend(); ++it)
         {
@@ -74,7 +76,7 @@ private:
     struct PendingOperation
     {
         Operation operation;
-        std::unique_ptr<IGameState> state;
+        std::unique_ptr<State> state;
     };
 
     void ApplyPendingOperations()
@@ -118,6 +120,6 @@ private:
         pending_.clear();
     }
 
-    std::vector<std::unique_ptr<IGameState>> states_;
+    std::vector<std::unique_ptr<State>> states_;
     std::vector<PendingOperation> pending_;
 };

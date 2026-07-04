@@ -5,6 +5,8 @@
 #include "system/MovementSystem.h"
 #include "tmp/movement/PositionComponent.h"
 #include "tmp/movement/FreeMovementComponent.h"
+#include "tmp/movement/CollisionComponent.h"
+#include "tmp/movement/MovementStateComponent.h"
 #include "tmp/movement/WalkCycleTimer.h"
 
 GameController::GameController(int startMapId, int playerX, int playerY,
@@ -30,22 +32,23 @@ void GameController::update(float dt, const PlayerControlComponent &input)
     auto *velocity = player_.get<VelocityComponent>();
     auto *direction = player_.get<DirectionComponent>();
     auto *movement = player_.get<FreeMovementComponent>();
+    auto *collision = player_.get<CollisionComponent>();
+    auto *movementState = player_.get<MovementStateComponent>();
     auto *walkCycle = player_.get<WalkCycleTimer>();
-    if (!position || !velocity || !direction || !movement)
+    if (!position || !velocity || !direction || !movement || !collision || !movementState)
         return;
 
-    MovementSystem::updateFree(*position, *velocity, *direction, *movement, dt, input.direction,
+    MovementSystem::updateFree(*position, *velocity, *direction, *movement, *collision,
+                               *movementState, dt, input.direction, input.sprinting,
                                [this](const AABB &box)
                                { return isPositionBlocked(box); });
 
-    // Was called twice in the old version (once null-guarded, once
-    // not) — collapsed to a single guarded call, same end effect.
-    bool isMoving = (input.direction != Direction::NONE);
-    if (walkCycle)
-        walkCycle->update(dt, isMoving);
+    if (walkCycle) {
+        bool isMoving = movementState->current != MovementState::Idle;
+        float speedScale = (movementState->current == MovementState::Sprinting) ? 1.5f : 1.f;
+        walkCycle->update(dt, isMoving, speedScale);
+    }
 
-    // input.sprinting / input.jumpRequested aren't consumed yet —
-    // this is the seam for PlayerStateSystem/PlayerStateComponent.
 }
 
 void GameController::changeMap(int mapId, float newX, float newY)

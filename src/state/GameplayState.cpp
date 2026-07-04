@@ -4,7 +4,7 @@
 #include "render/RenderSystem.h"
 #include "state/PauseState.h"
 
-GameplayState::GameplayState(InputManager& input, AssetManager& assets, StateMachine& stateMachine)
+GameplayState::GameplayState(InputManager& input, AssetManager& assets, StateMachine<IGameState>& stateMachine)
     : input_(input), assets_(assets), stateMachine_(stateMachine)
 {
     auto up = std::make_shared<MoveCommand>(Direction::UP);

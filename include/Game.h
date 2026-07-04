@@ -6,8 +6,9 @@
 
 #include "asset/AssetManager.h"
 #include "input/InputManager.h"
-#include "state/StateMachine.h"
+#include "utils/StateMachine.h"
 #include "render/RenderSystem.h"
+#include "state/IGameState.h"
 
 // ---------------------------------------------------------------------------
 // Game — top-level owner of long-lived systems and the main loop.
@@ -24,7 +25,7 @@ private:
 
     AssetManager assets_;
     InputManager input_;
-    StateMachine states_;
+    StateMachine<IGameState> states_;
     std::unique_ptr<RenderSystem> renderSystem_;
 
     sf::Clock gameClock_;

@@ -1,10 +1,9 @@
 #pragma once
 
 #include "IGameState.h"
+#include "utils/StateMachine.h"
 
 class InputManager;
-class StateMachine;
-
 // ---------------------------------------------------------------------------
 // PauseState — sits on top of GameplayState. Doesn't touch
 // GameController at all; BlocksUpdateBelow (default true) freezes
@@ -13,7 +12,7 @@ class StateMachine;
 // ---------------------------------------------------------------------------
 class PauseState : public IGameState {
 public:
-    PauseState(InputManager& input, StateMachine& stateMachine);
+    PauseState(InputManager& input, StateMachine<IGameState>& stateMachine);
 
     void Update(float dt) override;
     void Render(RenderSystem& renderSystem, float dt) override;
@@ -22,5 +21,5 @@ public:
 
 private:
     InputManager& input_;
-    StateMachine& stateMachine_;
+    StateMachine<IGameState>& stateMachine_;
 };

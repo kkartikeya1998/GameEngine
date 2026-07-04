@@ -1,10 +1,10 @@
 #include <iostream>
 
 #include "state/PauseState.h"
-#include "state/StateMachine.h"
+#include "utils/StateMachine.h"
 #include "input/InputManager.h"
 
-PauseState::PauseState(InputManager& input, StateMachine& stateMachine)
+PauseState::PauseState(InputManager& input, StateMachine<IGameState>& stateMachine)
     : input_(input), stateMachine_(stateMachine)
 {
     // std::cout << "[PauseState] Created\n";
