@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include "tmp/movement/DirectionComponent.h"
-#include "tmp/movement/MovementStateComponent.h"
+#include "tmp/component/DirectionComponent.h"
+#include "tmp/component/MovementStateComponent.h"
 
 inline std::string toString(Direction direction) {
     switch (direction) {
@@ -17,7 +17,7 @@ inline std::string toString(Direction direction) {
 
 inline std::string toString(MovementState state) {
     switch (state) {
-        case MovementState::Idle:      return "walk"; // idle reuses walk frame 0
+        case MovementState::Idle:      return "idle"; // idle reuses walk frame 0
         case MovementState::Walking:   return "walk";
         case MovementState::Sprinting: return "run";
     }

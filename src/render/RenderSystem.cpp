@@ -1,8 +1,8 @@
 #include "render/RenderSystem.h"
 #include "system/MovementSystem.h"
-#include "tmp/movement/FreeMovementComponent.h"
-#include "tmp/movement/RenderComponent.h"
-#include "tmp/movement/CollisionComponent.h"
+#include "tmp/component/FreeMovementComponent.h"
+#include "tmp/component/RenderComponent.h"
+#include "tmp/component/CollisionComponent.h"
 #include <optional>
 #include <algorithm>
 #include <vector>
@@ -27,9 +27,10 @@ RenderSystem::RenderSystem(std::unique_ptr<IRenderer> renderer)
     }
 }
 
-void RenderSystem::render(GameController &controller, float dt)
+void RenderSystem::render(GameController &controller, const Camera &camera, float dt)
 {
     renderer_->clear();
+    renderer_->beginWorldView(camera);
 
     World *world = controller.getWorld();
     Entity *player = controller.getPlayer();

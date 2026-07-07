@@ -5,6 +5,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include "render/IRenderer.h"
+#include "render/Camera.h"
 #include "system/GameController.h"
 
 // ---------------------------------------------------------------------------
@@ -14,7 +15,7 @@ class RenderSystem {
 public:
     explicit RenderSystem(std::unique_ptr<IRenderer> renderer);
 
-    void render(GameController& controller, float dt);
+    void render(GameController& controller, const Camera& camera, float dt);
 
     std::optional<sf::Event> pollEvent();
 

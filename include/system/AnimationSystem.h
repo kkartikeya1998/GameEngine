@@ -2,10 +2,10 @@
 
 #include "asset/repositories/CharacterRepository.h"
 #include "asset/metadata/DirectionNaming.h"
-#include "tmp/movement/RenderComponent.h"
-#include "tmp/movement/DirectionComponent.h"
-#include "tmp/movement/MovementStateComponent.h"
-#include "tmp/movement/WalkCycleTimer.h"
+#include "tmp/component/RenderComponent.h"
+#include "tmp/component/DirectionComponent.h"
+#include "tmp/component/MovementStateComponent.h"
+#include "tmp/component/WalkCycleTimer.h"
 #include "system/GameController.h"
 
 #include <iostream>

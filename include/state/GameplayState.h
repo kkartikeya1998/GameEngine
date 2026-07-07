@@ -4,11 +4,12 @@
 #include <string>
 #include "IGameState.h"
 #include "input/KeyBindings.h"
-#include "tmp/movement/PlayerControlComponent.h"
+#include "tmp/component/PlayerControlComponent.h"
 #include "asset/AssetManager.h"
 #include "system/GameController.h"
 #include "utils/StateMachine.h"
 #include "system/AnimationSystem.h"
+#include "render/Camera.h"
 
 class InputManager;
 
@@ -29,4 +30,5 @@ private:
 
     KeyBindings<PlayerControlComponent> bindings_;
     std::unique_ptr<GameController> controller_;
+    Camera camera_;
 };

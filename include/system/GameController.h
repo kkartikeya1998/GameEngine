@@ -7,7 +7,7 @@
 #include "asset/repositories/MapObjectRepository.h"
 #include "entities/Entity.h"
 #include "entities/player/Player.h"
-#include "tmp/movement/PlayerControlComponent.h"
+#include "tmp/component/PlayerControlComponent.h"
 
 // ---------------------------------------------------------------------------
 // GameController — manages World and Player lifecycle.

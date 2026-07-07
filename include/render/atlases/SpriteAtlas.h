@@ -3,7 +3,7 @@
 #include "render/atlases/Atlas.h"
 #include "asset/repositories/CharacterRepository.h"
 // for direction only
-#include "tmp/movement/DirectionComponent.h"
+#include "tmp/component/DirectionComponent.h"
 
 // ---------------------------------------------------------------------------
 // SpriteAtlas — player walk-cycle sprite lookup.

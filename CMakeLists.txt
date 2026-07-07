@@ -35,8 +35,8 @@ add_executable(PokemonProject
     # src/entities/pokemon/PokemonSpeciesRepository.cpp
     
     src/system/MovementSystem.cpp
-
     src/system/GameController.cpp
+    src/system/CameraSystem.cpp
     
     src/input/InputManager.cpp
 

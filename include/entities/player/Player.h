@@ -1,15 +1,15 @@
 #pragma once
 
 #include "entities/Entity.h"
-#include "tmp/movement/PositionComponent.h"
-#include "tmp/movement/VelocityComponent.h"
-#include "tmp/movement/DirectionComponent.h"
-#include "tmp/movement/FreeMovementComponent.h"
-#include "tmp/movement/CollisionComponent.h"
-#include "tmp/movement/MovementStateComponent.h"
-#include "tmp/movement/WalkCycleTimer.h"
-#include "tmp/movement/RenderComponent.h"
-#include "tmp/movement/PlayerControlComponent.h"
+#include "tmp/component/PositionComponent.h"
+#include "tmp/component/VelocityComponent.h"
+#include "tmp/component/DirectionComponent.h"
+#include "tmp/component/FreeMovementComponent.h"
+#include "tmp/component/CollisionComponent.h"
+#include "tmp/component/MovementStateComponent.h"
+#include "tmp/component/WalkCycleTimer.h"
+#include "tmp/component/RenderComponent.h"
+#include "tmp/component/PlayerControlComponent.h"
 #include "system/GameConstants.h"
 
 inline Entity makePlayer(

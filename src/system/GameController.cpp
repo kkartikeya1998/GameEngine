@@ -4,11 +4,11 @@
 #include "system/GameConstants.h"
 #include "system/MovementSystem.h"
 #include "system/AnimationSystem.h"
-#include "tmp/movement/PositionComponent.h"
-#include "tmp/movement/FreeMovementComponent.h"
-#include "tmp/movement/CollisionComponent.h"
-#include "tmp/movement/MovementStateComponent.h"
-#include "tmp/movement/WalkCycleTimer.h"
+#include "tmp/component/PositionComponent.h"
+#include "tmp/component/FreeMovementComponent.h"
+#include "tmp/component/CollisionComponent.h"
+#include "tmp/component/MovementStateComponent.h"
+#include "tmp/component/WalkCycleTimer.h"
 
 GameController::GameController(int startMapId, int playerX, int playerY,
                                MapObjectRepository &objectRepository,

@@ -3,6 +3,8 @@
 #include "input/InputManager.h"
 #include "render/RenderSystem.h"
 #include "state/PauseState.h"
+#include "system/CameraSystem.h"
+#include "tmp/component/PositionComponent.h"
 
 GameplayState::GameplayState(InputManager& input, AssetManager& assets, StateMachine<IGameState>& stateMachine, AnimationSystem& animationSystem)
     : input_(input), assets_(assets), stateMachine_(stateMachine), animationSystem_(animationSystem)
@@ -32,6 +34,13 @@ void GameplayState::OnEnter()
     controller_ = std::make_unique<GameController>(
         1, 600, 600,
         assets_.get<MapObjectRepository>(), assets_.get<TileRepository>());
+
+    // Center the camera on the player immediately, so the first
+    // rendered frame isn't a flash at world-origin before the first
+    // Update() call runs.
+    if (auto* pos = controller_->getPlayer()->get<PositionComponent>()) {
+        CameraSystem::update(*pos, *controller_->getActiveMap(), camera_);
+    }
 }
 
 void GameplayState::OnExit()
@@ -50,10 +59,14 @@ void GameplayState::Update(float dt)
     
     PlayerControlComponent input = bindings_.poll(input_);
     controller_->update(dt, input);
+
+    if (auto* pos = controller_->getPlayer()->get<PositionComponent>()) {
+        CameraSystem::update(*pos, *controller_->getActiveMap(), camera_);
+    }
 }
 
 void GameplayState::Render(RenderSystem& renderSystem, float dt)
 {
     animationSystem_.update(*controller_, dt);
-    renderSystem.render(*controller_, dt);
+    renderSystem.render(*controller_, camera_, dt);
 }

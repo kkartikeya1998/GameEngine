@@ -7,9 +7,9 @@
 #include "world/Tile.h"
 #include "entities/Entity.h"
 // for AABB
-#include "tmp/movement/PositionComponent.h"
-#include "tmp/movement/RenderComponent.h"
-#include "tmp/movement/CollisionComponent.h"
+#include "tmp/component/PositionComponent.h"
+#include "tmp/component/RenderComponent.h"
+#include "tmp/component/CollisionComponent.h"
 #include "system/GameConstants.h"
 
 // ---------------------------------------------------------------------------

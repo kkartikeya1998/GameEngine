@@ -30,6 +30,13 @@ void SFMLRenderer::clear() {
     window_->clear(sf::Color::Black);
 }
 
+void SFMLRenderer::beginWorldView(const Camera& camera) {
+    window_->setView(sf::View(
+        sf::Vector2f(camera.centerX, camera.centerY),
+        sf::Vector2f(camera.viewWidth, camera.viewHeight)
+    ));
+}
+
 void SFMLRenderer::present() {
     window_->display();
 }

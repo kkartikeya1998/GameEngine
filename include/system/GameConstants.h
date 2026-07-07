@@ -15,7 +15,8 @@ namespace GameConstants {
     inline constexpr int GAME_RESOLUTION_W = TILE_SIZE*12;
     inline constexpr int GAME_RESOLUTION_H = TILE_SIZE*8;
     inline constexpr int FRAME_RATE = 60;
-    
+    inline constexpr int TILES_VISIBLE_X = 5; // TILES_VISIBLE_Y is derived from TILES_VISIBLE_X and the window's aspect ratio 
+
     // Units pixels and seconds
     // works good only for 128 tile size
     inline constexpr float PLAYER_HITBOX_WIDTH = 25.f;

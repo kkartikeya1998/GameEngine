@@ -13,7 +13,7 @@
 #include "asset/repositories/TileRepository.h"
 #include "asset/repositories/MapObjectRepository.h"
 #include "asset/repositories/CharacterRepository.h"
-#include "tmp/movement/RenderComponent.h"
+#include "tmp/component/RenderComponent.h"
 
 namespace sf {
     class RenderWindow;
@@ -37,6 +37,7 @@ public:
  
 
     void clear() override;
+    void beginWorldView(const Camera& camera) override;
     void drawTile(int gridX, int gridY, const RenderComponent& tileRender) override;
     void drawPlayer(const PositionComponent& playerPos, const DirectionComponent& facing, const RenderComponent& playerRender, float animProgress) override;
     void drawMapObject(const RenderComponent& objectRender) override;

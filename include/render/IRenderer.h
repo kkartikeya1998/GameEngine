@@ -3,9 +3,10 @@
 #include <optional>
 #include <string>
 #include <SFML/Window/Event.hpp>
-#include "tmp/movement/DirectionComponent.h"
-#include "tmp/movement/PositionComponent.h"
-#include "tmp/movement/RenderComponent.h"
+#include "tmp/component/DirectionComponent.h"
+#include "tmp/component/PositionComponent.h"
+#include "tmp/component/RenderComponent.h"
+#include "render/Camera.h"
 
 // ---------------------------------------------------------------------------
 // IRenderer — abstract interface for rendering.
@@ -25,6 +26,11 @@ public:
 
     // Clear the screen for a new frame
     virtual void clear() = 0;
+
+    // Sets the world-space view the renderer should draw through this frame.
+    // Must be called (after clear(), before draw calls) for
+    // drawTile/drawPlayer/drawMapObject to appear camera-relative.
+    virtual void beginWorldView(const Camera& camera) = 0;
 
     virtual void drawTile(int gridX, int gridY, const RenderComponent& tileRender) = 0;
 
