@@ -1,18 +1,12 @@
 #pragma once
 
 #include <memory>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <filesystem>
 
 #include "system/GameConstants.h"
 #include "render/IRenderer.h"
-#include "render/atlases/TileAtlas.h"
-#include "render/atlases/SpriteAtlas.h"
-#include "render/atlases/MapObjectAtlas.h"
-#include "asset/repositories/TileRepository.h"
-#include "asset/repositories/MapObjectRepository.h"
-#include "asset/repositories/CharacterRepository.h"
 #include "tmp/component/RenderComponent.h"
 
 namespace sf {
@@ -23,25 +17,21 @@ namespace sf {
 
 // ---------------------------------------------------------------------------
 // SFMLRenderer — SFML-based concrete implementation of IRenderer.
+//
+// Knows nothing about repositories or atlases; every RenderComponent it
+// receives already carries a resolved texturePath/textureRect. Its only
+// job is turning that into an sf::Sprite and drawing it.
 // ---------------------------------------------------------------------------
 class SFMLRenderer : public IRenderer {
 public:
-    SFMLRenderer(int windowWidth, int windowHeight,
-                 const TileRepository& tileRepository,
-                 const MapObjectRepository& objectRepository,
-                 const CharacterRepository& characterRepository,
-                 const std::filesystem::path& tileSpritesheetPath,
-                 const std::filesystem::path& playerSpritesheetPath,
-                 const std::filesystem::path& objectSpritesheetPath);
+    SFMLRenderer(int windowWidth, int windowHeight);
     ~SFMLRenderer() override;
- 
 
     void clear() override;
     void beginWorldView(const Camera& camera) override;
-    void drawTile(int gridX, int gridY, const RenderComponent& tileRender) override;
-    void drawPlayer(const PositionComponent& playerPos, const DirectionComponent& facing, const RenderComponent& playerRender, float animProgress) override;
-    void drawMapObject(const RenderComponent& objectRender) override;
-    void drawDebugRect(float x, float y, float width, float height) override;    void present() override;
+    void drawEntity(const RenderComponent& render, RenderAnchor anchor) override;
+    void drawDebugRect(float x, float y, float width, float height) override;
+    void present() override;
     bool isOpen() const override;
     std::optional<sf::Event> pollEvent() override;
 
@@ -50,18 +40,9 @@ private:
     static constexpr int WINDOW_WIDTH = GameConstants::GAME_RESOLUTION_W;
     static constexpr int WINDOW_HEIGHT = GameConstants::GAME_RESOLUTION_H;
 
-    // Atlases — genuinely owned here, each references a repository that
-    // Game owns and passed in via the constructor above.
-    TileAtlas tileAtlas_;
-    SpriteAtlas spriteAtlas_;
-    MapObjectAtlas mapObjAtlas_;
-
-    // SFML resources.
     std::unique_ptr<sf::RenderWindow> window_;
 
-    // for tiles
-    float screenX(float gridX) const { return gridX * TILE_SIZE; }
-    float screenY(float gridY) const { return gridY * TILE_SIZE; }
-    // for players/npcs
-    float spriteScale(float width, float height) { return std::min( static_cast<float>(TILE_SIZE) / width, static_cast<float>(TILE_SIZE) / height); }
+    // Textures cached by path so repeated entities sharing a sheet load it once
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textureCache_;
+    const sf::Texture& getOrLoadTexture(const std::string& path);
 };

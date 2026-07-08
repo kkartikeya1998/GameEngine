@@ -10,7 +10,7 @@ void World::loadMap(int mapId)
     active_map_ = loader_.loadMapById(mapId);
 }
 
-Map* World::getActiveMap() const
+const Map* World::getActiveMap() const
 {
     return active_map_.get();
 }

@@ -20,7 +20,7 @@ GameController::GameController(int startMapId, int playerX, int playerY,
 
 bool GameController::isPositionBlocked(const AABB &box) const
 {
-    Map *activeMap = world_.getActiveMap();
+    const Map* activeMap = world_.getActiveMap();
     if (!activeMap)
         return true;
 
@@ -29,22 +29,13 @@ bool GameController::isPositionBlocked(const AABB &box) const
 
 void GameController::update(float dt, const PlayerControlComponent &input)
 {
-    auto *position = player_.get<PositionComponent>();
-    auto *velocity = player_.get<VelocityComponent>();
-    auto *direction = player_.get<DirectionComponent>();
-    auto *movement = player_.get<FreeMovementComponent>();
-    auto *collision = player_.get<CollisionComponent>();
-    auto *movementState = player_.get<MovementStateComponent>();
-    auto *walkCycle = player_.get<WalkCycleTimer>();
-    if (!position || !velocity || !direction || !movement || !collision || !movementState)
-        return;
-
-    MovementSystem::update(*position, *velocity, *direction, *movement, *collision,
-                               *movementState, dt, input.direction, input.sprinting,
+    MovementSystem::update(player_, input, *world_.getActiveMap(), dt,
                                [this](const AABB &box)
                                { return isPositionBlocked(box); });
 
 
+    auto *walkCycle = player_.get<WalkCycleTimer>();
+    auto* movementState = player_.get<MovementStateComponent>();
     if (walkCycle) {
         bool isMoving = movementState->current != MovementState::Idle;
         float speedScale = (movementState->current == MovementState::Sprinting) ? 1.5f : 1.f;

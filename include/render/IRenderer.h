@@ -3,52 +3,33 @@
 #include <optional>
 #include <string>
 #include <SFML/Window/Event.hpp>
-#include "tmp/component/DirectionComponent.h"
-#include "tmp/component/PositionComponent.h"
 #include "tmp/component/RenderComponent.h"
 #include "render/Camera.h"
+
+// Where renderX/renderY are measured from for a given RenderComponent
+enum class RenderAnchor { TopLeft, CenterBottom };
 
 // ---------------------------------------------------------------------------
 // IRenderer — abstract interface for rendering.
 //
 // The renderer doesn't know or care about World, Player, or GameController.
-// It only knows how to draw primitive elements: tiles, players, map
-// objects, and UI.
-//
-// Responsibility:
-//   - Draw game elements on the target backend (SFML, console, web, etc.)
-//   - Manage the render window/display
-//   - Be platform-agnostic from the game logic's perspective
+// It only knows how to draw a fully-resolved RenderComponent and debug
+// primitives. Name/texture resolution happens upstream in RenderSystem.
 // ---------------------------------------------------------------------------
 class IRenderer {
 public:
     virtual ~IRenderer() = default;
 
-    // Clear the screen for a new frame
     virtual void clear() = 0;
-
-    // Sets the world-space view the renderer should draw through this frame.
-    // Must be called (after clear(), before draw calls) for
-    // drawTile/drawPlayer/drawMapObject to appear camera-relative.
     virtual void beginWorldView(const Camera& camera) = 0;
 
-    virtual void drawTile(int gridX, int gridY, const RenderComponent& tileRender) = 0;
+    // Single draw path for tiles, players, and map objects alike
+    virtual void drawEntity(const RenderComponent& render, RenderAnchor anchor) = 0;
 
-    // Entities can be drawn at fractional grid positions for smooth animation
-    virtual void drawPlayer(const PositionComponent& playerPos, const DirectionComponent& playerDir, const RenderComponent& playerRender, float animProgress) = 0;
-
-    virtual void drawMapObject(const RenderComponent& objRender) = 0;
-    
-    // Debug-only: draws an unfilled rectangle outline at world-pixel
-    // coordinates (x, y = top-left), given width/height in pixels. Not
-    // part of normal gameplay rendering — exists purely so collision
-    // boxes, hitboxes, etc. can be visually verified during development.
+    // Debug-only: draws an unfilled rectangle outline at world-pixel coordinates
     virtual void drawDebugRect(float x, float y, float width, float height) = 0;
-    // Present the rendered frame to the screen
+
     virtual void present() = 0;
-
-    // Check if the window should close
     virtual bool isOpen() const = 0;
-
     virtual std::optional<sf::Event> pollEvent() = 0;
 };

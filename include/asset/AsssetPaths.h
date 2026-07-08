@@ -17,8 +17,8 @@ namespace Assets
     inline const std::filesystem::path OBJECTS =
         ROOT / "objects";
 
-    inline const std::filesystem::path SPRITES =
-        ROOT / "sprites";
+    inline const std::filesystem::path CHARACTERS =
+        ROOT / "characters";
 
     namespace Maps
     {
@@ -29,13 +29,13 @@ namespace Assets
             MAPS / "object_metadata.json";
     }
 
-    namespace Sprites
+    namespace Characters
     {
-        inline const std::filesystem::path SPRITE_METADATA =
-            SPRITES / "sprite_metadata.json";
+        inline const std::filesystem::path CHARACTERS_METADATA =
+            CHARACTERS / "characters_metadata.json";
 
         inline const std::filesystem::path PLAYER_SPRITESHEET =
-            SPRITES / "player.png";
+            CHARACTERS / "player.png";
     }
 
     namespace Objects

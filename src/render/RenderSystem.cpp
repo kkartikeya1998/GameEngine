@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <vector>
 #include <functional>
-#include <iostream>
 
 namespace
 {
@@ -18,13 +17,28 @@ namespace
     };
 }
 
-RenderSystem::RenderSystem(std::unique_ptr<IRenderer> renderer)
+RenderSystem::RenderSystem(std::unique_ptr<IRenderer> renderer,
+                            const TileRepository& tileRepository,
+                            const std::filesystem::path& tileSpritesheetPath)
     : renderer_(std::move(renderer))
+    , tileAtlas_(tileSpritesheetPath, tileRepository)
+    , tileTexturePath_(tileSpritesheetPath.string())
 {
     if (!renderer_)
-    {
         throw std::invalid_argument("RenderSystem: renderer cannot be null");
-    }
+}
+
+RenderComponent RenderSystem::resolveTile(int gridX, int gridY, const RenderComponent& tileRender) const
+{
+    SpriteRegion region = tileAtlas_.getTileSprite(tileRender.name);
+
+    RenderComponent resolved = tileRender;
+    resolved.texturePath = tileTexturePath_;
+    resolved.textureRect = sf::IntRect(region.subrect);
+    resolved.sourceTileSize = region.sourceTileSize;
+    resolved.renderX = static_cast<float>(gridX) * GameConstants::TILE_SIZE;
+    resolved.renderY = static_cast<float>(gridY) * GameConstants::TILE_SIZE;
+    return resolved;
 }
 
 void RenderSystem::render(GameController &controller, const Camera &camera, float dt)
@@ -41,7 +55,7 @@ void RenderSystem::render(GameController &controller, const Camera &camera, floa
         return;
     }
 
-    Map *map = world->getActiveMap();
+    const Map *map = world->getActiveMap();
 
     if (map)
     {
@@ -49,7 +63,8 @@ void RenderSystem::render(GameController &controller, const Camera &camera, floa
         {
             for (int x = 0; x < map->getWidth(); ++x)
             {
-                renderer_->drawTile(x, y, map->tile_at(x, y).getRenderComponent());
+                RenderComponent tile = resolveTile(x, y, map->tile_at(x, y).getRenderComponent());
+                renderer_->drawEntity(tile, RenderAnchor::TopLeft);
             }
         }
 
@@ -77,9 +92,9 @@ void RenderSystem::render(GameController &controller, const Camera &camera, floa
 
             renderables.push_back(Renderable{
                 depthY,
-                [this, mapObjPos = *mapObjPos, mapObjRender = *mapObjRender]()
+                [this, mapObjRender = *mapObjRender]()
                 {
-                    renderer_->drawMapObject(mapObjRender);
+                    renderer_->drawEntity(mapObjRender, RenderAnchor::CenterBottom);
                 }});
         }
 
@@ -88,22 +103,21 @@ void RenderSystem::render(GameController &controller, const Camera &camera, floa
         const auto *playerPos = player->get<PositionComponent>();
         const auto *playerCollision = player->get<CollisionComponent>();
         const auto *playerRender = player->get<RenderComponent>();
-        const auto *playerDirection = player->get<DirectionComponent>();
-        const auto *playerTimer = player->get<WalkCycleTimer>();
 
-        if (playerPos && playerCollision && playerRender && playerDirection)
+        if (playerPos && playerCollision && playerRender)
         {
             AABB playerBox = playerCollision->resolve(playerPos->x, playerPos->y);
             renderer_->drawDebugRect(playerBox.x, playerBox.y, playerBox.width, playerBox.height);
 
-            float animProgress = playerTimer ? playerTimer->getProgress() : 0.f;
+            RenderComponent resolvedPlayer = *playerRender;
+            resolvedPlayer.renderX = playerPos->x;
+            resolvedPlayer.renderY = playerPos->y;
 
             renderables.push_back(Renderable{
                 playerBox.y + playerBox.height,
-                [this, playerPos = *playerPos, playerDirection = *playerDirection,
-                 playerRender = *playerRender, animProgress]()
+                [this, resolvedPlayer]()
                 {
-                    renderer_->drawPlayer(playerPos, playerDirection, playerRender, animProgress);
+                    renderer_->drawEntity(resolvedPlayer, RenderAnchor::CenterBottom);
                 }});
         }
 
@@ -114,22 +128,19 @@ void RenderSystem::render(GameController &controller, const Camera &camera, floa
                   });
 
         for (auto &r : renderables)
-        {
             r.draw();
-        }
     }
     else
     {
         const auto *playerPos = player->get<PositionComponent>();
         const auto *playerMove = player->get<FreeMovementComponent>();
         const auto *playerRender = player->get<RenderComponent>();
-        const auto *playerDir = player->get<DirectionComponent>();
         if (playerPos && playerMove && playerRender)
         {
-            renderer_->drawPlayer(
-                *playerPos, *playerDir,
-                *playerRender,
-                0.f); // fix
+            RenderComponent resolvedPlayer = *playerRender;
+            resolvedPlayer.renderX = playerPos->x;
+            resolvedPlayer.renderY = playerPos->y;
+            renderer_->drawEntity(resolvedPlayer, RenderAnchor::CenterBottom);
         }
     }
 

@@ -22,7 +22,7 @@ public:
     AssetManager() {
         emplace<TileRepository>(Assets::Maps::TILESET_METADATA);
         emplace<MapObjectRepository>(Assets::Maps::OBJECT_METADATA);
-        emplace<CharacterRepository>(Assets::Sprites::SPRITE_METADATA);
+        emplace<CharacterRepository>(Assets::Characters::CHARACTERS_METADATA);
     }
 
     // Retrieves a previously loaded repository by its concrete type.

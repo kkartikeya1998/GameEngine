@@ -21,7 +21,7 @@ public:
 
     World *getWorld() { return &world_; }
     Entity *getPlayer() { return &player_; }
-    Map *getActiveMap() { return world_.getActiveMap(); }
+    const Map *getActiveMap() { return world_.getActiveMap(); }
 
     // Called every frame with the current player input snapshot.
     void update(float dt, const PlayerControlComponent &input);

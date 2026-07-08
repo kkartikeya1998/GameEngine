@@ -9,17 +9,12 @@ Game::Game()
     : assets_(),
       renderSystem_(std::make_unique<RenderSystem>(
           std::make_unique<SFMLRenderer>(
-              GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H,
-              assets_.get<TileRepository>(),
-              assets_.get<MapObjectRepository>(),
-              assets_.get<CharacterRepository>(),
-              Assets::Objects::SIMPLE_SUMMER_TILES,
-              Assets::Sprites::PLAYER_SPRITESHEET,
-              Assets::Objects::SIMPLE_SUMMER_OBJECTS))),
-            animationSystem_(assets_.get<CharacterRepository>())
+              GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H),
+          assets_.get<TileRepository>(),
+          Assets::Objects::SIMPLE_SUMMER_TILES)),
+      animationSystem_(assets_.get<CharacterRepository>())
 {
-    // Goes straight to gameplay for now — swap for pushing a
-    // MainMenuState once one exists; this is the only line that changes.
+    // straight to gameplay mode
     states_.Push(std::make_unique<GameplayState>(input_, assets_, states_, animationSystem_));
 }
 

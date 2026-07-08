@@ -64,9 +64,7 @@ public:
         return npcs_;
     }
 
-    // True if box (world/pixel space) overlaps any non-walkable tile, or
-    // falls outside the map's bounds. tileSize is the caller's render
-    // tile size (e.g. SFMLRenderer::TILE_SIZE).
+    // [TODO] Replace with collision system
     bool isAreaBlocked(const AABB& box) const;
 
 };

@@ -38,7 +38,7 @@ class World {
 public:
     World(MapObjectRepository& objectRepository, TileRepository& tileRepository);
 
-    Map* getActiveMap() const;
+    const Map* getActiveMap() const;
 
     void loadMap(int mapId);
 
@@ -64,6 +64,5 @@ public:
 
 private:
     MapLoader loader_;
-
     std::unique_ptr<Map> active_map_;
 };

@@ -18,6 +18,8 @@ public:
     Tile& operator=(Tile&&) = default;
 
     RenderComponent& getRenderComponent() { return renderComponent; }
+    const RenderComponent& getRenderComponent() const {return renderComponent; }
+    
     void addRenderComponent(const RenderComponent& render) { renderComponent = render; }
 private:
     RenderComponent renderComponent;
