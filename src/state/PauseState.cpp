@@ -20,6 +20,10 @@ void PauseState::Update(float dt)
 
 void PauseState::Render(RenderSystem& renderSystem, float dt)
 {
-    // std::cout << "[PauseState] Rendering overlay (not implemented yet)\n";
-    // TODO: draw a pause overlay/menu
+    renderSystem.submitRect(
+        RenderLayer::ScreenOverlay, 0.f,
+        0.f, 0.f,
+        GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H,
+        sf::Color(0, 0, 0, 150),
+        /*screenSpace=*/true);
 }

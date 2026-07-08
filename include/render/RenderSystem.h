@@ -2,17 +2,23 @@
 
 #include <memory>
 #include <optional>
+#include <functional>
+#include <vector>
 #include <SFML/Window/Event.hpp>
 
 #include "render/IRenderer.h"
 #include "render/Camera.h"
+#include "render/RenderLayer.h"
 #include "render/atlases/TileAtlas.h"
 #include "asset/repositories/TileRepository.h"
-#include "system/GameController.h"
+#include "tmp/component/RenderComponent.h"
 
 // ---------------------------------------------------------------------------
-// RenderSystem.h — owns the repository-facing lookup step; the renderer
-// only ever sees fully-resolved RenderComponents.
+// RenderSystem.h — owns the frame's renderable queue and the layer/z sort.
+// Does NOT know about World/GameController/states; callers (GameplayState,
+// PauseState, ...) submit fully-formed draw requests during their Render().
+// Still owns the tile-atlas lookup, since that's a repository-facing
+// resolution step, not a per-state concern.
 // ---------------------------------------------------------------------------
 class RenderSystem {
 public:
@@ -20,16 +26,43 @@ public:
                  const TileRepository& tileRepository,
                  const std::filesystem::path& tileSpritesheetPath);
 
-    void render(GameController& controller, const Camera& camera, float dt);
+    // Call once per real frame, before any state's Render() runs.
+    void beginFrame(const Camera& camera);
+
+    // Queue a sprite draw. Sorted by (layer, z) at endFrame().
+    void submit(RenderLayer layer, float z, RenderComponent render, RenderAnchor anchor);
+
+    // Queue a debug rect outline (world-space). Drawn after the sorted pass,
+    // same as today's debug overlay behavior.
+    void submitDebugRect(float x, float y, float width, float height);
+
+    // Queue a flat-colored rect, e.g. pause overlay. World-space by default;
+    // screenSpace=true skips the camera view transform (fullscreen overlays).
+    void submitRect(RenderLayer layer, float z, float x, float y,
+                     float width, float height, sf::Color color, bool screenSpace = false);
+
+    // Resolves a tile's texture rect via the atlas and submits it.
+    // Kept here (not GameplayState) since it needs tileAtlas_/tileTexturePath_.
+    void submitTile(int gridX, int gridY, const RenderComponent& tileRender);
+
+    // Sorts the queue, draws everything, clears the queue, presents.
+    void endFrame();
 
     std::optional<sf::Event> pollEvent();
     bool isOpen() const;
 
 private:
+    struct Renderable {
+        RenderLayer layer;
+        float z;
+        std::function<void()> draw;
+    };
+
     std::unique_ptr<IRenderer> renderer_;
     TileAtlas tileAtlas_;
-    std::string tileTexturePath_; // TODO: confirm TileRepository metadata doesn't already carry this
+    std::string tileTexturePath_;
 
-    // Builds a fully-resolved RenderComponent for a tile at grid (x, y)
-    RenderComponent resolveTile(int gridX, int gridY, const RenderComponent& tileRender) const;
+    Camera currentCamera_;
+    std::vector<Renderable> queue_;
+    std::vector<Renderable> debugQueue_; // rects drawn after the sorted pass
 };

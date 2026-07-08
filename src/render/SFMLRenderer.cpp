@@ -80,13 +80,29 @@ void SFMLRenderer::drawDebugRect(float x, float y, float width, float height) {
         sf::Color(255, 210, 210),
     };
 
-    for (std::size_t i = 0; i < std::size(kMargins); ++i) {
+    for (std::size_t i = 0; i < std::size(kMargins)-2; ++i) {
         float margin = kMargins[i];
         sf::RectangleShape rect(sf::Vector2f(width + 2.f * margin, height + 2.f * margin));
         rect.setPosition(sf::Vector2f(x - margin, y - margin));
         rect.setFillColor(sf::Color::Transparent);
         rect.setOutlineColor(kColors[i]);
         rect.setOutlineThickness(kThicknesses[i]);
+        window_->draw(rect);
+    }
+}
+
+void SFMLRenderer::drawRect(float x, float y, float width, float height,
+                             sf::Color color, bool screenSpace) {
+    sf::RectangleShape rect(sf::Vector2f(width, height));
+    rect.setPosition(sf::Vector2f(x, y));
+    rect.setFillColor(color);
+
+    if (screenSpace) {
+        sf::View current = window_->getView();
+        window_->setView(window_->getDefaultView());
+        window_->draw(rect);
+        window_->setView(current);
+    } else {
         window_->draw(rect);
     }
 }

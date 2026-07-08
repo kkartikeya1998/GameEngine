@@ -21,6 +21,7 @@ public:
     void OnExit() override;
     void Update(float dt) override;
     void Render(RenderSystem& renderSystem, float dt) override;
+    std::optional<Camera> GetCamera() const override { return camera_; }
 
 private:
     InputManager& input_;

@@ -68,5 +68,67 @@ void GameplayState::Update(float dt)
 void GameplayState::Render(RenderSystem& renderSystem, float dt)
 {
     animationSystem_.update(*controller_, dt);
-    renderSystem.render(*controller_, camera_, dt);
+
+    World* world = controller_->getWorld();
+    Entity* player = controller_->getPlayer();
+    if (!world || !player)
+        return;
+
+    const Map* map = world->getActiveMap();
+
+    if (!map) {
+        // No active map: draw player only, free-movement mode.
+        const auto* playerPos = player->get<PositionComponent>();
+        const auto* playerMove = player->get<FreeMovementComponent>();
+        const auto* playerRender = player->get<RenderComponent>();
+        if (playerPos && playerMove && playerRender) {
+            RenderComponent resolved = *playerRender;
+            resolved.renderX = playerPos->x;
+            resolved.renderY = playerPos->y;
+            renderSystem.submit(resolved.layer, resolved.z, resolved, RenderAnchor::CenterBottom);
+        }
+        return;
+    }
+
+    // ---- Terrain -----------------------------------------------------
+    for (int y = 0; y < map->getHeight(); ++y) {
+        for (int x = 0; x < map->getWidth(); ++x) {
+            renderSystem.submitTile(x, y, map->tile_at(x, y).getRenderComponent());
+        }
+    }
+
+    // ---- Map objects (GroundDecoration/Characters, per RenderComponent::layer) ---
+    for (const auto& mapObj : map->getMapObjects()) {
+        const auto* mapObjRender = mapObj->get<RenderComponent>();
+        const auto* mapObjPos = mapObj->get<PositionComponent>();
+        if (!mapObjRender || !mapObjPos)
+            continue;
+
+        const auto* mapObjCollision = mapObj->get<CollisionComponent>();
+        float z = static_cast<float>(mapObjPos->y);
+
+        if (mapObjCollision) {
+            AABB box = mapObjCollision->resolve(mapObjPos->x, mapObjPos->y);
+            z = box.y + box.height;
+            renderSystem.submitDebugRect(box.x, box.y, box.width, box.height);
+        }
+
+        renderSystem.submit(mapObjRender->layer, z, *mapObjRender, RenderAnchor::CenterBottom);
+    }
+
+    // ---- Player --------------------------------------------------------
+    const auto* playerPos = player->get<PositionComponent>();
+    const auto* playerCollision = player->get<CollisionComponent>();
+    const auto* playerRender = player->get<RenderComponent>();
+
+    if (playerPos && playerCollision && playerRender) {
+        AABB playerBox = playerCollision->resolve(playerPos->x, playerPos->y);
+        renderSystem.submitDebugRect(playerBox.x, playerBox.y, playerBox.width, playerBox.height);
+
+        RenderComponent resolved = *playerRender;
+        resolved.renderX = playerPos->x;
+        resolved.renderY = playerPos->y;
+
+        renderSystem.submit(resolved.layer, playerBox.y + playerBox.height, resolved, RenderAnchor::CenterBottom);
+    }
 }

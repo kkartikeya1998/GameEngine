@@ -6,26 +6,26 @@
 
 #include "render/RenderSystem.h"
 
-
 template <typename State>
-class StateMachine {
+class StateMachine
+{
 public:
     void Push(std::unique_ptr<State> state)
     {
         pending_.push_back(
-            { Operation::Push, std::move(state) });
+            {Operation::Push, std::move(state)});
     }
 
     void Pop()
     {
         pending_.push_back(
-            { Operation::Pop, nullptr });
+            {Operation::Pop, nullptr});
     }
 
     void Replace(std::unique_ptr<State> state)
     {
         pending_.push_back(
-            { Operation::Replace, std::move(state) });
+            {Operation::Replace, std::move(state)});
     }
 
     void Update(float dt)
@@ -41,9 +41,9 @@ public:
         ApplyPendingOperations();
     }
 
-    void Render(RenderSystem& renderSystem, float dt)
+    void Render(RenderSystem &renderSystem, float dt)
     {
-        std::vector<State*> toRender;
+        std::vector<State *> toRender;
 
         for (auto it = states_.rbegin(); it != states_.rend(); ++it)
         {
@@ -53,10 +53,26 @@ public:
                 break;
         }
 
+        // toRender is currently top-to-bottom; walk it bottom-to-top to find
+        // the active camera (the state closest to the "world" owns it).
+        Camera camera;
+        for (auto it = toRender.rbegin(); it != toRender.rend(); ++it)
+        {
+            if (auto cam = (*it)->GetCamera())
+            {
+                camera = *cam;
+                break;
+            }
+        }
+
+        renderSystem.beginFrame(camera);
+
         for (auto it = toRender.rbegin(); it != toRender.rend(); ++it)
         {
             (*it)->Render(renderSystem, dt);
         }
+
+        renderSystem.endFrame();
     }
 
     bool Empty() const
@@ -65,7 +81,6 @@ public:
     }
 
 private:
-
     enum class Operation
     {
         Push,
@@ -81,7 +96,7 @@ private:
 
     void ApplyPendingOperations()
     {
-        for (auto& op : pending_)
+        for (auto &op : pending_)
         {
             switch (op.operation)
             {

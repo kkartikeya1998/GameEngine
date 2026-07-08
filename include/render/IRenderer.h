@@ -29,6 +29,11 @@ public:
     // Debug-only: draws an unfilled rectangle outline at world-pixel coordinates
     virtual void drawDebugRect(float x, float y, float width, float height) = 0;
 
+    // Filled, colored rect. screenSpace=true draws in window coordinates,
+    // ignoring the active camera view (e.g. fullscreen overlays).
+    virtual void drawRect(float x, float y, float width, float height,
+                           sf::Color color, bool screenSpace) = 0;
+
     virtual void present() = 0;
     virtual bool isOpen() const = 0;
     virtual std::optional<sf::Event> pollEvent() = 0;

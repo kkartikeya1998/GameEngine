@@ -35,7 +35,8 @@ inline Entity makePlayer(
         Assets::Characters::PLAYER_SPRITESHEET.string(),
         sf::IntRect{{0, 0}, {32, 32}},
         GameConstants::TILE_SIZE,
-        x, y);
+        x, y,
+        RenderLayer::Characters);
          // initial texture rectangle
 
     // e.add<PlayerControlComponent>();

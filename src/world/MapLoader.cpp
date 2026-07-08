@@ -135,7 +135,8 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
                 meta->renderBox.textureRect,
                 meta->renderBox.sourceTileSize,
                 originX,
-                originY);
+                originY,
+                RenderLayer::Characters);
 
             if (meta->collisionBox.has_value())
             {

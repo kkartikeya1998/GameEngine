@@ -4,12 +4,14 @@
 #include <unordered_map>
 #include <string>
 #include <filesystem>
+#include <SFML/Graphics/Color.hpp>
 
 #include "system/GameConstants.h"
 #include "render/IRenderer.h"
 #include "tmp/component/RenderComponent.h"
 
-namespace sf {
+namespace sf
+{
     class RenderWindow;
     class Texture;
     class Sprite;
@@ -22,15 +24,18 @@ namespace sf {
 // receives already carries a resolved texturePath/textureRect. Its only
 // job is turning that into an sf::Sprite and drawing it.
 // ---------------------------------------------------------------------------
-class SFMLRenderer : public IRenderer {
+class SFMLRenderer : public IRenderer
+{
 public:
     SFMLRenderer(int windowWidth, int windowHeight);
     ~SFMLRenderer() override;
 
     void clear() override;
-    void beginWorldView(const Camera& camera) override;
-    void drawEntity(const RenderComponent& render, RenderAnchor anchor) override;
+    void beginWorldView(const Camera &camera) override;
+    void drawEntity(const RenderComponent &render, RenderAnchor anchor) override;
     void drawDebugRect(float x, float y, float width, float height) override;
+    void drawRect(float x, float y, float width, float height,
+                  sf::Color color, bool screenSpace) override;
     void present() override;
     bool isOpen() const override;
     std::optional<sf::Event> pollEvent() override;
@@ -44,5 +49,5 @@ private:
 
     // Textures cached by path so repeated entities sharing a sheet load it once
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textureCache_;
-    const sf::Texture& getOrLoadTexture(const std::string& path);
+    const sf::Texture &getOrLoadTexture(const std::string &path);
 };
