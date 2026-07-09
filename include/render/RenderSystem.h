@@ -45,6 +45,13 @@ public:
     // Kept here (not GameplayState) since it needs tileAtlas_/tileTexturePath_.
     void submitTile(int gridX, int gridY, const RenderComponent& tileRender);
 
+    void submitText(RenderLayer layer, float z,
+                    const sf::Font& font,
+                    const std::string& text,
+                    float x, float y,
+                    unsigned int characterSize,
+                    sf::Color color,
+                    bool screenSpace = false);
     // Sorts the queue, draws everything, clears the queue, presents.
     void endFrame();
 
@@ -55,9 +62,10 @@ private:
     struct Renderable {
         RenderLayer layer;
         float z;
+        bool screenSpace;
         std::function<void()> draw;
     };
-
+    
     std::unique_ptr<IRenderer> renderer_;
     TileAtlas tileAtlas_;
     std::string tileTexturePath_;

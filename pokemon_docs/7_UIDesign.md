@@ -1,0 +1,1 @@
+https://medium.com/@nicolaskraj/designing-efficient-user-interfaces-for-games-be20b516f1c2

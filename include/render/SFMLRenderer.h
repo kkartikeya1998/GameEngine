@@ -32,10 +32,12 @@ public:
 
     void clear() override;
     void beginWorldView(const Camera &camera) override;
+    void setDefaultView() override;
     void drawEntity(const RenderComponent &render, RenderAnchor anchor) override;
     void drawDebugRect(float x, float y, float width, float height) override;
     void drawRect(float x, float y, float width, float height,
                   sf::Color color, bool screenSpace) override;
+    void drawText(const sf::Text& text) override;
     void present() override;
     bool isOpen() const override;
     std::optional<sf::Event> pollEvent() override;

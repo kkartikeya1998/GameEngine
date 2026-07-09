@@ -6,7 +6,7 @@
 
 #include "asset/AssetManager.h"
 #include "input/InputManager.h"
-#include "utils/StateMachine.h"
+#include "state/StateMachine.h"
 #include "render/RenderSystem.h"
 #include "state/IGameState.h"
 #include "system/AnimationSystem.h"

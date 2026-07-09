@@ -92,19 +92,20 @@ void SFMLRenderer::drawDebugRect(float x, float y, float width, float height) {
 }
 
 void SFMLRenderer::drawRect(float x, float y, float width, float height,
-                             sf::Color color, bool screenSpace) {
+                            sf::Color color, bool /*screenSpace*/)
+{
     sf::RectangleShape rect(sf::Vector2f(width, height));
     rect.setPosition(sf::Vector2f(x, y));
     rect.setFillColor(color);
+    window_->draw(rect);
+}
 
-    if (screenSpace) {
-        sf::View current = window_->getView();
-        window_->setView(window_->getDefaultView());
-        window_->draw(rect);
-        window_->setView(current);
-    } else {
-        window_->draw(rect);
-    }
+void SFMLRenderer::drawText(const sf::Text& text) {
+    window_->draw(text);
+}
+
+void SFMLRenderer::setDefaultView() {
+    window_->setView(window_->getDefaultView());
 }
 
 std::optional<sf::Event> SFMLRenderer::pollEvent() {
