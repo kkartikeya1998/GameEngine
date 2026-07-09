@@ -82,7 +82,7 @@ void RenderSystem::submitText(RenderLayer layer, float z,
                               bool screenSpace)
 {
 
-    std::cout << "[RenderSystem] submitText entered.\n";
+    // std::cout << "[RenderSystem] submitText entered.\n";
     queue_.push_back(Renderable{
         layer,
         z,
@@ -98,12 +98,12 @@ void RenderSystem::submitText(RenderLayer layer, float z,
             renderer_->drawText(sfText);
         }});
         
-    std::cout << "[RenderSystem] submitText exiting...\n";
+    // std::cout << "[RenderSystem] submitText exiting...\n";
 }
 
 void RenderSystem::endFrame()
 {
-    std::cout << "[RenderSystem] endFrame entered.\n";
+    // std::cout << "[RenderSystem] endFrame entered.\n";
     renderer_->clear();
 
     // Sort by layer/z
@@ -141,7 +141,7 @@ void RenderSystem::endFrame()
     }
 
     renderer_->present();
-    std::cout << "[RenderSystem] endFrame exiting.\n";
+    // std::cout << "[RenderSystem] endFrame exiting.\n";
 }
 
 bool RenderSystem::isOpen() const

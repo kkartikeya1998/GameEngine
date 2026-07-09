@@ -2,10 +2,21 @@
 
 #include "IGameState.h"
 #include "state/StateMachine.h"
+#include "input/KeyBindings.h"
+#include "ui/MenuContext.h"
+#include "ui/Panel.h"
 
 #include <SFML/Graphics/Font.hpp>
 
 class InputManager;
+
+// Context passed to pause menu action commands — only what Resume/Quit need
+struct PauseActionContext
+{
+    StateMachine<IGameState> &stateMachine;
+    InputManager &input;
+};
+
 // ---------------------------------------------------------------------------
 // PauseState — sits on top of GameplayState. Doesn't touch
 // GameController at all; BlocksUpdateBelow (default true) freezes
@@ -25,6 +36,9 @@ public:
 private:
     InputManager &input_;
     StateMachine<IGameState> &stateMachine_;
+
+    KeyBindings<MenuContext> navInput_; // Up/Down/Enter/Escape -> menu intent
+    Panel<PauseActionContext> panel_;   // Continue / Quit options
 
     static sf::Font s_font_;
     const sf::Font &font_; // refers to s_font_

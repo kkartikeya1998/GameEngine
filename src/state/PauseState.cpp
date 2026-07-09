@@ -4,14 +4,36 @@
 #include "state/StateMachine.h"
 #include "input/InputManager.h"
 #include "asset/AsssetPaths.h"
+#include "ui/UISystem.h"
+#include "state/MenuInput.h"
 
 sf::Font PauseState::s_font_;
+
+// Resumes gameplay by popping this state — OnResume() fires on GameplayState below
+class ResumeCommand : public ICommand<PauseActionContext>
+{
+public:
+    void execute(PauseActionContext &ctx) const override
+    {
+        ctx.stateMachine.Pop();
+    }
+};
+
+// Requests application quit via InputManager
+class QuitCommand : public ICommand<PauseActionContext>
+{
+public:
+    void execute(PauseActionContext &ctx) const override
+    {
+        ctx.input.RequestQuit();
+    }
+};
 
 PauseState::PauseState(InputManager &input,
                        StateMachine<IGameState> &stateMachine)
     : input_(input), stateMachine_(stateMachine), font_(s_font_)
 {
-    std::cout << "[PauseState] Created\n";
+    // std::cout << "[PauseState] Created\n";
 
     // Lazy initialization: load once on first construction
     static bool s_loaded = false;
@@ -29,71 +51,47 @@ PauseState::PauseState(InputManager &input,
                       << Assets::Fonts::PIXFAY << "\n";
         }
     }
+
+    MenuInput::BindDefaults(navInput_); // Up/Down/Enter
+    MenuInput::BindBackKey(navInput_, Key::Escape);
+
+    const float boxWidth = 600.f;
+    const float boxHeight = 120.f;
+
+    panel_.type = UIType::NonDiegetic; // pause menu is pure UI, not in-world
+    panel_.x = (GameConstants::GAME_RESOLUTION_W - boxWidth) * 0.5f;
+    panel_.y = (GameConstants::GAME_RESOLUTION_H - boxHeight) * 0.7f;
+    panel_.width = boxWidth;
+    panel_.height = boxHeight;
+    panel_.options.push_back({"Continue", std::make_shared<ResumeCommand>()}); // index 0, default selection
+    panel_.options.push_back({"Quit", std::make_shared<QuitCommand>()});       // index 1
 }
 
 void PauseState::Update(float dt)
 {
-
-    std::cout << "[PauseState] Starting Update...\n";
     if (input_.WasKeyPressed(Key::Escape))
     {
-        input_.RequestQuit();
-    }
-    if (input_.WasKeyPressed(Key::Enter))
-    {
-        stateMachine_.Pop(); // back to GameplayState — OnResume() fires there, controller_ untouched
+        input_.RequestQuit(); // direct quit shortcut, kept separate from panel cancel semantics — revisit once a submenu needs "back" instead of "quit"
     }
 
-    std::cout << "[PauseState] Ending Update...\n";
+    MenuContext nav = navInput_.poll(input_); // translate raw keys to menu intent
+
+    if (UISystem::HandleDefaultBack(nav, stateMachine_))
+        return; // Escape already popped — don't also run navigation this frame
+
+    PauseActionContext actionCtx{stateMachine_, input_}; // what Resume/Quit commands need
+    UISystem::HandleNavigation(panel_, nav, actionCtx);  // move cursor / fire selected command
 }
 
 void PauseState::Render(RenderSystem &renderSystem, float dt)
 {
-    std::cout << "[PauseState] Starting Render...\n";
-    // 1. Fullscreen translucent black overlay (as you already had).
     renderSystem.submitRect(
         RenderLayer::ScreenOverlay, 0.f,
         0.f, 0.f,
         GameConstants::GAME_RESOLUTION_W,
         GameConstants::GAME_RESOLUTION_H,
         sf::Color(0, 0, 0, 150),
-        /*screenSpace=*/true);
+        /*screenSpace=*/true); // fullscreen dim, drawn beneath the panel
 
-    std::cout << "[PauseState] Submitted first rect.\n";
-    // 2. Dialogue box rectangle in screen space.
-    const float boxWidth = 600.f;
-    const float boxHeight = 120.f;
-
-    const float boxX = (GameConstants::GAME_RESOLUTION_W - boxWidth) * 0.5f;
-    const float boxY = (GameConstants::GAME_RESOLUTION_H - boxHeight) * 0.7f;
-
-    std::cout << "[PauseState] Submitting second rect.\n";
-    renderSystem.submitRect(
-        RenderLayer::ScreenOverlay, 1.f, // draw above tint
-        boxX, boxY,
-        boxWidth, boxHeight,
-        sf::Color(0, 0, 0, 200), // slightly darker panel
-        /*screenSpace=*/true);
-
-    std::cout << "[PauseState] Submitted second rect.\n";
-    // 3. Dialogue text inside the box.
-    const std::string message =
-        "Press ESC to quit\n"
-        "Press ENTER to continue";
-
-    const float paddingX = 20.f;
-    const float paddingY = 20.f;
-
-    std::cout << "[PauseState] Submitting text.\n";
-    renderSystem.submitText(
-        RenderLayer::ScreenOverlay, 2.f, // on top of box
-        font_,                           // PauseState member: const sf::Font& font_;
-        message,
-        boxX + paddingX,
-        boxY + paddingY,
-        24u,
-        sf::Color::White,
-        /*screenSpace=*/true);
-
-    std::cout << "[PauseState] Ending Render...\n";
+    UISystem::Render(panel_, renderSystem, font_); // panel backdrop + options, replaces old hardcoded box/text
 }

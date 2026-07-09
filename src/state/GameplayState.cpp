@@ -50,13 +50,20 @@ void GameplayState::OnExit()
     controller_.reset();
 }
 
+#include "state/InventoryState.h" // new include, alongside PauseState's
+
 void GameplayState::Update(float dt)
 {
-
     if (input_.WasKeyPressed(Key::Escape))
     {
         stateMachine_.Push(std::make_unique<PauseState>(input_, stateMachine_));
-        return; // don't also process movement the same frame we pause
+        return;
+    }
+
+    if (input_.WasKeyPressed(Key::I))
+    {
+        stateMachine_.Push(std::make_unique<InventoryState>(input_, stateMachine_, *controller_->getPlayer()));
+        return; // don't also process movement the frame we open inventory
     }
 
     PlayerControlComponent input = bindings_.poll(input_);

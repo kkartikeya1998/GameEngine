@@ -42,6 +42,7 @@ add_executable(PokemonProject
 
     src/state/GameplayState.cpp
     src/state/PauseState.cpp
+    src/state/InventoryState.cpp
 
     src/render/RenderSystem.cpp
     src/render/SFMLRenderer.cpp
