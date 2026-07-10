@@ -6,8 +6,8 @@
 #include "system/CameraSystem.h"
 #include "tmp/component/PositionComponent.h"
 
-GameplayState::GameplayState(InputManager &input, AssetManager &assets, StateMachine<IGameState> &stateMachine, AnimationSystem &animationSystem)
-    : input_(input), assets_(assets), stateMachine_(stateMachine), animationSystem_(animationSystem)
+GameplayState::GameplayState(InputManager &input, AssetManager &assets, StateMachine<IGameState> &stateMachine, AnimationSystem &animationSystem, EventQueue &events)
+    : input_(input), assets_(assets), stateMachine_(stateMachine), animationSystem_(animationSystem), events_(events)
 {
     auto up = std::make_shared<MoveCommand>(Direction::UP);
     auto down = std::make_shared<MoveCommand>(Direction::DOWN);
@@ -62,7 +62,7 @@ void GameplayState::Update(float dt)
 
     if (input_.WasKeyPressed(Key::I))
     {
-        stateMachine_.Push(std::make_unique<InventoryState>(input_, stateMachine_, *controller_->getPlayer()));
+        stateMachine_.Push(std::make_unique<InventoryState>(input_, stateMachine_, *controller_->getPlayer(), events_));
         return; // don't also process movement the frame we open inventory
     }
 

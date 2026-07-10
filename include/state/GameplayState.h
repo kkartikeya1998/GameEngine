@@ -10,12 +10,13 @@
 #include "state/StateMachine.h"
 #include "system/AnimationSystem.h"
 #include "render/Camera.h"
+#include "events/EventQueue.h"
 
 class InputManager;
 
 class GameplayState : public IGameState {
 public:
-    GameplayState(InputManager& input, AssetManager& assets, StateMachine<IGameState>& stateMachine, AnimationSystem& animationSystem);
+    GameplayState(InputManager& input, AssetManager& assets, StateMachine<IGameState>& stateMachine, AnimationSystem& animationSystem, EventQueue& events);
 
     void OnEnter() override;
     void OnExit() override;
@@ -28,6 +29,7 @@ private:
     AssetManager& assets_;
     StateMachine<IGameState>& stateMachine_;
     AnimationSystem& animationSystem_;
+    EventQueue& events_;
 
     KeyBindings<PlayerControlComponent> bindings_;
     std::unique_ptr<GameController> controller_;

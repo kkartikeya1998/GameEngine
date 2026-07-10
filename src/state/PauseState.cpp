@@ -47,8 +47,8 @@ PauseState::PauseState(InputManager &input,
         else
         {
             s_loaded = true;
-            std::cout << "[PauseState] Font loaded: "
-                      << Assets::Fonts::PIXFAY << "\n";
+            // std::cout << "[PauseState] Font loaded: "
+            //           << Assets::Fonts::PIXFAY << "\n";
         }
     }
 
@@ -69,10 +69,10 @@ PauseState::PauseState(InputManager &input,
 
 void PauseState::Update(float dt)
 {
-    if (input_.WasKeyPressed(Key::Escape))
-    {
-        input_.RequestQuit(); // direct quit shortcut, kept separate from panel cancel semantics — revisit once a submenu needs "back" instead of "quit"
-    }
+    // if (input_.WasKeyPressed(Key::Escape))
+    // {
+    //     input_.RequestQuit(); // direct quit shortcut, kept separate from panel cancel semantics — revisit once a submenu needs "back" instead of "quit"
+    // }
 
     MenuContext nav = navInput_.poll(input_); // translate raw keys to menu intent
 

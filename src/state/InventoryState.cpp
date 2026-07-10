@@ -22,6 +22,8 @@ public:
         items[itemIndex_].quantity -= 1;
         if (items[itemIndex_].quantity <= 0)
             items.erase(items.begin() + itemIndex_);
+
+        ctx.events.Push(ItemConsumed{});
     }
 
 private:
@@ -34,14 +36,16 @@ public:
     void execute(InventoryActionContext &ctx) const override
     {
         ctx.stateMachine.Pop();
+        ctx.events.Push(ItemConsumed{}); // [TODO] : Remove. For testing purposes. Should show on selecting close, but not pressing I again
     }
 };
 
 InventoryState::InventoryState(InputManager &input,
                                StateMachine<IGameState> &stateMachine,
                                Entity &player,
+                               EventQueue &events,
                                bool *openFlag)
-    : input_(input), stateMachine_(stateMachine), player_(player), openFlag_(openFlag), font_(s_font_)
+    : input_(input), stateMachine_(stateMachine), player_(player), events_(events), openFlag_(openFlag), font_(s_font_)
 {
     static bool s_loaded = false;
     if (!s_loaded)
@@ -102,7 +106,7 @@ void InventoryState::Update(float dt)
     if (UISystem::HandleDefaultBack(nav, stateMachine_))
         return; // OnExit() fires here, clearing openFlag_
 
-    InventoryActionContext actionCtx{player_.get<InventoryComponent>(), stateMachine_};
+    InventoryActionContext actionCtx{player_.get<InventoryComponent>(), stateMachine_, events_};
     UISystem::HandleNavigation(panel_, nav, actionCtx);
 
     if (nav.confirm)

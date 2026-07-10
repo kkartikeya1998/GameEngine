@@ -6,6 +6,7 @@
 #include "ui/Panel.h"
 #include "entities/Entity.h"
 #include "tmp/component/InventoryComponent.h"
+#include "events/EventQueue.h"
 
 #include <SFML/Graphics/Font.hpp>
 
@@ -15,14 +16,15 @@ class InputManager;
 struct InventoryActionContext {
     InventoryComponent *inventory; // nullable — Close doesn't need it, UseItemCommand checks before use
     StateMachine<IGameState> &stateMachine;
+   EventQueue &events;
 };
-
 class InventoryState : public IGameState
 {
 public:
     InventoryState(InputManager &input,
                    StateMachine<IGameState> &stateMachine,
                    Entity &player,
+                   EventQueue &events,
                    bool *openFlag = nullptr); // GameplayState passes &inventoryOpen_ to guard re-push; PauseState leaves default, doesn't need it since Pause already blocks GameplayState's Update
 
     void OnEnter() override;
@@ -37,6 +39,7 @@ private:
     InputManager &input_;
     StateMachine<IGameState> &stateMachine_;
     Entity &player_;
+    EventQueue &events_;
     bool *openFlag_; // non-owning, points at caller's tracking bool if given
 
     KeyBindings<MenuContext> navInput_;

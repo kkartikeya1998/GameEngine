@@ -10,7 +10,7 @@
 #include "render/RenderSystem.h"
 #include "state/IGameState.h"
 #include "system/AnimationSystem.h"
-
+#include "events/EventQueue.h"
 // ---------------------------------------------------------------------------
 // Game — top-level owner of long-lived systems and the main loop.
 //
@@ -28,6 +28,7 @@ private:
     InputManager input_;
     StateMachine<IGameState> states_;
     AnimationSystem animationSystem_;
+    EventQueue events_;
     std::unique_ptr<RenderSystem> renderSystem_;
 
     sf::Clock gameClock_;

@@ -15,12 +15,20 @@ Game::Game()
       animationSystem_(assets_.get<CharacterRepository>())
 {
     // straight to gameplay mode
-    states_.Push(std::make_unique<GameplayState>(input_, assets_, states_, animationSystem_));
+    states_.Push(std::make_unique<GameplayState>(input_, assets_, states_, animationSystem_, events_));
 }
 
 void Game::Update(float dt)
 {
     states_.Update(dt);
+
+    events_.Drain([this](auto &&e)
+                  {
+       using T = std::decay_t<decltype(e)>;
+       if constexpr (std::is_same_v<T, ItemConsumed>)
+       {
+           std::cout << "Item consumed\n";
+       } });
 }
 
 void Game::Render()
@@ -32,7 +40,8 @@ void Game::Run()
 {
     try
     {
-        while (renderSystem_->isOpen()){
+        while (renderSystem_->isOpen())
+        {
             lastDt_ = gameClock_.restart().asSeconds();
 
             // first check for qindow close events before polling input, so we don't miss a quit request
@@ -40,7 +49,7 @@ void Game::Run()
             {
                 input_.ProcessEvent(*event);
             }
-            
+
             if (input_.ShouldQuit())
             {
                 return;
