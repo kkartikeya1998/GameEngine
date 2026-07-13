@@ -20,6 +20,7 @@ inline std::string toString(MovementState state) {
         case MovementState::Idle:      return "idle"; // idle reuses walk frame 0
         case MovementState::Walking:   return "walk";
         case MovementState::Sprinting: return "run";
+        case MovementState::Jumping:   return "jump";
     }
     return "walk";
 }

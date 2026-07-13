@@ -59,5 +59,8 @@
     { "type": "SS_Object_TreasureChest", "origin": { "x": 700, "y": 310 } },
     { "type": "SS_Object_CastleRound", "origin": { "x": 880, "y": 740 } },
     { "type": "SS_Object_BlueBanner", "origin": { "x": 635, "y": 870 } }
+  ],
+  "wild_pokemon": [
+    { "speciesId": 1, "level_min": 3, "level_max": 5, "origin": { "x": 320, "y": 480 } }
   ]
 }

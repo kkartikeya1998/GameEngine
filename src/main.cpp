@@ -17,9 +17,14 @@
 #include <stdexcept>
 
 int main() {
-    Game game;
-    game.Run();
-    return 0;
+    try {
+        Game game;
+        game.Run();
+        return 0;
+    } catch (const std::exception& e) {
+        std::cerr << "Fatal: " << e.what() << "\n";
+        return 1;
+    }
 }
 // ---------------------------------------------------------------------------------------------------------------------------------------------
 // int main() {

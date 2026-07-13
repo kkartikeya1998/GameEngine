@@ -5,8 +5,10 @@
 #include "state/PauseState.h"
 #include "system/CameraSystem.h"
 #include "tmp/component/PositionComponent.h"
+// #include "asset/repositories/PokemonSpeciesAssetRepository.h"
+#include <iostream>
 
-GameplayState::GameplayState(InputManager &input, AssetManager &assets, StateMachine<IGameState> &stateMachine, AnimationSystem &animationSystem, EventQueue &events)
+GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMachine<IGameState> &stateMachine, AnimationSystem &animationSystem, EventQueue &events)
     : input_(input), assets_(assets), stateMachine_(stateMachine), animationSystem_(animationSystem), events_(events)
 {
     auto up = std::make_shared<MoveCommand>(Direction::UP);
@@ -31,9 +33,8 @@ GameplayState::GameplayState(InputManager &input, AssetManager &assets, StateMac
 void GameplayState::OnEnter()
 {
     // Map/player load happens on entering gameplay, not at app boot.
-    controller_ = std::make_unique<GameController>(
-        1, 600, 600,
-        assets_.get<MapObjectRepository>(), assets_.get<TileRepository>());
+    // GameplayState.cpp OnEnter()
+    controller_ = std::make_unique<GameController>(1, 600, 600, assets_);
 
     // Center the camera on the player immediately, so the first
     // rendered frame isn't a flash at world-origin before the first
@@ -147,5 +148,29 @@ void GameplayState::Render(RenderSystem &renderSystem, float dt)
         resolved.renderY = playerPos->y;
 
         renderSystem.submit(resolved.layer, playerBox.y + playerBox.height, resolved, RenderAnchor::CenterBottom);
+    }
+    // ---- NPCs (wild Pokémon, wandering characters) ----
+    for (const auto &npc : map->getNpcs())
+    {
+        const auto *npcRender = npc->get<RenderComponent>();
+        const auto *npcPos = npc->get<PositionComponent>();
+        if (!npcRender || !npcPos)
+            continue;
+
+        const auto *npcCollision = npc->get<CollisionComponent>();
+        float z = static_cast<float>(npcPos->y);
+
+        if (npcCollision)
+        {
+            AABB box = npcCollision->resolve(npcPos->x, npcPos->y);
+            z = box.y + box.height;
+            renderSystem.submitDebugRect(box.x, box.y, box.width, box.height);
+        }
+
+        RenderComponent resolved = *npcRender;
+        resolved.renderX = npcPos->x;
+        resolved.renderY = npcPos->y;
+
+        renderSystem.submit(resolved.layer, z, resolved, RenderAnchor::CenterBottom);
     }
 }

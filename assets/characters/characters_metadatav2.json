@@ -1,0 +1,136 @@
+{
+  "components": {
+    "Animation": {
+      "player_idle": {
+        "texture": "assets/characters/player.png",
+        "frame_width": 480,
+        "frame_height": 480,
+        "columns": 20,
+        "frame_duration": 0.1,
+        "loop": true,
+        "directions": {
+          "down": {
+            "start_index": 80,
+            "frame_count": 16
+          },
+          "right": {
+            "start_index": 96,
+            "frame_count": 16
+          },
+          "up": {
+            "start_index": 112,
+            "frame_count": 16
+          },
+          "left": {
+            "start_index": 128,
+            "frame_count": 16
+          }
+        }
+      },
+      "player_walk": {
+        "texture": "assets/characters/player.png",
+        "frame_width": 480,
+        "frame_height": 480,
+        "columns": 20,
+        "frame_duration": 0.1,
+        "loop": true,
+        "directions": {
+          "down": {
+            "start_index": 0,
+            "frame_count": 20
+          },
+          "right": {
+            "start_index": 20,
+            "frame_count": 20
+          },
+          "up": {
+            "start_index": 40,
+            "frame_count": 20
+          },
+          "left": {
+            "start_index": 60,
+            "frame_count": 20
+          }
+        }
+      },
+      "player_run": {
+        "texture": "assets/characters/player.png",
+        "frame_width": 480,
+        "frame_height": 480,
+        "columns": 20,
+        "frame_duration": 0.1,
+        "loop": true,
+        "directions": {
+          "down": {
+            "start_index": 144,
+            "frame_count": 12
+          },
+          "right": {
+            "start_index": 156,
+            "frame_count": 12
+          },
+          "up": {
+            "start_index": 168,
+            "frame_count": 12
+          },
+          "left": {
+            "start_index": 180,
+            "frame_count": 12
+          }
+        }
+      },
+      "fox_idle": {
+        "texture": "assets/characters/fox.png",
+        "frame_width": 256,
+        "frame_height": 256,
+        "columns": 20,
+        "frame_duration": 0.1,
+        "loop": true,
+        "directions": {
+          "down": {
+            "start_index": 0,
+            "frame_count": 20
+          },
+          "right": {
+            "start_index": 20,
+            "frame_count": 20
+          },
+          "up": {
+            "start_index": 40,
+            "frame_count": 20
+          },
+          "left": {
+            "start_index": 60,
+            "frame_count": 20
+          }
+        }
+      },
+      "fox_walk": {
+        "texture": "assets/characters/fox.png",
+        "frame_width": 256,
+        "frame_height": 256,
+        "columns": 20,
+        "frame_duration": 0.1,
+        "loop": true,
+        "directions": {
+          "down": {
+            "start_index": 80,
+            "frame_count": 12
+          },
+          "right": {
+            "start_index": 92,
+            "frame_count": 12
+          },
+          "up": {
+            "start_index": 104,
+            "frame_count": 12
+          },
+          "left": {
+            "start_index": 116,
+            "frame_count": 12
+          }
+        }
+      }
+    }
+  }
+}

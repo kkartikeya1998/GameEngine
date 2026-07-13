@@ -1,0 +1,583 @@
+{
+  "components": {
+    "Render": {
+      "SS_Object_Campfire": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1085,
+        "y": 1,
+        "w": 200,
+        "h": 160
+      },
+      "SS_Object_Flag": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1249,
+        "y": 887,
+        "w": 100,
+        "h": 160
+      },
+      "SS_Object_RedBanner": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 967,
+        "y": 1789,
+        "w": 160,
+        "h": 240
+      },
+      "SS_Object_BlueBanner": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1129,
+        "y": 1789,
+        "w": 160,
+        "h": 240
+      },
+      "SS_Object_Tent": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 723,
+        "y": 403,
+        "w": 300,
+        "h": 280
+      },
+      "SS_Object_House": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1,
+        "y": 723,
+        "w": 480,
+        "h": 640
+      },
+      "SS_Object_Windmill": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1,
+        "y": 1,
+        "w": 720,
+        "h": 720
+      },
+      "SS_Object_CastleRound": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 403,
+        "y": 1365,
+        "w": 320,
+        "h": 480
+      },
+      "SS_Object_CastleSquare": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 723,
+        "y": 1,
+        "w": 360,
+        "h": 400
+      },
+      "SS_Object_TreeLarge": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1,
+        "y": 1365,
+        "w": 400,
+        "h": 480
+      },
+      "SS_Object_TreeMedium": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 725,
+        "y": 1045,
+        "w": 360,
+        "h": 400
+      },
+      "SS_Object_TreeSmall": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 483,
+        "y": 1045,
+        "w": 240,
+        "h": 280
+      },
+      "SS_Object_TreeStumpTall": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1087,
+        "y": 1007,
+        "w": 160,
+        "h": 140
+      },
+      "SS_Object_TreeStumpShort": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1267,
+        "y": 325,
+        "w": 120,
+        "h": 100
+      },
+      "SS_Object_MagicStoneTower": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 725,
+        "y": 1447,
+        "w": 240,
+        "h": 400
+      },
+      "SS_Object_WatchtowerTall": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 967,
+        "y": 1447,
+        "w": 260,
+        "h": 340
+      },
+      "SS_Object_WatchtowerShort": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1025,
+        "y": 403,
+        "w": 240,
+        "h": 260
+      },
+      "SS_Object_Well": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 323,
+        "y": 1847,
+        "w": 200,
+        "h": 200
+      },
+      "SS_Object_BushesLarge": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 525,
+        "y": 1849,
+        "w": 240,
+        "h": 140
+      },
+      "SS_Object_BushesMedium": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 767,
+        "y": 1849,
+        "w": 180,
+        "h": 140
+      },
+      "SS_Object_BushesSmall": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1209,
+        "y": 1231,
+        "w": 140,
+        "h": 120
+      },
+      "SS_Object_WoodenBridgeHorizontal": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 483,
+        "y": 723,
+        "w": 480,
+        "h": 320
+      },
+      "SS_Object_WoodenBridgeVertical": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 965,
+        "y": 685,
+        "w": 240,
+        "h": 320
+      },
+      "SS_Object_WoodenFenceHorizontal": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1087,
+        "y": 1149,
+        "w": 220,
+        "h": 80
+      },
+      "SS_Object_WoodenFenceVertical": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1207,
+        "y": 665,
+        "w": 80,
+        "h": 220
+      },
+      "SS_Object_WoodenCart": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1,
+        "y": 1849,
+        "w": 320,
+        "h": 160
+      },
+      "SS_Object_WoodenBarrel": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1087,
+        "y": 1231,
+        "w": 120,
+        "h": 140
+      },
+      "SS_Object_TreasureChest": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1085,
+        "y": 163,
+        "w": 200,
+        "h": 160
+      },
+      "SS_Object_Rock01": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1309,
+        "y": 1049,
+        "w": 120,
+        "h": 100
+      },
+      "SS_Object_Rock02": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1087,
+        "y": 1373,
+        "w": 100,
+        "h": 60
+      },
+      "SS_Object_Rock03": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1189,
+        "y": 1373,
+        "w": 100,
+        "h": 60
+      },
+      "SS_Object_Rock04": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1085,
+        "y": 325,
+        "w": 60,
+        "h": 60
+      },
+      "SS_Object_Rock05": {
+        "texture": "assets/objects/SimpleSummer_Objects.png",
+        "tile_size": 256,
+        "x": 1147,
+        "y": 325,
+        "w": 60,
+        "h": 60
+      }
+    },
+    "Collision": {
+      "SS_Object_Campfire": {
+        "offset_x": 8,
+        "offset_y": -20,
+        "width": 140,
+        "height": 120
+      },
+      "SS_Object_Flag": {
+        "offset_x": -22,
+        "offset_y": -5,
+        "width": 45,
+        "height": 25
+      },
+      "SS_Object_RedBanner": {
+        "offset_x": 0,
+        "offset_y": 0,
+        "width": 45,
+        "height": 25
+      },
+      "SS_Object_BlueBanner": {
+        "offset_x": 0,
+        "offset_y": 0,
+        "width": 45,
+        "height": 25
+      },
+      "SS_Object_Tent": {
+        "offset_x": 5,
+        "offset_y": -40,
+        "width": 240,
+        "height": 150
+      },
+      "SS_Object_House": {
+        "offset_x": 0,
+        "offset_y": -15,
+        "width": 350,
+        "height": 170
+      },
+      "SS_Object_Windmill": {
+        "offset_x": -30,
+        "offset_y": -55,
+        "width": 265,
+        "height": 125
+      },
+      "SS_Object_CastleRound": {
+        "offset_x": 0,
+        "offset_y": -45,
+        "width": 245,
+        "height": 150
+      },
+      "SS_Object_CastleSquare": {
+        "offset_x": 5,
+        "offset_y": -15,
+        "width": 280,
+        "height": 120
+      },
+      "SS_Object_TreeLarge": {
+        "offset_x": 15,
+        "offset_y": -70,
+        "width": 85,
+        "height": 60
+      },
+      "SS_Object_TreeMedium": {
+        "offset_x": -10,
+        "offset_y": -40,
+        "width": 80,
+        "height": 50
+      },
+      "SS_Object_TreeSmall": {
+        "offset_x": 15,
+        "offset_y": -30,
+        "width": 70,
+        "height": 40
+      },
+      "SS_Object_TreeStumpTall": {
+        "offset_x": 0,
+        "offset_y": -10,
+        "width": 70,
+        "height": 35
+      },
+      "SS_Object_TreeStumpShort": {
+        "offset_x": 15,
+        "offset_y": -20,
+        "width": 70,
+        "height": 25
+      },
+      "SS_Object_MagicStoneTower": {
+        "offset_x": 0,
+        "offset_y": -20,
+        "width": 170,
+        "height": 120
+      },
+      "SS_Object_WatchtowerTall": {
+        "offset_x": 15,
+        "offset_y": -25,
+        "width": 180,
+        "height": 110
+      },
+      "SS_Object_Well": {
+        "offset_x": 0,
+        "offset_y": -20,
+        "width": 160,
+        "height": 90
+      },
+      "SS_Object_BushesLarge": {
+        "offset_x": 0,
+        "offset_y": -25,
+        "width": 0,
+        "height": 0
+      },
+      "SS_Object_BushesMedium": {
+        "offset_x": 0,
+        "offset_y": -25,
+        "width": 0,
+        "height": 0
+      },
+      "SS_Object_BushesSmall": {
+        "offset_x": 0,
+        "offset_y": -30,
+        "width": 0,
+        "height": 0
+      },
+      "SS_Object_WoodenFenceHorizontal": {
+        "offset_x": 0,
+        "offset_y": 0,
+        "width": 180,
+        "height": 25
+      },
+      "SS_Object_WoodenFenceVertical": {
+        "offset_x": -5,
+        "offset_y": -10,
+        "width": 45,
+        "height": 170
+      },
+      "SS_Object_WoodenCart": {
+        "offset_x": 10,
+        "offset_y": -10,
+        "width": 260,
+        "height": 110
+      },
+      "SS_Object_WoodenBarrel": {
+        "offset_x": 0,
+        "offset_y": -15,
+        "width": 90,
+        "height": 60
+      },
+      "SS_Object_TreasureChest": {
+        "offset_x": 0,
+        "offset_y": -20,
+        "width": 140,
+        "height": 75
+      },
+      "SS_Object_Rock01": {
+        "offset_x": 10,
+        "offset_y": -5,
+        "width": 85,
+        "height": 45
+      },
+      "SS_Object_Rock02": {
+        "offset_x": 10,
+        "offset_y": -5,
+        "width": 65,
+        "height": 35
+      },
+      "SS_Object_Rock03": {
+        "offset_x": 5,
+        "offset_y": -10,
+        "width": 75,
+        "height": 30
+      },
+      "SS_Object_Rock04": {
+        "offset_x": 5,
+        "offset_y": -15,
+        "width": 35,
+        "height": 15
+      },
+      "SS_Object_Rock05": {
+        "offset_x": 5,
+        "offset_y": -15,
+        "width": 30,
+        "height": 10
+      }
+    }
+  },
+  "archetypes": {
+    "SS_Object_Campfire": {
+      "render": "SS_Object_Campfire",
+      "collision": "SS_Object_Campfire"
+    },
+    "SS_Object_Flag": {
+      "render": "SS_Object_Flag",
+      "collision": "SS_Object_Flag"
+    },
+    "SS_Object_RedBanner": {
+      "render": "SS_Object_RedBanner",
+      "collision": "SS_Object_RedBanner"
+    },
+    "SS_Object_BlueBanner": {
+      "render": "SS_Object_BlueBanner",
+      "collision": "SS_Object_BlueBanner"
+    },
+    "SS_Object_Tent": {
+      "render": "SS_Object_Tent",
+      "collision": "SS_Object_Tent"
+    },
+    "SS_Object_House": {
+      "render": "SS_Object_House",
+      "collision": "SS_Object_House"
+    },
+    "SS_Object_Windmill": {
+      "render": "SS_Object_Windmill",
+      "collision": "SS_Object_Windmill"
+    },
+    "SS_Object_CastleRound": {
+      "render": "SS_Object_CastleRound",
+      "collision": "SS_Object_CastleRound"
+    },
+    "SS_Object_CastleSquare": {
+      "render": "SS_Object_CastleSquare",
+      "collision": "SS_Object_CastleSquare"
+    },
+    "SS_Object_TreeLarge": {
+      "render": "SS_Object_TreeLarge",
+      "collision": "SS_Object_TreeLarge"
+    },
+    "SS_Object_TreeMedium": {
+      "render": "SS_Object_TreeMedium",
+      "collision": "SS_Object_TreeMedium"
+    },
+    "SS_Object_TreeSmall": {
+      "render": "SS_Object_TreeSmall",
+      "collision": "SS_Object_TreeSmall"
+    },
+    "SS_Object_TreeStumpTall": {
+      "render": "SS_Object_TreeStumpTall",
+      "collision": "SS_Object_TreeStumpTall"
+    },
+    "SS_Object_TreeStumpShort": {
+      "render": "SS_Object_TreeStumpShort",
+      "collision": "SS_Object_TreeStumpShort"
+    },
+    "SS_Object_MagicStoneTower": {
+      "render": "SS_Object_MagicStoneTower",
+      "collision": "SS_Object_MagicStoneTower"
+    },
+    "SS_Object_WatchtowerTall": {
+      "render": "SS_Object_WatchtowerTall",
+      "collision": "SS_Object_WatchtowerTall"
+    },
+    "SS_Object_WatchtowerShort": {
+      "render": "SS_Object_WatchtowerShort"
+    },
+    "SS_Object_Well": {
+      "render": "SS_Object_Well",
+      "collision": "SS_Object_Well"
+    },
+    "SS_Object_BushesLarge": {
+      "render": "SS_Object_BushesLarge",
+      "collision": "SS_Object_BushesLarge"
+    },
+    "SS_Object_BushesMedium": {
+      "render": "SS_Object_BushesMedium",
+      "collision": "SS_Object_BushesMedium"
+    },
+    "SS_Object_BushesSmall": {
+      "render": "SS_Object_BushesSmall",
+      "collision": "SS_Object_BushesSmall"
+    },
+    "SS_Object_WoodenBridgeHorizontal": {
+      "render": "SS_Object_WoodenBridgeHorizontal"
+    },
+    "SS_Object_WoodenBridgeVertical": {
+      "render": "SS_Object_WoodenBridgeVertical"
+    },
+    "SS_Object_WoodenFenceHorizontal": {
+      "render": "SS_Object_WoodenFenceHorizontal",
+      "collision": "SS_Object_WoodenFenceHorizontal"
+    },
+    "SS_Object_WoodenFenceVertical": {
+      "render": "SS_Object_WoodenFenceVertical",
+      "collision": "SS_Object_WoodenFenceVertical"
+    },
+    "SS_Object_WoodenCart": {
+      "render": "SS_Object_WoodenCart",
+      "collision": "SS_Object_WoodenCart"
+    },
+    "SS_Object_WoodenBarrel": {
+      "render": "SS_Object_WoodenBarrel",
+      "collision": "SS_Object_WoodenBarrel"
+    },
+    "SS_Object_TreasureChest": {
+      "render": "SS_Object_TreasureChest",
+      "collision": "SS_Object_TreasureChest"
+    },
+    "SS_Object_Rock01": {
+      "render": "SS_Object_Rock01",
+      "collision": "SS_Object_Rock01"
+    },
+    "SS_Object_Rock02": {
+      "render": "SS_Object_Rock02",
+      "collision": "SS_Object_Rock02"
+    },
+    "SS_Object_Rock03": {
+      "render": "SS_Object_Rock03",
+      "collision": "SS_Object_Rock03"
+    },
+    "SS_Object_Rock04": {
+      "render": "SS_Object_Rock04",
+      "collision": "SS_Object_Rock04"
+    },
+    "SS_Object_Rock05": {
+      "render": "SS_Object_Rock05",
+      "collision": "SS_Object_Rock05"
+    }
+  }
+}

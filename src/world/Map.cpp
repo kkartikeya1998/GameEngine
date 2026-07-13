@@ -39,12 +39,12 @@ bool Map::isAreaBlocked(const AABB& box) const {
     int minTileY = static_cast<int>(std::floor(box.y / GameConstants::TILE_SIZE));
     int maxTileY = static_cast<int>(std::floor((box.y + box.height) / GameConstants::TILE_SIZE));
     // independent collision source: objects with a precise
-    // collisionBox (see CollisionBox in MapObjectRepository.h). This is
+    // CollisionData (see CollisionData in MapObjectRepository.h). This is
     // deliberately separate from the tile-grid check above — an object
-    // with a collisionBox does NOT also mark its tile as blocking via
+    // with a CollisionData does NOT also mark its tile as blocking via
     // footprint (see MapLoader::applyFootprint), so there's no double
     // application of blocking for the same object. Objects WITHOUT a
-    // collisionBox return nullopt here and rely entirely on the
+    // CollisionData return nullopt here and rely entirely on the
     // tile-grid check above instead, via their footprint's blocking
     // flag — exactly as before this method existed.
     for (const auto& obj : map_objects) {

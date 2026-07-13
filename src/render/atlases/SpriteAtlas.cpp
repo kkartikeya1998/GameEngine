@@ -2,14 +2,11 @@
 #include <stdexcept>
 #include <iostream>
 
-SpriteAtlas::SpriteAtlas(const std::filesystem::path& spritesheet_path, const CharacterRepository& characterRepository)
-    : Atlas(spritesheet_path)
-    , characterRepository_(characterRepository)
-{}
+SpriteAtlas::SpriteAtlas(const std::filesystem::path& spritesheet_path,
+                          const ComponentAssetRepository<RenderAssetMetadata>& renderRepository)
+    : Atlas(spritesheet_path), renderRepository_(renderRepository) {}
 
 SpriteRegion SpriteAtlas::getCharacterSprite(const std::string& spriteName) const
 {
-    // std::cout << "[SpriteAtlas] getCharacterSprite: " << spriteName << std::endl;
-    return regionFromRepository(characterRepository_, spriteName, spriteName);
-    // std::cout << "[SpriteAtlas] getCharacterSprite: " << spriteName << "retrieved" << std::endl;
+    return regionFromRepository(renderRepository_, spriteName, spriteName);
 }

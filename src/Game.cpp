@@ -10,9 +10,9 @@ Game::Game()
       renderSystem_(std::make_unique<RenderSystem>(
           std::make_unique<SFMLRenderer>(
               GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H),
-          assets_.get<TileRepository>(),
+          assets_.renderRepository(),
           Assets::Objects::SIMPLE_SUMMER_TILES)),
-      animationSystem_(assets_.get<CharacterRepository>())
+      animationSystem_(assets_)
 {
     // straight to gameplay mode
     states_.Push(std::make_unique<GameplayState>(input_, assets_, states_, animationSystem_, events_));

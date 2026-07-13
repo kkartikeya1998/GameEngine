@@ -11,6 +11,7 @@
 #include "tmp/component/RenderComponent.h"
 #include "tmp/component/PlayerControlComponent.h"
 #include "system/GameConstants.h"
+#include "asset/AsssetPaths.h"
 
 inline Entity makePlayer(
     float x, float y,

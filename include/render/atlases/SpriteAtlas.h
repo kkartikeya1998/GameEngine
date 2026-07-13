@@ -1,10 +1,8 @@
 #pragma once
 
 #include "render/atlases/Atlas.h"
-#include "asset/repositories/CharacterRepository.h"
-// for direction only
-#include "tmp/component/DirectionComponent.h"
-
+#include "asset/metadata/RenderAssetMetadata.h"
+#include "asset/repositories/ComponentAssetRepository.h"
 // ---------------------------------------------------------------------------
 // SpriteAtlas — player walk-cycle sprite lookup.
 //
@@ -16,11 +14,10 @@
 
 class SpriteAtlas : public Atlas {
 public:
-    SpriteAtlas(const std::filesystem::path& spritesheet_path, const CharacterRepository& characterRepository);
-
+    SpriteAtlas(const std::filesystem::path& spritesheet_path,
+                const ComponentAssetRepository<RenderAssetMetadata>& renderRepository);
     const sf::Texture& playerTexture() const { return texture(); }
     SpriteRegion getCharacterSprite(const std::string& spriteName) const;
-
 private:
-    const CharacterRepository& characterRepository_;
+    const ComponentAssetRepository<RenderAssetMetadata>& renderRepository_;
 };

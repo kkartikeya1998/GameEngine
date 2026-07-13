@@ -5,7 +5,7 @@
 #include "IGameState.h"
 #include "input/KeyBindings.h"
 #include "tmp/component/PlayerControlComponent.h"
-#include "asset/AssetManager.h"
+#include "asset/AssetDatabase.h"
 #include "system/GameController.h"
 #include "state/StateMachine.h"
 #include "system/AnimationSystem.h"
@@ -16,7 +16,7 @@ class InputManager;
 
 class GameplayState : public IGameState {
 public:
-    GameplayState(InputManager& input, AssetManager& assets, StateMachine<IGameState>& stateMachine, AnimationSystem& animationSystem, EventQueue& events);
+    GameplayState(InputManager& input, AssetDatabase& assets, StateMachine<IGameState>& stateMachine, AnimationSystem& animationSystem, EventQueue& events);
 
     void OnEnter() override;
     void OnExit() override;
@@ -26,7 +26,7 @@ public:
 
 private:
     InputManager& input_;
-    AssetManager& assets_;
+    AssetDatabase& assets_;
     StateMachine<IGameState>& stateMachine_;
     AnimationSystem& animationSystem_;
     EventQueue& events_;

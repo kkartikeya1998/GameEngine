@@ -1,0 +1,510 @@
+{
+  "components": {
+    "Render": {
+      "SS_Grass01": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass02": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 256,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass03": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 512,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass04": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 768,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass05": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1024,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass06": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1280,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass07": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1536,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass08": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1792,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass09": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 2048,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass10": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 0,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass11": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 256,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass12": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 512,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass13": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 768,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass14": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1024,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass15": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1280,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass16": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1536,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass17": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1792,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass18": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 2048,
+        "y": 256,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass19": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 0,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass20": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 256,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass21": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 512,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass22": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 768,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass23": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1024,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass24": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1280,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass25": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1536,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass26": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1792,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass27": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 2048,
+        "y": 512,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass28": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 0,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass29": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 256,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass30": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 512,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass31": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 768,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass32": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1024,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass33": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1280,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass34": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1536,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass35": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1792,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass36": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 2048,
+        "y": 768,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass37": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 0,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass38": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 256,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass39": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 512,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass40": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 768,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass41": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1024,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass42": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1280,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass43": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1536,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass44": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1792,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass45": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 2048,
+        "y": 1024,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass46": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 0,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass47": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 256,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass48": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 512,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass49": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 768,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass50": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1024,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass51": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1280,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass52": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1536,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass53": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1792,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass54": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 2048,
+        "y": 1280,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass55": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 0,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass56": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 256,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass57": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 512,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass58": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 768,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass59": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1024,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass60": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1280,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass61": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1536,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass62": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 1792,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      },
+      "SS_Grass63": {
+        "texture": "assets/objects/SimpleSummer_Tiles.png",
+        "tile_size": 256,
+        "x": 2048,
+        "y": 1536,
+        "w": 256,
+        "h": 256
+      }
+    }
+  }
+}

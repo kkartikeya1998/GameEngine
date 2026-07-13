@@ -4,7 +4,7 @@
 #include <string>
 #include <SFML/System/Clock.hpp>
 
-#include "asset/AssetManager.h"
+#include "asset/AssetDatabase.h"
 #include "input/InputManager.h"
 #include "state/StateMachine.h"
 #include "render/RenderSystem.h"
@@ -24,7 +24,7 @@ public:
 private:
     std::string assetsRoot_;
 
-    AssetManager assets_;
+    AssetDatabase assets_;
     InputManager input_;
     StateMachine<IGameState> states_;
     AnimationSystem animationSystem_;

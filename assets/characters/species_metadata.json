@@ -1,0 +1,9 @@
+{
+  "texture": "assets/characters/pokemon.jpeg",
+  "tile_size": 32,
+  "species": {
+    "1": { "render_component": { "x": 0, "y": 0, "w": 32, "h": 32 } },
+    "4": { "render_component": { "x": 32, "y": 0, "w": 32, "h": 32 },
+           "collision_component": { "offset_x": 4, "offset_y": 20, "width": 24, "height": 10 } }
+  }
+}

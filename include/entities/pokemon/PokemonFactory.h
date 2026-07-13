@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include "entities/pokemon/Pokemon.h"
-#include "entities/pokemon/PokemonSpeciesRepository.h"
+// #include "entities/pokemon/PokemonSpeciesRepository.h"
 
 class PokemonFactory {
 public:

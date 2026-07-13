@@ -4,7 +4,8 @@
 enum class MovementState {
     Idle,
     Walking,
-    Sprinting
+    Sprinting,
+    Jumping
 };
 
 struct MovementStateComponent : public Component {

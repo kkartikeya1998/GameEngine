@@ -24,4 +24,6 @@ namespace GameConstants {
     inline constexpr float PLAYER_HITBOX_OFFSET_X = 0.f;
     inline constexpr float PLAYER_HITBOX_OFFSET_Y = -25.f;
     inline constexpr float PLAYER_SPEED = 256.f;
+
+    inline constexpr float WILD_POKEMON_SPEED = 60.0f;
 }

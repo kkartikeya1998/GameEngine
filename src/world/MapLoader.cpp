@@ -1,12 +1,14 @@
 #include "world/MapLoader.h"
 #include "world/Map.h"
-#include "entities/Entity.h"
-#include "tmp/component/PositionComponent.h"
-#include "tmp/component/CollisionComponent.h"
-#include "tmp/component/RenderComponent.h"
+#include "entities/npc/TileRestrictionComponent.h"
+#include "entities/pokemon/WildPokemon.h"
 #include "system/GameConstants.h"
+#include "entities/EntityFactory.h"
+#include "asset/AsssetPaths.h"
 
 #include <cmath>
+#include <cstdlib>
+#include <unordered_set>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -16,10 +18,8 @@
 
 using json = nlohmann::json;
 
-MapLoader::MapLoader(
-    MapObjectRepository &mapObjectRepository, TileRepository &tileRepository) : 
-        mapObjectRepository_(mapObjectRepository),
-        tileRepository_(tileRepository)
+MapLoader::MapLoader(const AssetDatabase &assets)
+    : assets_(assets)
 {
     loadMetadata();
 }
@@ -92,17 +92,14 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
             std::string typeName = tiles_json[flat].get<std::string>();
 
             Tile tile;
-            TileTypeMetadata const *tileMeta = tileRepository_.find(typeName);
-
-            // probably shifted half a tile size to the right and down, 
+            const RenderAssetMetadata *tileMeta = assets_.findRender(typeName);
             tile.addRenderComponent(RenderComponent(
                 typeName,
-                tileMeta->renderBox.texturePath,
-                tileMeta->renderBox.textureRect,
-                tileMeta->renderBox.sourceTileSize,
+                tileMeta->RenderData.texturePath,
+                tileMeta->RenderData.textureRect,
+                tileMeta->RenderData.sourceTileSize,
                 static_cast<float>(x * GameConstants::TILE_SIZE),
-                static_cast<float>(y * GameConstants::TILE_SIZE)
-            ));
+                static_cast<float>(y * GameConstants::TILE_SIZE)));
             map->set_tile(
                 x,
                 y,
@@ -114,45 +111,40 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
     {
         for (const auto &entry : j["map_objects"])
         {
-            std::string type = entry["type"];
+            std::string archetype = entry["type"];
+            float originX = entry["origin"]["x"];
+            float originY = entry["origin"]["y"];
 
-            const ObjectTypeMetadata *meta = mapObjectRepository_.find(type);
-            if (!meta)
-                continue;
+            auto entity = EntityFactory::make(assets_, archetype, originX, originY, RenderLayer::Characters);
+            if (entity)
+                map->addMapObject(std::move(entity));
+        }
+    }
+
+    if (j.contains("wild_pokemon"))
+    {
+        for (const auto &entry : j["wild_pokemon"])
+        {
+            int speciesId = entry["speciesId"];
+            int levelMin = entry.value("level_min", entry.value("level", 5));
+            int levelMax = entry.value("level_max", levelMin);
+            int level = levelMin;
+            if (levelMax > levelMin)
+                level += std::rand() % (levelMax - levelMin + 1);
 
             float originX = entry["origin"]["x"];
             float originY = entry["origin"]["y"];
 
-            auto entity = std::make_unique<Entity>();
+            std::unordered_set<TileCoord, TileCoordHash> allowedTiles;
+            if (entry.contains("allowedTiles"))
+                for (const auto &t : entry["allowedTiles"])
+                    allowedTiles.insert(TileCoord{t["x"].get<int>(), t["y"].get<int>()});
 
-            entity->add<PositionComponent>(
-                originX,
-                originY);
+            auto entity = std::make_unique<Entity>(
+                makeWildPokemon(speciesId, level, originX, originY, assets_, std::move(allowedTiles)));
 
-            entity->add<RenderComponent>(
-                type,
-                meta->renderBox.texturePath,
-                meta->renderBox.textureRect,
-                meta->renderBox.sourceTileSize,
-                originX,
-                originY,
-                RenderLayer::Characters);
-
-            if (meta->collisionBox.has_value())
-            {
-                const CollisionBox &cb = *meta->collisionBox;
-                float scale = static_cast<float>(GameConstants::TILE_SIZE) / static_cast<float>(meta->renderBox.sourceTileSize);
-
-                entity->add<CollisionComponent>(
-                    cb.offsetX * scale,
-                    cb.offsetY * scale,
-                    cb.width * scale,
-                    cb.height * scale);
-            }
-
-            map->addMapObject(std::move(entity));
+            map->addNpc(std::move(entity));
         }
     }
-
     return map;
 }

@@ -55,12 +55,12 @@ void MapObject::getTeleportTarget(int& x, int& y) const
 // -------------------------
 // Collision
 // -------------------------
-std::optional<AABB> MapObject::getCollisionBox() const
+std::optional<AABB> MapObject::getCollisionData() const
 {
-    if (!metadata_->collisionBox)
+    if (!metadata_->CollisionData)
         return std::nullopt;
 
-    const CollisionBox& cb = *metadata_->collisionBox;
+    const CollisionData& cb = *metadata_->CollisionData;
 
     float scale = GameConstants::TILE_SIZE / static_cast<float>(metadata_->sourceTileSize);
 

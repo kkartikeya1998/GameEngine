@@ -4,9 +4,11 @@
 #include <iostream>
 
 RenderSystem::RenderSystem(std::unique_ptr<IRenderer> renderer,
-                           const TileRepository &tileRepository,
+                           const ComponentAssetRepository<RenderAssetMetadata> &renderRepository,
                            const std::filesystem::path &tileSpritesheetPath)
-    : renderer_(std::move(renderer)), tileAtlas_(tileSpritesheetPath, tileRepository), tileTexturePath_(tileSpritesheetPath.string())
+    : renderer_(std::move(renderer))
+    , tileAtlas_(tileSpritesheetPath, renderRepository)
+    , tileTexturePath_(tileSpritesheetPath.string())
 {
     if (!renderer_)
         throw std::invalid_argument("RenderSystem: renderer cannot be null");
@@ -97,7 +99,7 @@ void RenderSystem::submitText(RenderLayer layer, float z,
 
             renderer_->drawText(sfText);
         }});
-        
+
     // std::cout << "[RenderSystem] submitText exiting...\n";
 }
 

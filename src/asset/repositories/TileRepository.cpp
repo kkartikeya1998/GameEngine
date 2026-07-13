@@ -61,12 +61,12 @@ void TileRepository::load_from_file(
                 tilesetName + "_" + tileType;
             
             const auto& render = def.at("render_component");
-            meta.renderBox.textureRect = sf::IntRect{
+            meta.RenderData.textureRect = sf::IntRect{
                 { render.value("x", 0), render.value("y", 0) },
                 { render.value("w", 0), render.value("h", 0) }
             };
-            meta.renderBox.texturePath = texture;
-            meta.renderBox.sourceTileSize = tileSize;
+            meta.RenderData.texturePath = texture;
+            meta.RenderData.sourceTileSize = tileSize;
 
             types_.emplace(meta.name, std::move(meta));
         }

@@ -50,12 +50,12 @@ protected:
         }
 
         SpriteRegion region;
-        region.subrect = meta->renderBox.textureRect;
+        region.subrect = meta->RenderData.textureRect;
         region.tile_size = sf::Vector2f(
-            static_cast<float>(meta->renderBox.textureRect.size.x),
-            static_cast<float>(meta->renderBox.textureRect.size.y)
+            static_cast<float>(meta->RenderData.textureRect.size.x),
+            static_cast<float>(meta->RenderData.textureRect.size.y)
         );
-        region.sourceTileSize = meta->renderBox.sourceTileSize;
+        region.sourceTileSize = meta->RenderData.sourceTileSize;
         
         return region;
     }

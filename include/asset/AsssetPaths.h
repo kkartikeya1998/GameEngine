@@ -26,19 +26,22 @@ namespace Assets
     namespace Maps
     {
         inline const std::filesystem::path TILESET_METADATA =
-            MAPS / "tileset_metadata.json";
+            MAPS / "tileset_metadatav2.json";
 
         inline const std::filesystem::path OBJECT_METADATA =
-            MAPS / "object_metadata.json";
+            MAPS / "object_metadatav2.json";
     }
 
     namespace Characters
     {
         inline const std::filesystem::path CHARACTERS_METADATA =
-            CHARACTERS / "characters_metadata.json";
+            CHARACTERS / "characters_metadatav2.json";
 
         inline const std::filesystem::path PLAYER_SPRITESHEET =
             CHARACTERS / "player.png";
+
+        inline const std::filesystem::path SPECIES_METADATA = 
+            CHARACTERS / "species_metadatav2.json";
     }
 
     namespace Objects

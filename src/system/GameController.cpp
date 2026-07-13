@@ -10,17 +10,15 @@
 #include "tmp/component/MovementStateComponent.h"
 #include "tmp/component/WalkCycleTimer.h"
 
-GameController::GameController(int startMapId, int playerX, int playerY,
-                               MapObjectRepository &objectRepository,
-                               TileRepository &tileRepository)
-    : world_(objectRepository, tileRepository), player_(makePlayer(static_cast<float>(playerX), static_cast<float>(playerY)))
+GameController::GameController(int startMapId, int playerX, int playerY, const AssetDatabase &assets)
+    : world_(assets), player_(makePlayer(static_cast<float>(playerX), static_cast<float>(playerY)))
 {
     world_.loadMap(startMapId);
 }
 
 bool GameController::isPositionBlocked(const AABB &box) const
 {
-    const Map* activeMap = world_.getActiveMap();
+    const Map *activeMap = world_.getActiveMap();
     if (!activeMap)
         return true;
 
@@ -30,13 +28,13 @@ bool GameController::isPositionBlocked(const AABB &box) const
 void GameController::update(float dt, const PlayerControlComponent &input)
 {
     MovementSystem::update(player_, input, *world_.getActiveMap(), dt,
-                               [this](const AABB &box)
-                               { return isPositionBlocked(box); });
-
+                           [this](const AABB &box)
+                           { return isPositionBlocked(box); });
 
     auto *walkCycle = player_.get<WalkCycleTimer>();
-    auto* movementState = player_.get<MovementStateComponent>();
-    if (walkCycle) {
+    auto *movementState = player_.get<MovementStateComponent>();
+    if (walkCycle)
+    {
         bool isMoving = movementState->current != MovementState::Idle;
         float speedScale = (movementState->current == MovementState::Sprinting) ? 1.5f : 1.f;
         walkCycle->update(dt, isMoving, speedScale);

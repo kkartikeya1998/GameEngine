@@ -1,6 +1,6 @@
 #pragma once
 
-#include "asset/repositories/CharacterRepository.h"
+#include "asset/AssetDatabase.h"
 #include "asset/metadata/DirectionNaming.h"
 #include "tmp/component/RenderComponent.h"
 #include "tmp/component/DirectionComponent.h"
@@ -8,25 +8,21 @@
 #include "tmp/component/WalkCycleTimer.h"
 #include "system/GameController.h"
 
-#include <iostream>
-
 class AnimationSystem
 {
 public:
-    explicit AnimationSystem(const CharacterRepository &characters) : characters_(characters) {}
+    explicit AnimationSystem(const AssetDatabase& assets) : assets_(assets) {}
 
     void update(GameController& controller, float dt)
     {
         for (Entity *e : controller.getWorld()->view<WalkCycleTimer>())
             animate(*e);
-
         animate(*controller.getPlayer());
     }
 
 private:
     void animate(Entity &e)
     {
-        // For now we only animate entities that have all of these components; so basically characters 
         if (!e.has<RenderComponent>() || !e.has<DirectionComponent>() ||
             !e.has<MovementStateComponent>() || !e.has<WalkCycleTimer>())
             return;
@@ -38,29 +34,25 @@ private:
 
         const std::string dirStr = toString(direction.facing);
         std::string state = toString(movementState.current);
+        std::string characterName = render.name.substr(0, render.name.find('_'));
 
-        std::string characterName = render.name.substr(0, render.name.find('_')); // extract 
-        int frames = characters_.frameCount(characterName, state, dirStr);
-        if (frames <= 0)
-        {
+        const AnimationAssetMetadata* anim = assets_.findAnimation(characterName + "_" + state);
+        if (!anim) {
             state = "walk";
-            frames = characters_.frameCount(characterName, state, dirStr);
+            anim = assets_.findAnimation(characterName + "_" + state);
         }
-        if (frames <= 0)
+        if (!anim)
             return;
 
-        int frameIndex = static_cast<int>(walkCycle.getProgress() * frames) % frames;
-        
-        std::string key = characterName + "_" + state + "_" + dirStr + "_" + std::to_string(frameIndex);
+        auto dirIt = anim->directions.find(dirStr);
+        int frameCount = (dirIt != anim->directions.end()) ? dirIt->second.frameCount : 1;
+        int frameIndex = static_cast<int>(walkCycle.getProgress() * frameCount) % frameCount;
 
-        render.name = key;
-        if (const auto *meta = characters_.find(key))
-        {
-            render.texturePath = meta->renderBox.texturePath;
-            render.textureRect = meta->renderBox.textureRect;
-            render.sourceTileSize = meta->renderBox.sourceTileSize;
-        }
+        render.name = characterName + "_" + state + "_" + dirStr + "_" + std::to_string(frameIndex);
+        render.texturePath = anim->texturePath;
+        render.textureRect = anim->frameRect(dirStr, frameIndex);
+        render.sourceTileSize = anim->frameWidth; // grid sheets: square frames assumed
     }
 
-    const CharacterRepository &characters_;
+    const AssetDatabase& assets_;
 };
