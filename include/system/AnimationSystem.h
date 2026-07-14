@@ -2,10 +2,10 @@
 
 #include "asset/AssetDatabase.h"
 #include "asset/metadata/DirectionNaming.h"
-#include "tmp/component/RenderComponent.h"
-#include "tmp/component/DirectionComponent.h"
-#include "tmp/component/MovementStateComponent.h"
-#include "tmp/component/WalkCycleTimer.h"
+#include "component/RenderComponent.h"
+#include "component/DirectionComponent.h"
+#include "component/MovementStateComponent.h"
+#include "component/WalkCycleTimer.h"
 #include "system/GameController.h"
 
 class AnimationSystem

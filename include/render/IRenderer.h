@@ -3,7 +3,7 @@
 #include <optional>
 #include <string>
 #include <SFML/Window/Event.hpp>
-#include "tmp/component/RenderComponent.h"
+#include "component/RenderComponent.h"
 #include "render/Camera.h"
 
 // Where renderX/renderY are measured from for a given RenderComponent

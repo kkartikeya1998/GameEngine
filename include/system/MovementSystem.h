@@ -4,13 +4,13 @@
 
 #include "entities/Entity.h"
 #include "world/Map.h"
-#include "tmp/component/PositionComponent.h"
-#include "tmp/component/VelocityComponent.h"
-#include "tmp/component/DirectionComponent.h"
-#include "tmp/component/FreeMovementComponent.h"
-#include "tmp/component/CollisionComponent.h"
-#include "tmp/component/MovementStateComponent.h"
-#include "tmp/component/PlayerControlComponent.h"
+#include "component/PositionComponent.h"
+#include "component/VelocityComponent.h"
+#include "component/DirectionComponent.h"
+#include "component/FreeMovementComponent.h"
+#include "component/CollisionComponent.h"
+#include "component/MovementStateComponent.h"
+#include "component/PlayerControlComponent.h"
 
 namespace MovementSystem
 {

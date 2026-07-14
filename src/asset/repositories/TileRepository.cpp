@@ -5,6 +5,7 @@
 
 #include "external/json.hpp"
 #include "asset/metadata/MetadataParser.h"
+#include "system/GameConstants.h"
 
 using json = nlohmann::json;
 

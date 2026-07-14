@@ -4,7 +4,7 @@
 #include <string>
 #include "IGameState.h"
 #include "input/KeyBindings.h"
-#include "tmp/component/PlayerControlComponent.h"
+#include "component/PlayerControlComponent.h"
 #include "asset/AssetDatabase.h"
 #include "system/GameController.h"
 #include "state/StateMachine.h"

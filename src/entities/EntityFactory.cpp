@@ -1,7 +1,7 @@
 #include "entities/EntityFactory.h"
-#include "tmp/component/PositionComponent.h"
-#include "tmp/component/RenderComponent.h"
-#include "tmp/component/CollisionComponent.h"
+#include "component/PositionComponent.h"
+#include "component/RenderComponent.h"
+#include "component/CollisionComponent.h"
 #include <stdexcept>
 
 namespace EntityFactory {

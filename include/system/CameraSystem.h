@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tmp/component/PositionComponent.h"
+#include "component/PositionComponent.h"
 #include "world/Map.h"
 #include "render/Camera.h"
 

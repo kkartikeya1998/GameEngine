@@ -43,6 +43,8 @@ build/
 Build/
 build-*/
 
+assets/
+
 # CMake generated files
 CMakeFiles/
 CMakeCache.txt

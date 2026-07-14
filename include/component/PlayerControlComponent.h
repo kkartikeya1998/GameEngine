@@ -1,5 +1,5 @@
 #pragma once
-#include "tmp/component/DirectionComponent.h"
+#include "component/DirectionComponent.h"
 #include "entities/Component.h"
 
 struct PlayerControlComponent : public Component {

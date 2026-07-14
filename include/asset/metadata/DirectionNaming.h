@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include "tmp/component/DirectionComponent.h"
-#include "tmp/component/MovementStateComponent.h"
+#include "component/DirectionComponent.h"
+#include "component/MovementStateComponent.h"
 
 inline std::string toString(Direction direction) {
     switch (direction) {

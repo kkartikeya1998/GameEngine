@@ -8,7 +8,7 @@
 // #include "asset/repositories/PokemonSpeciesAssetRepository.h"
 #include "entities/Entity.h"
 #include "entities/player/Player.h"
-#include "tmp/component/PlayerControlComponent.h"
+#include "component/PlayerControlComponent.h"
 
 // ---------------------------------------------------------------------------
 // GameController — manages World and Player lifecycle.

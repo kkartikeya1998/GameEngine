@@ -6,10 +6,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "asset/repositories/IAssetRepository.h"
-#include "asset/metadata/AssetMetadataName.h"
-#include "asset/metadata/RenderData.h"
-#include "system/GameConstants.h"
 // ---------------------------------------------------------------------------
 // TileTypeMetadata — full description of one tile TYPE.
 // ---------------------------------------------------------------------------

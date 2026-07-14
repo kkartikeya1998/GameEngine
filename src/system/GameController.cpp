@@ -4,11 +4,11 @@
 #include "system/GameConstants.h"
 #include "system/MovementSystem.h"
 #include "system/AnimationSystem.h"
-#include "tmp/component/PositionComponent.h"
-#include "tmp/component/FreeMovementComponent.h"
-#include "tmp/component/CollisionComponent.h"
-#include "tmp/component/MovementStateComponent.h"
-#include "tmp/component/WalkCycleTimer.h"
+#include "component/PositionComponent.h"
+#include "component/FreeMovementComponent.h"
+#include "component/CollisionComponent.h"
+#include "component/MovementStateComponent.h"
+#include "component/WalkCycleTimer.h"
 
 GameController::GameController(int startMapId, int playerX, int playerY, const AssetDatabase &assets)
     : world_(assets), player_(makePlayer(static_cast<float>(playerX), static_cast<float>(playerY)))

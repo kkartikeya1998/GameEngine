@@ -11,7 +11,7 @@
 #include "render/RenderLayer.h"
 #include "render/atlases/TileAtlas.h"
 #include "asset/repositories/TileRepository.h"
-#include "tmp/component/RenderComponent.h"
+#include "component/RenderComponent.h"
 #include "asset/repositories/ComponentAssetRepository.h"
 #include "asset/metadata/RenderAssetMetadata.h"
 

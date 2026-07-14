@@ -27,14 +27,6 @@ add_executable(PokemonProject
     src/world/Map.cpp
 
     src/entities/EntityFactory.cpp
-
-    # src/entities/pokemon/Pokemon.cpp
-    # src/entities/pokemon/Stats.cpp
-    # src/entities/pokemon/WildPokemon.cpp
-    # src/entities/pokemon/WildPokemonFactory.cpp
-    # src/entities/pokemon/CapturedPokemon.cpp
-    # src/entities/pokemon/CapturedPokemonFactory.cpp
-    # src/entities/pokemon/PokemonSpeciesRepository.cpp
     
     src/system/MovementSystem.cpp
     src/system/GameController.cpp
@@ -50,21 +42,13 @@ add_executable(PokemonProject
     src/render/SFMLRenderer.cpp
     src/render/atlases/Atlas.cpp
     src/render/atlases/TileAtlas.cpp
-    src/render/atlases/SpriteAtlas.cpp
-    src/render/atlases/MapObjectAtlas.cpp
 
-    # src/asset/repositories/MapObjectRepository.cpp
-    # src/asset/repositories/TileRepository.cpp
-    # src/asset/repositories/CharacterRepository.cpp
-    # src/asset/repositories/PokemonSpeciesAssetRepository.cpp
     src/asset/AssetDatabase.cpp
     src/asset/metadata/AnimationAssetMetadata.cpp
     src/asset/metadata/CollisionAssetMetadata.cpp
     src/asset/metadata/RenderAssetMetadata.cpp
     src/asset/metadata/ArchetypeDefinition.cpp
     src/asset/source/JsonMetadataSource.cpp
-
-
 
     src/Game.cpp
     )

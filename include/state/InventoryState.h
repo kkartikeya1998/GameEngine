@@ -5,7 +5,7 @@
 #include "ui/MenuContext.h"
 #include "ui/Panel.h"
 #include "entities/Entity.h"
-#include "tmp/component/InventoryComponent.h"
+#include "component/InventoryComponent.h"
 #include "events/EventQueue.h"
 
 #include <SFML/Graphics/Font.hpp>

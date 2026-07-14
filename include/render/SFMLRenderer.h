@@ -8,7 +8,7 @@
 
 #include "system/GameConstants.h"
 #include "render/IRenderer.h"
-#include "tmp/component/RenderComponent.h"
+#include "component/RenderComponent.h"
 
 namespace sf
 {

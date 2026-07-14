@@ -1,7 +1,7 @@
 #pragma once
 
 #include "entities/Component.h"
-#include "tmp/component/PositionComponent.h" // for AABB
+#include "component/PositionComponent.h" // for AABB
 
 // ---------------------------------------------------------------------------
 // CollisionComponent — owns an entity's collidable rectangle.

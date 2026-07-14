@@ -4,7 +4,7 @@
 #include "render/RenderSystem.h"
 #include "state/PauseState.h"
 #include "system/CameraSystem.h"
-#include "tmp/component/PositionComponent.h"
+#include "component/PositionComponent.h"
 // #include "asset/repositories/PokemonSpeciesAssetRepository.h"
 #include <iostream>
 

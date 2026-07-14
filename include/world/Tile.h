@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "tmp/component/RenderComponent.h"
+#include "component/RenderComponent.h"
 
 // ---------------------------------------------------------------------------
 // A simple non-entity class but with a RenderComponent, representing a single tile in the map grid.

@@ -1,6 +1,6 @@
 #pragma once
 #include "input/ICommand.h"
-#include "tmp/component/PlayerControlComponent.h"
+#include "component/PlayerControlComponent.h"
 
 class MoveCommand : public ICommand<PlayerControlComponent> {
 public:
