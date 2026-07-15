@@ -1,5 +1,9 @@
 #pragma once
 
+#include "asset/metadata/AssetMetadataName.h"
+#include "asset/metadata/RenderAssetMetadata.h"
+#include "asset/repositories/IAssetRepository.h"
+
 #include <string>
 #include <filesystem>
 #include <unordered_map>

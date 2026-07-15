@@ -132,6 +132,7 @@ void GameplayState::Render(RenderSystem &renderSystem, float dt)
         resolved.renderX = entPos->x;
         resolved.renderY = entPos->y;
 
+        // std::cout << "Submitting :" << resolved.name << "\n";
         renderSystem.submit(resolved.layer, z, resolved, RenderAnchor::CenterBottom);
     }
 }

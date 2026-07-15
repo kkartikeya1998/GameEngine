@@ -5,6 +5,8 @@
 #include "system/MovementSystem.h"
 #include "system/CollisionSystem.h"
 #include "system/AnimationSystem.h"
+#include "entities/npc/CreatureAISystem.h"
+#include "entities/npc/WanderAIComponent.h"
 #include "component/PositionComponent.h"
 #include "component/FreeMovementComponent.h"
 #include "component/CollisionComponent.h"
@@ -12,22 +14,24 @@
 #include "component/WalkCycleTimer.h"
 
 GameController::GameController(int startMapId, int playerX, int playerY, const AssetDatabase &assets)
-    : world_(assets)
+    : world_(assets), assets_(assets)
 {
     world_.loadMap(startMapId);
-    playerId_ = makePlayer(world_.registry(), static_cast<float>(playerX), static_cast<float>(playerY));
+    playerId_ = makePlayer(world_.registry(), assets_, static_cast<float>(playerX), static_cast<float>(playerY));
 }
 
-bool GameController::isPositionBlocked(const AABB &box)
+bool GameController::isPositionBlockedFor(EntityID id, const AABB &box)
 {
-    return CollisionSystem::isAreaBlocked(world_.registry(), box, playerId_);
+    return CollisionSystem::isAreaBlocked(world_.registry(), box, id);
 }
 
 void GameController::update(float dt, const PlayerControlComponent &input)
 {
-    MovementSystem::update(world_.registry(), playerId_, input, world_.getActiveMap(), dt,
-                           [this](const AABB &box)
-                           { return isPositionBlocked(box); });
+    // Player moves first — NPC collision checks below read the player's
+    // post-move position, giving the player effective movement priority.
+    MovementSystem::update(world_.registry(), playerId_, world_.getActiveMap(), dt,
+                            [this](const AABB &box) { return isPositionBlockedFor(playerId_, box); },
+                            &input);
 
     auto *walkCycle = world_.registry().get<WalkCycleTimer>(playerId_);
     auto *movementState = world_.registry().get<MovementStateComponent>(playerId_);
@@ -37,13 +41,20 @@ void GameController::update(float dt, const PlayerControlComponent &input)
         float speedScale = (movementState->current == MovementState::Sprinting) ? 1.5f : 1.f;
         walkCycle->update(dt, isMoving, speedScale);
     }
+
+    CreatureAISystem::update(world_.registry(), dt);
+    for (EntityID id : world_.registry().view<WanderAIComponent>())
+    {
+        MovementSystem::update(world_.registry(), id, world_.getActiveMap(), dt,
+                                [this, id](const AABB &box) { return isPositionBlockedFor(id, box); });
+
+        if (auto *timer = world_.registry().get<WalkCycleTimer>(id))
+            timer->update(dt, true);
+    }
 }
 
 void GameController::changeMap(int mapId, float newX, float newY)
 {
     world_.loadMap(mapId);
-
-    // Map reload destroyed the old player entity along with everything
-    // else — recreate it at the new position rather than reusing playerId_.
-    playerId_ = makePlayer(world_.registry(), newX, newY);
+    playerId_ = makePlayer(world_.registry(), assets_, newX, newY);
 }

@@ -13,9 +13,10 @@ enum class CreatureState {
 // Pure state — all logic lives in CreatureAISystem.
 struct WanderAIComponent : public Component {
     CreatureState state = CreatureState::Idle;
-    float stateTimer = 0.f;   // seconds remaining in current state
+    float stateTimer = 0.f;
     float targetX = 0.f;
     float targetY = 0.f;
+    float movingElapsed = 0.f;   // new — time spent trying to reach current target
 
     WanderAIComponent() = default;
 };

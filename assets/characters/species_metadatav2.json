@@ -3,11 +3,11 @@
     "Render": {
       "species_1": {
         "texture": "assets/characters/pokemon.jpeg",
-        "tile_size": 32,
+        "tile_size": 64,
         "x": 0,
         "y": 0,
-        "w": 32,
-        "h": 32
+        "w": 0,
+        "h": 0
       },
       "species_4": {
         "texture": "assets/characters/pokemon.jpeg",
@@ -19,17 +19,111 @@
       }
     },
     "Collision": {
+      "species_1": {
+        "offset_x": 0,
+        "offset_y": -10,
+        "width": 12,
+        "height": 8
+      },
       "species_4": {
         "offset_x": 4,
         "offset_y": 20,
         "width": 24,
         "height": 10
       }
+    },
+    "PmdAnimation": {
+      "species_1": {
+        "walk": {
+          "texturePath": "assets\\sprite\\Walk-Anim.png",
+          "frameWidth": 40,
+          "frameHeight": 40,
+          "frameCount": 6,
+          "frameDurations": [
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+          ],
+          "loop": true
+        },
+        "attack": {
+          "texturePath": "assets\\sprite\\Attack-Anim.png",
+          "frameWidth": 64,
+          "frameHeight": 72,
+          "frameCount": 11,
+          "frameDurations": [
+            4.0,
+            2.0,
+            4.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            4.0
+          ],
+          "loop": false
+        },
+        "sleep": {
+          "texturePath": "assets\\sprite\\Sleep-Anim.png",
+          "frameWidth": 24,
+          "frameHeight": 24,
+          "frameCount": 2,
+          "frameDurations": [
+            30.0,
+            35.0
+          ],
+          "loop": true
+        },
+        "hurt": {
+          "texturePath": "assets\\sprite\\Hurt-Anim.png",
+          "frameWidth": 40,
+          "frameHeight": 56,
+          "frameCount": 2,
+          "frameDurations": [
+            2.0,
+            8.0
+          ],
+          "loop": false
+        },
+        "idle": {
+          "texturePath": "assets\\sprite\\Idle-Anim.png",
+          "frameWidth": 32,
+          "frameHeight": 40,
+          "frameCount": 3,
+          "frameDurations": [
+            40.0,
+            6.0,
+            6.0
+          ],
+          "loop": true
+        },
+        "faint": {
+          "texturePath": "assets\\sprite\\Faint-Anim.png",
+          "frameWidth": 32,
+          "frameHeight": 24,
+          "frameCount": 4,
+          "frameDurations": [
+            8.0,
+            12.0,
+            4.0,
+            10.0
+          ],
+          "loop": false
+        }
+      }
     }
   },
   "archetypes": {
     "species_1": {
-      "render": "species_1"
+      "render": "species_1",
+      "pmdAnimation": "species_1",
+      "collision": "species_1"
     },
     "species_4": {
       "render": "species_4",

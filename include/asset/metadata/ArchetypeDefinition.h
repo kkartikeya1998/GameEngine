@@ -12,7 +12,8 @@
 struct ArchetypeDefinition : public AssetMetadataName {
     std::optional<std::string> renderId;
     std::optional<std::string> collisionId;
-    std::optional<std::string> animationId;
+    std::optional<std::string> animationId;     // packed-strip assets (AnimationAssetMetadata)
+    std::optional<std::string> pmdAnimationId;  // PMD-style assets (PmdAnimationSetMetadata)
 
     static ArchetypeDefinition fromJson(const std::string& id, const nlohmann::json& entry);
 };

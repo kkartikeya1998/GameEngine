@@ -4,63 +4,83 @@
 namespace MovementSystem
 {
 
-    void update(Registry &registry, EntityID id, const PlayerControlComponent &input,
-                const Map &map, float dt, const std::function<bool(const AABB &)> &isBlocked)
+    void update(Registry &registry, EntityID id, const Map &map, float dt,
+                const std::function<bool(const AABB &)> &isBlocked,
+                const PlayerControlComponent *input)
     {
         auto *position = registry.get<PositionComponent>(id);
         auto *velocity = registry.get<VelocityComponent>(id);
         auto *direction = registry.get<DirectionComponent>(id);
-        auto *movement = registry.get<FreeMovementComponent>(id);
-        auto *collision = registry.get<CollisionComponent>(id);
         auto *state = registry.get<MovementStateComponent>(id);
 
-        if (!position || !velocity || !direction || !movement || !collision || !state)
+        if (!position || !velocity || !direction || !state)
             return;
 
-        auto inputDir = input.direction;
-        auto sprintRequested = input.sprinting;
-        float effectiveSpeed = movement->speed * (sprintRequested ? movement->sprintMultiplier : 1.f);
+        bool sprintRequested = false;
 
-        velocity->vx = 0.f;
-        velocity->vy = 0.f;
-
-        switch (inputDir)
+        if (input)
         {
-        case Direction::UP:    velocity->vy = -effectiveSpeed; break;
-        case Direction::DOWN:  velocity->vy = effectiveSpeed;  break;
-        case Direction::LEFT:  velocity->vx = -effectiveSpeed; break;
-        case Direction::RIGHT: velocity->vx = effectiveSpeed;  break;
-        case Direction::NONE:  break;
+            auto *movement = registry.get<FreeMovementComponent>(id);
+            if (!movement)
+                return; // input-driven entities must have this
+
+            sprintRequested = input->sprinting;
+            float effectiveSpeed = movement->speed * (sprintRequested ? movement->sprintMultiplier : 1.f);
+
+            velocity->vx = 0.f;
+            velocity->vy = 0.f;
+
+            switch (input->direction)
+            {
+            case Direction::UP:
+                velocity->vy = -effectiveSpeed;
+                break;
+            case Direction::DOWN:
+                velocity->vy = effectiveSpeed;
+                break;
+            case Direction::LEFT:
+                velocity->vx = -effectiveSpeed;
+                break;
+            case Direction::RIGHT:
+                velocity->vx = effectiveSpeed;
+                break;
+            case Direction::NONE:
+                break;
+            }
+
+            if (input->direction != Direction::NONE)
+                direction->facing = input->direction;
         }
+        // else: velocity and facing were already set upstream (CreatureAISystem).
 
-        if (inputDir != Direction::NONE)
-            direction->facing = inputDir;
-
+        auto *collision = registry.get<CollisionComponent>(id); // optional — species_1 has none
         bool moved = false;
 
         if (velocity->vx != 0.f)
         {
             float dx = velocity->vx * dt;
-            AABB testX = collision->resolve(position->x + dx, position->y);
+            AABB testX = collision ? collision->resolve(position->x + dx, position->y)
+                                   : AABB{position->x + dx, position->y, 0.f, 0.f};
             if (!isBlocked(testX) && mapBoundsCheck(map, testX))
             {
                 position->x += dx;
                 moved = true;
             }
-            else
-                velocity->vx = 0.f;
+            else if (input)
+                velocity->vx = 0.f; // AI path recomputes vx next frame regardless
         }
 
         if (velocity->vy != 0.f)
         {
             float dy = velocity->vy * dt;
-            AABB testY = collision->resolve(position->x, position->y + dy);
+            AABB testY = collision ? collision->resolve(position->x, position->y + dy)
+                                   : AABB{position->x, position->y + dy, 0.f, 0.f};
             if (!isBlocked(testY) && mapBoundsCheck(map, testY))
             {
                 position->y += dy;
                 moved = true;
             }
-            else
+            else if (input)
                 velocity->vy = 0.f;
         }
 

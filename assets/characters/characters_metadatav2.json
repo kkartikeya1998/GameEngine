@@ -1,5 +1,15 @@
 {
   "components": {
+    "Render": {
+      "player": {
+        "texture": "assets/characters/player.png",
+        "x": 0,
+        "y": 0,
+        "w": 480,
+        "h": 480,
+        "tile_size": 480
+      }
+    },
     "Animation": {
       "player_idle": {
         "texture": "assets/characters/player.png",
@@ -131,6 +141,21 @@
           }
         }
       }
+    },
+    "Collision": {
+      "player": {
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "width": 6.0,
+        "height": 5.0
+      }
+    }
+  },
+  "archetypes": {
+    "player": {
+      "renderId": "player",
+      "collisionId": "player",
+      "animation" : "player"
     }
   }
 }

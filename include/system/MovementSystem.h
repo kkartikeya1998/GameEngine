@@ -14,9 +14,11 @@
 
 namespace MovementSystem
 {
-    // velocity is genuine units/second; dt is applied once here.
-    void update(Registry &registry, EntityID id, const PlayerControlComponent &input,
-                const Map &map, float dt, const std::function<bool(const AABB &)> &isBlocked);
+    // input == nullptr: velocity/direction are used as already set by the
+    // caller (e.g. CreatureAISystem) rather than derived from input.
+    void update(Registry &registry, EntityID id, const Map &map, float dt,
+                const std::function<bool(const AABB &)> &isBlocked,
+                const PlayerControlComponent *input = nullptr);
 
     bool mapBoundsCheck(const Map &map, const AABB &aabb);
 }

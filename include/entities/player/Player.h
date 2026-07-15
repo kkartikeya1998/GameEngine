@@ -11,35 +11,30 @@
 #include "component/RenderComponent.h"
 #include "component/PlayerControlComponent.h"
 #include "system/GameConstants.h"
+#include "entities/EntityFactory.h"
 #include "asset/AsssetPaths.h"
+#include "asset/AssetDatabase.h"
+#include <iostream>
 
 inline EntityID makePlayer(
-    Registry& registry,
+    Registry &registry,
+    const AssetDatabase &assets,
     float x, float y,
     float movement_speed = GameConstants::PLAYER_SPEED,
     float sprintMultiplier = 1.5f,
-    float walkCyclesPerSecond = 4.0f)
+    float walkCyclesPerSecond = 2.0f)
 {
     EntityID id = registry.create();
-    registry.add<PositionComponent>(id, x, y);
+
+    EntityFactory::populate(registry, assets, id, "player", x, y, RenderLayer::Characters);
+
     registry.add<VelocityComponent>(id);
     registry.add<DirectionComponent>(id, Direction::DOWN);
     registry.add<FreeMovementComponent>(id, movement_speed, sprintMultiplier);
-    registry.add<CollisionComponent>(id,
-        GameConstants::PLAYER_HITBOX_OFFSET_X,
-        GameConstants::PLAYER_HITBOX_OFFSET_Y,
-        GameConstants::PLAYER_HITBOX_WIDTH,
-        GameConstants::PLAYER_HITBOX_HEIGHT);
     registry.add<MovementStateComponent>(id);
     registry.add<WalkCycleTimer>(id, walkCyclesPerSecond);
-    registry.add<RenderComponent>(id,
-        "player_walk_down_0",
-        Assets::Characters::PLAYER_SPRITESHEET.string(),
-        sf::IntRect{{0, 0}, {32, 32}},
-        GameConstants::TILE_SIZE,
-        x, y,
-        RenderLayer::Characters);
+    registry.add<PlayerControlComponent>(id);
 
-    // registry.add<PlayerControlComponent>(id);
+    std::cout << "Created player: " << id.index << " " << id.generation << std::endl;
     return id;
 }

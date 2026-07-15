@@ -25,7 +25,8 @@ public:
     void changeMap(int mapId, float newX, float newY);
 
 private:
+    const AssetDatabase &assets_;
     World world_;
     EntityID playerId_;
-    bool isPositionBlocked(const AABB &box);
+    bool isPositionBlockedFor(EntityID id, const AABB &box);
 };

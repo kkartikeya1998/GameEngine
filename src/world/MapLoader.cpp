@@ -51,7 +51,7 @@ void MapLoader::loadMetadata()
     }
 }
 
-void MapLoader::loadInto(Registry& registry, Map& map, int mapId) const
+void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
 {
     std::string mapPath;
 
@@ -92,13 +92,17 @@ void MapLoader::loadInto(Registry& registry, Map& map, int mapId) const
 
             Tile tile;
             const RenderAssetMetadata *tileMeta = assets_.findRender(typeName);
-            tile.addRenderComponent(RenderComponent(
+            RenderComponent tileRender(
                 typeName,
                 tileMeta->RenderData.texturePath,
                 tileMeta->RenderData.textureRect,
                 tileMeta->RenderData.sourceTileSize,
                 static_cast<float>(x * GameConstants::TILE_SIZE),
-                static_cast<float>(y * GameConstants::TILE_SIZE)));
+                static_cast<float>(y * GameConstants::TILE_SIZE),
+                RenderLayer::Terrain,
+                tileMeta->RenderData.renderScale);
+
+            tile.addRenderComponent(tileRender);
             map.set_tile(x, y, tile);
         }
     }
@@ -112,9 +116,12 @@ void MapLoader::loadInto(Registry& registry, Map& map, int mapId) const
             float originY = entry["origin"]["y"];
 
             EntityID id = registry.create();
-            try {
+            try
+            {
                 EntityFactory::populate(registry, assets_, id, archetype, originX, originY, RenderLayer::Characters);
-            } catch (const std::runtime_error&) {
+            }
+            catch (const std::runtime_error &)
+            {
                 registry.destroy(id); // unknown archetype: don't leave a dangling empty entity
             }
         }

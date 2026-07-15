@@ -10,13 +10,13 @@
 using json = nlohmann::json;
 
 TileRepository::TileRepository(
-    const std::filesystem::path& metadataFilePath)
+    const std::filesystem::path &metadataFilePath)
 {
     load_from_file(metadataFilePath);
 }
 
 void TileRepository::load_from_file(
-    const std::filesystem::path& path)
+    const std::filesystem::path &path)
 {
     std::ifstream file(path);
 
@@ -30,23 +30,23 @@ void TileRepository::load_from_file(
     json j;
     file >> j;
 
-    const auto& tilesets = j.at("tilesets");
+    const auto &tilesets = j.at("tilesets");
 
     for (auto tilesetIt = tilesets.begin();
          tilesetIt != tilesets.end();
          ++tilesetIt)
     {
         const std::string tilesetName = tilesetIt.key();
-        const json& tileset = tilesetIt.value();
+        const json &tileset = tilesetIt.value();
 
         const std::string texture =
             tileset.value("texture", "");
 
         int tileSize =
             tileset.value("tile_size",
-                GameConstants::TILE_SIZE);
+                          GameConstants::TILE_SIZE);
 
-        const auto& tileTypes =
+        const auto &tileTypes =
             tileset.at("tile_types");
 
         for (auto it = tileTypes.begin();
@@ -54,28 +54,27 @@ void TileRepository::load_from_file(
              ++it)
         {
             const std::string tileType = it.key();
-            const json& def = it.value();
+            const json &def = it.value();
 
             TileTypeMetadata meta;
 
             meta.name =
                 tilesetName + "_" + tileType;
-            
-            const auto& render = def.at("render_component");
+
+            const auto &render = def.at("render_component");
             meta.RenderData.textureRect = sf::IntRect{
-                { render.value("x", 0), render.value("y", 0) },
-                { render.value("w", 0), render.value("h", 0) }
-            };
+                {render.value("x", 0), render.value("y", 0)},
+                {render.value("w", 0), render.value("h", 0)}};
             meta.RenderData.texturePath = texture;
             meta.RenderData.sourceTileSize = tileSize;
-
+            meta.RenderData.renderScale = def.value("scale", RenderData::autoScale(tileSize));
             types_.emplace(meta.name, std::move(meta));
         }
     }
 }
 
-const TileTypeMetadata* TileRepository::find(
-    const std::string& type) const
+const TileTypeMetadata *TileRepository::find(
+    const std::string &type) const
 {
     auto it = types_.find(type);
     return it == types_.end() ? nullptr : &it->second;
