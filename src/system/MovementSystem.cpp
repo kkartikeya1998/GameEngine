@@ -4,16 +4,15 @@
 namespace MovementSystem
 {
 
-    void update(Entity &entity, const PlayerControlComponent &input, const Map &map,
-                float dt, const std::function<bool(const AABB &)> &isBlocked)
+    void update(Registry &registry, EntityID id, const PlayerControlComponent &input,
+                const Map &map, float dt, const std::function<bool(const AABB &)> &isBlocked)
     {
-
-        auto *position = entity.get<PositionComponent>();
-        auto *velocity = entity.get<VelocityComponent>();
-        auto *direction = entity.get<DirectionComponent>();
-        auto *movement = entity.get<FreeMovementComponent>();
-        auto *collision = entity.get<CollisionComponent>();
-        auto *state = entity.get<MovementStateComponent>();
+        auto *position = registry.get<PositionComponent>(id);
+        auto *velocity = registry.get<VelocityComponent>(id);
+        auto *direction = registry.get<DirectionComponent>(id);
+        auto *movement = registry.get<FreeMovementComponent>(id);
+        auto *collision = registry.get<CollisionComponent>(id);
+        auto *state = registry.get<MovementStateComponent>(id);
 
         if (!position || !velocity || !direction || !movement || !collision || !state)
             return;
@@ -27,20 +26,11 @@ namespace MovementSystem
 
         switch (inputDir)
         {
-        case Direction::UP:
-            velocity->vy = -effectiveSpeed;
-            break;
-        case Direction::DOWN:
-            velocity->vy = effectiveSpeed;
-            break;
-        case Direction::LEFT:
-            velocity->vx = -effectiveSpeed;
-            break;
-        case Direction::RIGHT:
-            velocity->vx = effectiveSpeed;
-            break;
-        case Direction::NONE:
-            break;
+        case Direction::UP:    velocity->vy = -effectiveSpeed; break;
+        case Direction::DOWN:  velocity->vy = effectiveSpeed;  break;
+        case Direction::LEFT:  velocity->vx = -effectiveSpeed; break;
+        case Direction::RIGHT: velocity->vx = effectiveSpeed;  break;
+        case Direction::NONE:  break;
         }
 
         if (inputDir != Direction::NONE)
@@ -85,4 +75,3 @@ namespace MovementSystem
                aabb.y + aabb.height <= map.getHeight() * GameConstants::TILE_SIZE;
     }
 }
-// namespace MovementSystem

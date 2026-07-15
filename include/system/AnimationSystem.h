@@ -2,35 +2,85 @@
 
 #include "asset/AssetDatabase.h"
 #include "asset/metadata/DirectionNaming.h"
+#include "entities/Registry.h"
 #include "component/RenderComponent.h"
 #include "component/DirectionComponent.h"
 #include "component/MovementStateComponent.h"
 #include "component/WalkCycleTimer.h"
-#include "system/GameController.h"
+#include "component/AnimationPlayerComponent.h"
 
 class AnimationSystem
 {
 public:
     explicit AnimationSystem(const AssetDatabase& assets) : assets_(assets) {}
 
-    void update(GameController& controller, float dt)
+    void update(Registry& registry, float dt)
     {
-        for (Entity *e : controller.getWorld()->view<WalkCycleTimer>())
-            animate(*e);
-        animate(*controller.getPlayer());
+        // AnimationPlayerComponent takes priority over WalkCycleTimer when
+        // both are present — explicit animation state wins over inferred.
+        for (EntityID id : registry.view<AnimationPlayerComponent, RenderComponent, DirectionComponent>())
+            animateWithPlayer(registry, id, dt);
+
+        for (EntityID id : registry.view<WalkCycleTimer, RenderComponent, DirectionComponent, MovementStateComponent>())
+        {
+            if (registry.has<AnimationPlayerComponent>(id))
+                continue;
+            animateWithWalkCycle(registry, id);
+        }
     }
 
 private:
-    void animate(Entity &e)
+    void animateWithPlayer(Registry& registry, EntityID id, float dt)
     {
-        if (!e.has<RenderComponent>() || !e.has<DirectionComponent>() ||
-            !e.has<MovementStateComponent>() || !e.has<WalkCycleTimer>())
+        auto& render = *registry.get<RenderComponent>(id);
+        auto& direction = *registry.get<DirectionComponent>(id);
+        auto& player = *registry.get<AnimationPlayerComponent>(id);
+
+        std::string characterName = render.name.substr(0, render.name.find('_'));
+        const AnimationAssetMetadata* anim = assets_.findAnimation(characterName + "_" + player.currentAnimation);
+        if (!anim)
             return;
 
-        auto &render = *e.get<RenderComponent>();
-        const auto &direction = *e.get<DirectionComponent>();
-        const auto &movementState = *e.get<MovementStateComponent>();
-        const auto &walkCycle = *e.get<WalkCycleTimer>();
+        const std::string dirStr = toString(direction.facing);
+        auto dirIt = anim->directions.find(dirStr);
+        int frameCount = (dirIt != anim->directions.end()) ? dirIt->second.frameCount : 1;
+
+        if (player.playing && !player.finished && anim->frameDuration > 0.f)
+        {
+            player.elapsed += dt;
+            while (player.elapsed >= anim->frameDuration)
+            {
+                player.elapsed -= anim->frameDuration;
+                player.currentFrame++;
+                if (player.currentFrame >= frameCount)
+                {
+                    if (anim->loop)
+                    {
+                        player.currentFrame = 0;
+                    }
+                    else
+                    {
+                        player.currentFrame = frameCount - 1;
+                        player.finished = true;
+                        player.playing = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        render.name = characterName + "_" + player.currentAnimation + "_" + dirStr + "_" + std::to_string(player.currentFrame);
+        render.texturePath = anim->texturePath;
+        render.textureRect = anim->frameRect(dirStr, player.currentFrame);
+        render.sourceTileSize = anim->frameWidth;
+    }
+
+    void animateWithWalkCycle(Registry& registry, EntityID id)
+    {
+        auto& render = *registry.get<RenderComponent>(id);
+        auto& direction = *registry.get<DirectionComponent>(id);
+        auto& movementState = *registry.get<MovementStateComponent>(id);
+        auto& walkCycle = *registry.get<WalkCycleTimer>(id);
 
         const std::string dirStr = toString(direction.facing);
         std::string state = toString(movementState.current);
@@ -51,7 +101,7 @@ private:
         render.name = characterName + "_" + state + "_" + dirStr + "_" + std::to_string(frameIndex);
         render.texturePath = anim->texturePath;
         render.textureRect = anim->frameRect(dirStr, frameIndex);
-        render.sourceTileSize = anim->frameWidth; // grid sheets: square frames assumed
+        render.sourceTileSize = anim->frameWidth;
     }
 
     const AssetDatabase& assets_;

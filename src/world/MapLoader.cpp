@@ -47,12 +47,11 @@ void MapLoader::loadMetadata()
 
         int id = j.value("id", -1);
 
-        maps_metadata_.push_back({id,
-                                  entry.path().string()});
+        maps_metadata_.push_back({id, entry.path().string()});
     }
 }
 
-std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
+void MapLoader::loadInto(Registry& registry, Map& map, int mapId) const
 {
     std::string mapPath;
 
@@ -75,7 +74,7 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
 
     int width = j["width"];
     int height = j["height"];
-    auto map = std::make_unique<Map>(width, height);
+    map = Map(width, height);
 
     const auto &tiles_json = j["tiles"];
 
@@ -100,10 +99,7 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
                 tileMeta->RenderData.sourceTileSize,
                 static_cast<float>(x * GameConstants::TILE_SIZE),
                 static_cast<float>(y * GameConstants::TILE_SIZE)));
-            map->set_tile(
-                x,
-                y,
-                tile);
+            map.set_tile(x, y, tile);
         }
     }
 
@@ -115,9 +111,12 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
             float originX = entry["origin"]["x"];
             float originY = entry["origin"]["y"];
 
-            auto entity = EntityFactory::make(assets_, archetype, originX, originY, RenderLayer::Characters);
-            if (entity)
-                map->addMapObject(std::move(entity));
+            EntityID id = registry.create();
+            try {
+                EntityFactory::populate(registry, assets_, id, archetype, originX, originY, RenderLayer::Characters);
+            } catch (const std::runtime_error&) {
+                registry.destroy(id); // unknown archetype: don't leave a dangling empty entity
+            }
         }
     }
 
@@ -140,11 +139,7 @@ std::unique_ptr<Map> MapLoader::loadMapById(int mapId) const
                 for (const auto &t : entry["allowedTiles"])
                     allowedTiles.insert(TileCoord{t["x"].get<int>(), t["y"].get<int>()});
 
-            auto entity = std::make_unique<Entity>(
-                makeWildPokemon(speciesId, level, originX, originY, assets_, std::move(allowedTiles)));
-
-            map->addNpc(std::move(entity));
+            makeWildPokemon(registry, speciesId, level, originX, originY, assets_, std::move(allowedTiles));
         }
     }
-    return map;
 }

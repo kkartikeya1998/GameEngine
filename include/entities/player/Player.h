@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entities/Entity.h"
+#include "entities/Registry.h"
 #include "component/PositionComponent.h"
 #include "component/VelocityComponent.h"
 #include "component/DirectionComponent.h"
@@ -13,33 +13,33 @@
 #include "system/GameConstants.h"
 #include "asset/AsssetPaths.h"
 
-inline Entity makePlayer(
+inline EntityID makePlayer(
+    Registry& registry,
     float x, float y,
     float movement_speed = GameConstants::PLAYER_SPEED,
     float sprintMultiplier = 1.5f,
     float walkCyclesPerSecond = 4.0f)
 {
-    Entity e;
-    e.add<PositionComponent>(x, y);
-    e.add<VelocityComponent>();
-    e.add<DirectionComponent>(Direction::DOWN);
-    e.add<FreeMovementComponent>(movement_speed, sprintMultiplier);
-    e.add<CollisionComponent>(
+    EntityID id = registry.create();
+    registry.add<PositionComponent>(id, x, y);
+    registry.add<VelocityComponent>(id);
+    registry.add<DirectionComponent>(id, Direction::DOWN);
+    registry.add<FreeMovementComponent>(id, movement_speed, sprintMultiplier);
+    registry.add<CollisionComponent>(id,
         GameConstants::PLAYER_HITBOX_OFFSET_X,
         GameConstants::PLAYER_HITBOX_OFFSET_Y,
         GameConstants::PLAYER_HITBOX_WIDTH,
         GameConstants::PLAYER_HITBOX_HEIGHT);
-    e.add<MovementStateComponent>();
-    e.add<WalkCycleTimer>(walkCyclesPerSecond);
-    e.add<RenderComponent>(
-        "player_walk_down_0", // initial frame name
+    registry.add<MovementStateComponent>(id);
+    registry.add<WalkCycleTimer>(id, walkCyclesPerSecond);
+    registry.add<RenderComponent>(id,
+        "player_walk_down_0",
         Assets::Characters::PLAYER_SPRITESHEET.string(),
         sf::IntRect{{0, 0}, {32, 32}},
         GameConstants::TILE_SIZE,
         x, y,
         RenderLayer::Characters);
-         // initial texture rectangle
 
-    // e.add<PlayerControlComponent>();
-    return e;
+    // registry.add<PlayerControlComponent>(id);
+    return id;
 }

@@ -4,7 +4,7 @@
 #include "input/KeyBindings.h"
 #include "ui/MenuContext.h"
 #include "ui/Panel.h"
-#include "entities/Entity.h"
+#include "entities/Registry.h"
 #include "component/InventoryComponent.h"
 #include "events/EventQueue.h"
 
@@ -16,14 +16,16 @@ class InputManager;
 struct InventoryActionContext {
     InventoryComponent *inventory; // nullable — Close doesn't need it, UseItemCommand checks before use
     StateMachine<IGameState> &stateMachine;
-   EventQueue &events;
+    EventQueue &events;
 };
+
 class InventoryState : public IGameState
 {
 public:
     InventoryState(InputManager &input,
                    StateMachine<IGameState> &stateMachine,
-                   Entity &player,
+                   Registry &registry,
+                   EntityID player,
                    EventQueue &events,
                    bool *openFlag = nullptr); // GameplayState passes &inventoryOpen_ to guard re-push; PauseState leaves default, doesn't need it since Pause already blocks GameplayState's Update
 
@@ -38,7 +40,8 @@ private:
 
     InputManager &input_;
     StateMachine<IGameState> &stateMachine_;
-    Entity &player_;
+    Registry &registry_;
+    EntityID player_;
     EventQueue &events_;
     bool *openFlag_; // non-owning, points at caller's tracking bool if given
 

@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "entities/Entity.h"
+#include "entities/Registry.h"
 #include "world/Map.h"
 #include "component/PositionComponent.h"
 #include "component/VelocityComponent.h"
@@ -14,11 +14,9 @@
 
 namespace MovementSystem
 {
-
-    // velocity is now genuine units/second; dt is applied once here.
-    void update(Entity &entity, const PlayerControlComponent &input, const Map &map,
-                float dt, const std::function<bool(const AABB &)> &isBlocked);
+    // velocity is genuine units/second; dt is applied once here.
+    void update(Registry &registry, EntityID id, const PlayerControlComponent &input,
+                const Map &map, float dt, const std::function<bool(const AABB &)> &isBlocked);
 
     bool mapBoundsCheck(const Map &map, const AABB &aabb);
-
-} // namespace MovementSystem
+}

@@ -1,34 +1,23 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include "world/Map.h"
 #include "world/MapLoader.h"
 #include "asset/AssetDatabase.h"
-#include "entities/Entity.h"
+#include "entities/Registry.h"
 
 class World
 {
 public:
     explicit World(const AssetDatabase& assets);
 
-    const Map *getActiveMap() const;
+    const Map& getActiveMap() const { return active_map_; }
+    Registry& registry() { return registry_; }
+    const Registry& registry() const { return registry_; }
+
     void loadMap(int mapId);
-
-    std::vector<Entity *> getAllEntities() const;
-
-    template <typename T>
-    std::vector<Entity *> view() const
-    {
-        std::vector<Entity *> result;
-        for (Entity *e : getAllEntities())
-            if (e->has<T>())
-                result.push_back(e);
-        return result;
-    }
 
 private:
     MapLoader loader_;
-    std::unique_ptr<Map> active_map_;
+    Registry registry_;
+    Map active_map_{1, 1}; // placeholder until first loadMap(); MapLoader replaces contents
 };

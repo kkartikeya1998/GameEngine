@@ -31,6 +31,7 @@ add_executable(PokemonProject
     src/system/MovementSystem.cpp
     src/system/GameController.cpp
     src/system/CameraSystem.cpp
+    src/system/CollisionSystem.cpp
     
     src/input/InputManager.cpp
 

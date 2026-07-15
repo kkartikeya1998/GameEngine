@@ -42,10 +42,11 @@ public:
 
 InventoryState::InventoryState(InputManager &input,
                                StateMachine<IGameState> &stateMachine,
-                               Entity &player,
+                               Registry &registry,
+                               EntityID player,
                                EventQueue &events,
                                bool *openFlag)
-    : input_(input), stateMachine_(stateMachine), player_(player), events_(events), openFlag_(openFlag), font_(s_font_)
+    : input_(input), stateMachine_(stateMachine), registry_(registry), player_(player), events_(events), openFlag_(openFlag), font_(s_font_)
 {
     static bool s_loaded = false;
     if (!s_loaded)
@@ -83,7 +84,7 @@ void InventoryState::RefreshOptions()
 {
     panel_.options.clear();
 
-    if (auto *inv = player_.get<InventoryComponent>())
+    if (auto *inv = registry_.get<InventoryComponent>(player_))
     {
         for (int i = 0; i < static_cast<int>(inv->items.size()); ++i)
         {
@@ -106,7 +107,7 @@ void InventoryState::Update(float dt)
     if (UISystem::HandleDefaultBack(nav, stateMachine_))
         return; // OnExit() fires here, clearing openFlag_
 
-    InventoryActionContext actionCtx{player_.get<InventoryComponent>(), stateMachine_, events_};
+    InventoryActionContext actionCtx{registry_.get<InventoryComponent>(player_), stateMachine_, events_};
     UISystem::HandleNavigation(panel_, nav, actionCtx);
 
     if (nav.confirm)

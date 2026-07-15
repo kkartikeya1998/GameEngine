@@ -5,7 +5,8 @@
 #include "state/PauseState.h"
 #include "system/CameraSystem.h"
 #include "component/PositionComponent.h"
-// #include "asset/repositories/PokemonSpeciesAssetRepository.h"
+#include "component/RenderComponent.h"
+#include "component/CollisionComponent.h"
 #include <iostream>
 
 GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMachine<IGameState> &stateMachine, AnimationSystem &animationSystem, EventQueue &events)
@@ -33,15 +34,15 @@ GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMa
 void GameplayState::OnEnter()
 {
     // Map/player load happens on entering gameplay, not at app boot.
-    // GameplayState.cpp OnEnter()
     controller_ = std::make_unique<GameController>(1, 600, 600, assets_);
 
     // Center the camera on the player immediately, so the first
     // rendered frame isn't a flash at world-origin before the first
     // Update() call runs.
-    if (auto *pos = controller_->getPlayer()->get<PositionComponent>())
+    auto &registry = controller_->getWorld()->registry();
+    if (auto *pos = registry.get<PositionComponent>(controller_->getPlayer()))
     {
-        CameraSystem::update(*pos, *controller_->getActiveMap(), camera_);
+        CameraSystem::update(*pos, controller_->getActiveMap(), camera_);
     }
 }
 
@@ -63,113 +64,73 @@ void GameplayState::Update(float dt)
 
     if (input_.WasKeyPressed(Key::I))
     {
-        stateMachine_.Push(std::make_unique<InventoryState>(input_, stateMachine_, *controller_->getPlayer(), events_));
+        // NOTE: InventoryState's constructor previously took `Entity&`
+        // (*controller_->getPlayer()). The player is now an EntityID into
+        // the registry, not an owned object — I haven't seen InventoryState.h
+        // so I'm passing registry + id, which is the closest equivalent, but
+        // this line needs InventoryState's constructor updated to match.
+        // Send that file and I'll fix this call site for real.
+        stateMachine_.Push(std::make_unique<InventoryState>(
+            input_, stateMachine_, controller_->getWorld()->registry(), controller_->getPlayer(), events_));
         return; // don't also process movement the frame we open inventory
     }
 
     PlayerControlComponent input = bindings_.poll(input_);
     controller_->update(dt, input);
 
-    if (auto *pos = controller_->getPlayer()->get<PositionComponent>())
+    auto &registry = controller_->getWorld()->registry();
+    if (auto *pos = registry.get<PositionComponent>(controller_->getPlayer()))
     {
-        CameraSystem::update(*pos, *controller_->getActiveMap(), camera_);
+        CameraSystem::update(*pos, controller_->getActiveMap(), camera_);
     }
 }
 
 void GameplayState::Render(RenderSystem &renderSystem, float dt)
 {
-    animationSystem_.update(*controller_, dt);
+    animationSystem_.update(controller_->getWorld()->registry(), dt);
 
     World *world = controller_->getWorld();
-    Entity *player = controller_->getPlayer();
-    if (!world || !player)
+    if (!world)
         return;
 
-    const Map *map = world->getActiveMap();
-
-    if (!map)
-    {
-        // No active map: draw player only, free-movement mode.
-        const auto *playerPos = player->get<PositionComponent>();
-        const auto *playerMove = player->get<FreeMovementComponent>();
-        const auto *playerRender = player->get<RenderComponent>();
-        if (playerPos && playerMove && playerRender)
-        {
-            RenderComponent resolved = *playerRender;
-            resolved.renderX = playerPos->x;
-            resolved.renderY = playerPos->y;
-            renderSystem.submit(resolved.layer, resolved.z, resolved, RenderAnchor::CenterBottom);
-        }
-        return;
-    }
+    const Map &map = world->getActiveMap();
+    Registry &registry = world->registry();
 
     // ---- Terrain -----------------------------------------------------
-    for (int y = 0; y < map->getHeight(); ++y)
+    for (int y = 0; y < map.getHeight(); ++y)
     {
-        for (int x = 0; x < map->getWidth(); ++x)
+        for (int x = 0; x < map.getWidth(); ++x)
         {
-            renderSystem.submitTile(x, y, map->tile_at(x, y).getRenderComponent());
+            renderSystem.submitTile(x, y, map.tile_at(x, y).getRenderComponent());
         }
     }
 
-    // ---- Map objects (GroundDecoration/Characters, per RenderComponent::layer) ---
-    for (const auto &mapObj : map->getMapObjects())
+    // ---- Everything else: player, map objects, npcs — one pass -------
+    // Previously three separate loops (map objects / player / npcs) doing
+    // near-identical work. Now that all three live in the same registry
+    // there's nothing distinguishing them at draw time — a single
+    // RenderComponent+PositionComponent query covers all of them, in
+    // whatever order the registry happens to iterate. Depth ordering is
+    // handled by RenderSystem's (layer, z) sort on submit, not by draw
+    // order here, so iteration order doesn't matter.
+    for (EntityID id : registry.view<RenderComponent, PositionComponent>())
     {
-        const auto *mapObjRender = mapObj->get<RenderComponent>();
-        const auto *mapObjPos = mapObj->get<PositionComponent>();
-        if (!mapObjRender || !mapObjPos)
-            continue;
+        const auto *entRender = registry.get<RenderComponent>(id);
+        const auto *entPos = registry.get<PositionComponent>(id);
 
-        const auto *mapObjCollision = mapObj->get<CollisionComponent>();
-        float z = static_cast<float>(mapObjPos->y);
+        const auto *entCollision = registry.get<CollisionComponent>(id);
+        float z = static_cast<float>(entPos->y);
 
-        if (mapObjCollision)
+        if (entCollision)
         {
-            AABB box = mapObjCollision->resolve(mapObjPos->x, mapObjPos->y);
+            AABB box = entCollision->resolve(entPos->x, entPos->y);
             z = box.y + box.height;
             renderSystem.submitDebugRect(box.x, box.y, box.width, box.height);
         }
 
-        renderSystem.submit(mapObjRender->layer, z, *mapObjRender, RenderAnchor::CenterBottom);
-    }
-
-    // ---- Player --------------------------------------------------------
-    const auto *playerPos = player->get<PositionComponent>();
-    const auto *playerCollision = player->get<CollisionComponent>();
-    const auto *playerRender = player->get<RenderComponent>();
-
-    if (playerPos && playerCollision && playerRender)
-    {
-        AABB playerBox = playerCollision->resolve(playerPos->x, playerPos->y);
-        renderSystem.submitDebugRect(playerBox.x, playerBox.y, playerBox.width, playerBox.height);
-
-        RenderComponent resolved = *playerRender;
-        resolved.renderX = playerPos->x;
-        resolved.renderY = playerPos->y;
-
-        renderSystem.submit(resolved.layer, playerBox.y + playerBox.height, resolved, RenderAnchor::CenterBottom);
-    }
-    // ---- NPCs (wild Pokémon, wandering characters) ----
-    for (const auto &npc : map->getNpcs())
-    {
-        const auto *npcRender = npc->get<RenderComponent>();
-        const auto *npcPos = npc->get<PositionComponent>();
-        if (!npcRender || !npcPos)
-            continue;
-
-        const auto *npcCollision = npc->get<CollisionComponent>();
-        float z = static_cast<float>(npcPos->y);
-
-        if (npcCollision)
-        {
-            AABB box = npcCollision->resolve(npcPos->x, npcPos->y);
-            z = box.y + box.height;
-            renderSystem.submitDebugRect(box.x, box.y, box.width, box.height);
-        }
-
-        RenderComponent resolved = *npcRender;
-        resolved.renderX = npcPos->x;
-        resolved.renderY = npcPos->y;
+        RenderComponent resolved = *entRender;
+        resolved.renderX = entPos->x;
+        resolved.renderY = entPos->y;
 
         renderSystem.submit(resolved.layer, z, resolved, RenderAnchor::CenterBottom);
     }

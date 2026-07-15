@@ -5,7 +5,6 @@
 #include "asset/metadata/AssetMetadataName.h"
 #include "external/json.hpp"
 
-// AnimationAssetMetadata.h
 struct AnimationDirectionData
 {
     int startIndex = 0;

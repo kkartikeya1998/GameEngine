@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_set>
-#include "entities/Entity.h"
+#include "entities/Registry.h"
 #include "entities/EntityFactory.h"
 #include "component/PositionComponent.h"
 #include "component/VelocityComponent.h"
@@ -12,37 +12,36 @@
 #include "entities/npc/TileRestrictionComponent.h"
 #include "asset/AssetDatabase.h"
 
-inline Entity makeWildPokemon(
+inline EntityID makeWildPokemon(
+    Registry& registry,
     int speciesId,
     int level,
     float x, float y,
     const AssetDatabase &assets,
     std::unordered_set<TileCoord, TileCoordHash> allowedTiles = {})
 {
+    EntityID id = registry.create();
     std::string archetypeId = "species_" + std::to_string(speciesId);
 
-    std::unique_ptr<Entity> base;
     try
     {
-        base = EntityFactory::make(assets, archetypeId, x, y, RenderLayer::Characters);
+        EntityFactory::populate(registry, assets, id, archetypeId, x, y, RenderLayer::Characters);
     }
     catch (const std::runtime_error &)
     {
         // Missing species: preserve old graceful-degradation behavior —
         // entity exists with AI/spawn data but no sprite/collision.
-        base = std::make_unique<Entity>();
-        base->add<PositionComponent>(x, y);
+        registry.add<PositionComponent>(id, x, y);
     }
 
-    Entity e = std::move(*base);
-    e.add<VelocityComponent>();
-    e.add<DirectionComponent>(Direction::DOWN);
-    e.add<MovementStateComponent>();
-    e.add<WanderAIComponent>();
-    e.add<WildSpawnComponent>(speciesId, level);
+    registry.add<VelocityComponent>(id);
+    registry.add<DirectionComponent>(id, Direction::DOWN);
+    registry.add<MovementStateComponent>(id);
+    registry.add<WanderAIComponent>(id);
+    registry.add<WildSpawnComponent>(id, speciesId, level);
 
     if (!allowedTiles.empty())
-        e.add<TileRestrictionComponent>(std::move(allowedTiles));
+        registry.add<TileRestrictionComponent>(id, std::move(allowedTiles));
 
-    return e;
+    return id;
 }
