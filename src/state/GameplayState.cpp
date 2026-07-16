@@ -7,7 +7,7 @@
 #include "component/PositionComponent.h"
 #include "component/RenderComponent.h"
 #include "component/CollisionComponent.h"
-#include "utils/Logger.h"
+#include "log/Logger.h"
 
 GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMachine<IGameState> &stateMachine, AnimationSystem &animationSystem, EventQueue &events)
     : input_(input), assets_(assets), stateMachine_(stateMachine), animationSystem_(animationSystem), events_(events)
@@ -18,6 +18,7 @@ GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMa
     auto right = std::make_shared<MoveCommand>(Direction::RIGHT);
     auto sprint = std::make_shared<SprintCommand>();
     auto jump = std::make_shared<JumpCommand>();
+    auto interact = std::make_shared<InteractCommand>();
 
     bindings_.bind(Key::W, up);
     bindings_.bind(Key::Up, up);
@@ -29,12 +30,14 @@ GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMa
     bindings_.bind(Key::Right, right);
     bindings_.bind(Key::LShift, sprint);
     bindings_.bind(Key::Space, jump, TriggerMode::Press);
+    bindings_.bind(Key::E, interact, TriggerMode::Press);
+
 }
 
 void GameplayState::OnEnter()
 {
     // Map/player load happens on entering gameplay, not at app boot.
-    controller_ = std::make_unique<GameController>(1, 600, 600, assets_);
+    controller_ = std::make_unique<GameController>(1, 600, 600, assets_, events_);
 
     // Center the camera on the player immediately, so the first
     // rendered frame isn't a flash at world-origin before the first
@@ -109,7 +112,7 @@ void GameplayState::Render(RenderSystem &renderSystem, float dt)
     // order here, so iteration order doesn't matter.
     for (EntityID id : registry.view<RenderComponent, PositionComponent>())
     {
-        // std::cout << "[GameplayState] Entity in (render, position) view:" << id.index << " " << id.generation << "\n"; 
+        // std::cout << "[GameplayState] Entity in (render, position) view:" << id.index << " " << id.generation << "\n";
         const auto *entRender = registry.get<RenderComponent>(id);
         const auto *entPos = registry.get<PositionComponent>(id);
 

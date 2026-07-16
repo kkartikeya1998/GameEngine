@@ -6,31 +6,41 @@
 #include <vector>
 #include "entities/EntityID.h"
 #include "entities/ComponentPool.h"
+#include "log/Logger.h"
 
 class Registry {
 public:
     EntityID create() {
+        EntityID id;
         if (!freeList_.empty()) {
             uint32_t idx = freeList_.back();
             freeList_.pop_back();
-            return EntityID{idx, generations_[idx]};
+            id = EntityID{idx, generations_[idx]};
+        } else {
+            generations_.push_back(0);
+            id = EntityID{static_cast<uint32_t>(generations_.size() - 1), 0};
         }
-        generations_.push_back(0);
-        return EntityID{static_cast<uint32_t>(generations_.size() - 1), 0};
+        LOG_INFO("Registry: created entity " + std::to_string(id.index) + " gen " + std::to_string(id.generation));
+        return id;
     }
 
     void destroy(EntityID id) {
-        if (!alive(id)) return;
+        if (!alive(id)) {
+            LOG_TRACE("Registry: destroy() called on dead/invalid entity " + std::to_string(id.index));
+            return;
+        }
         generations_[id.index]++;
         freeList_.push_back(id.index);
         for (auto& [type, pool] : pools_)
             pool->remove(id);
+        LOG_INFO("Registry: destroyed entity " + std::to_string(id.index) + " (new gen " + std::to_string(generations_[id.index]) + ")");
     }
 
     // Called by World::loadMap between maps. Bumps every live generation so
     // any EntityID held from before this call reads as dead rather than
     // aliasing onto whatever gets created next, and drops every pool.
     void clear() {
+        LOG_INFO("Registry: clear() — dropping " + std::to_string(pools_.size()) + " pools, " + std::to_string(generations_.size()) + " entity slots");
         for (uint32_t i = 0; i < generations_.size(); ++i)
             generations_[i]++;
         freeList_.clear();
@@ -45,6 +55,7 @@ public:
 
     template <typename T, typename... Args>
     T& add(EntityID id, Args&&... args) {
+        LOG_TRACE("Registry: add<" + std::string(typeid(T).name()) + "> to entity " + std::to_string(id.index));
         return pool<T>().add(id, std::forward<Args>(args)...);
     }
 
@@ -65,7 +76,10 @@ public:
     template <typename T>
     void remove(EntityID id) {
         auto it = pools_.find(std::type_index(typeid(T)));
-        if (it != pools_.end()) it->second->remove(id);
+        if (it != pools_.end()) {
+            LOG_TRACE("Registry: remove<" + std::string(typeid(T).name()) + "> from entity " + std::to_string(id.index));
+            it->second->remove(id);
+        }
     }
 
     // Iterates the FIRST type's pool, filters by has<Rest>() on the others.

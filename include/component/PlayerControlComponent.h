@@ -6,4 +6,5 @@ struct PlayerControlComponent : public Component {
     Direction direction = Direction::NONE;
     bool sprinting = false;
     bool jumpRequested = false;
+    bool interactRequested = false;
 };

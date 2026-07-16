@@ -117,13 +117,36 @@
           "loop": false
         }
       }
+    },
+    "Interaction": {
+      "oak_intro": {
+        "steps": [
+          {
+            "type": "dialogue",
+            "text": "Hello there! Welcome to the world of Pokemon!"
+          },
+          {
+            "type": "battle",
+            "trainerId": "oak"
+          }
+        ]
+      },
+      "cat_meow": {
+        "steps": [
+          {
+            "type": "dialogue",
+            "text": "Meow!"
+          }
+        ]
+      }
     }
   },
   "archetypes": {
     "species_1": {
       "render": "species_1",
       "pmdAnimation": "species_1",
-      "collision": "species_1"
+      "collision": "species_1",
+      "interaction": "cat_meow"
     },
     "species_4": {
       "render": "species_4",

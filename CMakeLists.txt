@@ -43,6 +43,7 @@ add_executable(PokemonProject
     src/state/GameplayState.cpp
     src/state/PauseState.cpp
     src/state/InventoryState.cpp
+    src/state/DialogueState.cpp
 
     src/render/RenderSystem.cpp
     src/render/SFMLRenderer.cpp
@@ -53,11 +54,17 @@ add_executable(PokemonProject
     src/asset/metadata/AnimationAssetMetadata.cpp
     src/asset/metadata/CollisionAssetMetadata.cpp
     src/asset/metadata/RenderAssetMetadata.cpp
+    src/asset/metadata/AnimationAssetMetadata.cpp
+    src/asset/metadata/InteractionAssetMetadata.cpp
     src/asset/metadata/ArchetypeDefinition.cpp
     src/asset/source/JsonMetadataSource.cpp
 
-    src/utils/Logger.cpp
+    src/log/Logger.cpp
+    src/log/sinks/ConsoleSink.cpp
+    src/log/sinks/FileSink.cpp
 
+    src/ui/DialogueBox.cpp
+    
     src/Game.cpp
     )
 

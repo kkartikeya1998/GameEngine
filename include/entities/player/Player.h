@@ -35,6 +35,6 @@ inline EntityID makePlayer(
     registry.add<WalkCycleTimer>(id, walkCyclesPerSecond);
     registry.add<PlayerControlComponent>(id);
 
-    std::cout << "Created player: " << id.index << " " << id.generation << std::endl;
+    // std::cout << "Created player: " << id.index << " " << id.generation << std::endl;
     return id;
 }

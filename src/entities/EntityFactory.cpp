@@ -2,7 +2,9 @@
 #include "component/PositionComponent.h"
 #include "component/RenderComponent.h"
 #include "component/CollisionComponent.h"
+#include "component/InteractableComponent.h"
 #include "system/GameConstants.h"
+#include "log/Logger.h"
 #include <stdexcept>
 
 namespace EntityFactory
@@ -39,12 +41,21 @@ namespace EntityFactory
                 {
                     if (const RenderAssetMetadata *render = db.findRender(*archetype->renderId))
                     {
-                        scale = render->RenderData.renderScale; // <-- was TILE_SIZE / sourceTileSize
+                        scale = render->RenderData.renderScale;
                     }
                 }
                 registry.add<CollisionComponent>(id,
                                                  collision->data.offsetX * scale, collision->data.offsetY * scale,
                                                  collision->data.width * scale, collision->data.height * scale);
+            }
+        }
+
+        if (archetype->interactionId)
+        {
+            const InteractionAssetMetadata *interaction = db.findInteraction(*archetype->interactionId);
+            if (interaction)
+            {
+                registry.add<InteractableComponent>(id, *archetype->interactionId);
             }
         }
     }

@@ -19,3 +19,8 @@ class JumpCommand : public ICommand<PlayerControlComponent> {
 public:
     void execute(PlayerControlComponent& playerControl) const override { playerControl.jumpRequested = true; }
 };
+
+class InteractCommand : public ICommand<PlayerControlComponent> {
+public:
+    void execute(PlayerControlComponent& playerControl) const override { playerControl.interactRequested = true; }
+};

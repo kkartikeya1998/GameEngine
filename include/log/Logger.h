@@ -1,24 +1,27 @@
+
 #pragma once
 
 #include <string_view>
+#include <vector>
+#include <memory>
+#include "log/LogLevel.h"
+#include "log/ILogSink.h"
 
 // ---------------------------------------------------------------------------
 // Logger — static, no instance. Origin (file/line/func) captured via macros
 // at the call site so callers never pass it manually.
 // ---------------------------------------------------------------------------
-
-enum class LogLevel { Trace, Debug, Info, Warning, Error, Fatal };
-
 class Logger {
 public:
     static void SetLevel(LogLevel level);
+    static void AddSink(std::unique_ptr<ILogSink> sink);
     static void Log(LogLevel level, const char* file, int line, const char* func, std::string_view message);
 
 private:
     static LogLevel minLevel_;
+    static std::vector<std::unique_ptr<ILogSink>> sinks_;
 };
 
-// Trace/Debug compile out entirely in non-debug builds — zero cost, not just filtered at runtime.
 #ifdef ENGINE_DEBUG
     #define LOG_TRACE(msg) Logger::Log(LogLevel::Trace, __FILE__, __LINE__, __func__, msg)
     #define LOG_DEBUG(msg) Logger::Log(LogLevel::Debug, __FILE__, __LINE__, __func__, msg)

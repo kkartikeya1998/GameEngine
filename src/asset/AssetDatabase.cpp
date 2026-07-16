@@ -74,6 +74,11 @@ void AssetDatabase::loadFile(const std::filesystem::path &path, const IMetadataS
                 pmdAnimationSection_,
                 components["PmdAnimation"]);
         }
+
+        if (components.contains("Interaction"))
+        {
+            accumulate(interactionSection_, components["Interaction"]);
+        }
     }
 
     if (root.contains("archetypes"))
@@ -82,9 +87,10 @@ void AssetDatabase::loadFile(const std::filesystem::path &path, const IMetadataS
 
 void AssetDatabase::finalize()
 {
+    archetypeRepo_ = std::make_unique<ComponentAssetRepository<ArchetypeDefinition>>(archetypeSection_);
     renderRepo_ = std::make_unique<ComponentAssetRepository<RenderAssetMetadata>>(renderSection_);
     collisionRepo_ = std::make_unique<ComponentAssetRepository<CollisionAssetMetadata>>(collisionSection_);
     animationRepo_ = std::make_unique<ComponentAssetRepository<AnimationAssetMetadata>>(animationSection_);
     pmdAnimationRepo_ = std::make_unique<ComponentAssetRepository<PmdAnimationSetMetadata>>(pmdAnimationSection_);
-    archetypeRepo_ = std::make_unique<ComponentAssetRepository<ArchetypeDefinition>>(archetypeSection_);
+    interactionRepo_ = std::make_unique<ComponentAssetRepository<InteractionAssetMetadata>>(interactionSection_);
 }

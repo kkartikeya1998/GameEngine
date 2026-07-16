@@ -5,6 +5,7 @@
 #include "system/MovementSystem.h"
 #include "system/CollisionSystem.h"
 #include "system/AnimationSystem.h"
+#include "system/InteractionSystem.h"
 #include "entities/npc/CreatureAISystem.h"
 #include "entities/npc/WanderAIComponent.h"
 #include "component/PositionComponent.h"
@@ -13,8 +14,8 @@
 #include "component/MovementStateComponent.h"
 #include "component/WalkCycleTimer.h"
 
-GameController::GameController(int startMapId, int playerX, int playerY, const AssetDatabase &assets)
-    : world_(assets), assets_(assets)
+GameController::GameController(int startMapId, int playerX, int playerY, const AssetDatabase &assets, EventQueue &events)
+    : world_(assets), assets_(assets), events_(events)
 {
     world_.loadMap(startMapId);
     playerId_ = makePlayer(world_.registry(), assets_, static_cast<float>(playerX), static_cast<float>(playerY));
@@ -29,10 +30,10 @@ void GameController::update(float dt, const PlayerControlComponent &input)
 {
     // Player moves first — NPC collision checks below read the player's
     // post-move position, giving the player effective movement priority.
-    MovementSystem::update(world_.registry(), playerId_, world_.getActiveMap(), dt,
-                            [this](const AABB &box) { return isPositionBlockedFor(playerId_, box); },
-                            &input);
-
+    MovementSystem::update(world_.registry(), playerId_, world_.getActiveMap(), dt, [this](const AABB &box)
+                           { return isPositionBlockedFor(playerId_, box); }, &input);
+    InteractionSystem::Update(world_.registry(), playerId_, events_, input);
+    
     auto *walkCycle = world_.registry().get<WalkCycleTimer>(playerId_);
     auto *movementState = world_.registry().get<MovementStateComponent>(playerId_);
     if (walkCycle && movementState)
@@ -46,7 +47,8 @@ void GameController::update(float dt, const PlayerControlComponent &input)
     for (EntityID id : world_.registry().view<WanderAIComponent>())
     {
         MovementSystem::update(world_.registry(), id, world_.getActiveMap(), dt,
-                                [this, id](const AABB &box) { return isPositionBlockedFor(id, box); });
+                               [this, id](const AABB &box)
+                               { return isPositionBlockedFor(id, box); });
 
         if (auto *timer = world_.registry().get<WalkCycleTimer>(id))
             timer->update(dt, true);

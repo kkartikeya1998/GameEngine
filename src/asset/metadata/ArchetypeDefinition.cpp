@@ -8,5 +8,6 @@ ArchetypeDefinition ArchetypeDefinition::fromJson(const std::string& id, const n
     if (entry.contains("collision")) def.collisionId = entry["collision"].get<std::string>();
     if (entry.contains("animation")) def.animationId = entry["animation"].get<std::string>();
     if (entry.contains("pmdAnimation")) def.pmdAnimationId = entry["pmdAnimation"].get<std::string>();
+    if (entry.contains("interaction")) def.interactionId = entry.at("interaction").get<std::string>();
     return def;
 }
