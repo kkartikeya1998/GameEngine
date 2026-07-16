@@ -37,9 +37,6 @@ namespace Assets
         inline const std::filesystem::path CHARACTERS_METADATA =
             CHARACTERS / "characters_metadatav2.json";
 
-        inline const std::filesystem::path PLAYER_SPRITESHEET =
-            CHARACTERS / "player.png";
-
         inline const std::filesystem::path SPECIES_METADATA = 
             CHARACTERS / "species_metadatav2.json";
     }

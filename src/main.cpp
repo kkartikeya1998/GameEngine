@@ -1,7 +1,6 @@
 #include "Game.h"
+#include "utils/Logger.h"
 
-#include <iostream>
-#include <memory>
 #include <stdexcept>
 
 int main() {
@@ -10,7 +9,7 @@ int main() {
         game.Run();
         return 0;
     } catch (const std::exception& e) {
-        std::cerr << "Fatal: " << e.what() << "\n";
+        LOG_FATAL(e.what());
         return 1;
     }
 }

@@ -8,6 +8,14 @@
         "w": 480,
         "h": 480,
         "tile_size": 480
+      },
+      "fox": {
+        "texture": "assets/characters/fox.png",
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256,
+        "tile_size": 256
       }
     },
     "Animation": {
@@ -144,18 +152,29 @@
     },
     "Collision": {
       "player": {
-        "offsetX": 0.0,
-        "offsetY": 0.0,
-        "width": 6.0,
-        "height": 5.0
+        "offset_x": 0.0,
+        "offset_y": -90.0,
+        "width": 90.0,
+        "height": 70.0
+      },
+      "fox": {
+        "offset_x": 0.0,
+        "offset_y": -120.0,
+        "width": 50.0,
+        "height": 40.0
       }
     }
   },
   "archetypes": {
     "player": {
-      "renderId": "player",
-      "collisionId": "player",
-      "animation" : "player"
+      "render": "player",
+      "collision": "player",
+      "animation": "player"
+    },
+    "fox": {
+      "render": "fox",
+      "collision": "fox",
+      "animation": "fox"
     }
   }
 }

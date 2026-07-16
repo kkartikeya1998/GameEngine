@@ -5,6 +5,11 @@ project(PokemonProject LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Default to Debug if the user didn't specify one 
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
 include(FetchContent)
 
 # Fetch SFML 3.1 from GitHub
@@ -27,12 +32,12 @@ add_executable(PokemonProject
     src/world/Map.cpp
 
     src/entities/EntityFactory.cpp
-    
+
     src/system/MovementSystem.cpp
     src/system/GameController.cpp
     src/system/CameraSystem.cpp
     src/system/CollisionSystem.cpp
-    
+
     src/input/InputManager.cpp
 
     src/state/GameplayState.cpp
@@ -51,6 +56,8 @@ add_executable(PokemonProject
     src/asset/metadata/ArchetypeDefinition.cpp
     src/asset/source/JsonMetadataSource.cpp
 
+    src/utils/Logger.cpp
+
     src/Game.cpp
     )
 
@@ -61,6 +68,7 @@ target_include_directories(PokemonProject PRIVATE
 
 target_compile_definitions(PokemonProject PRIVATE
     PROJECT_ROOT=\"${CMAKE_SOURCE_DIR}\"
+    $<$<CONFIG:Debug>:ENGINE_DEBUG>
 )
 
 target_link_libraries(PokemonProject PRIVATE SFML::Graphics SFML::Window SFML::System)

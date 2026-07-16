@@ -7,7 +7,7 @@
 #include "component/PositionComponent.h"
 #include "component/RenderComponent.h"
 #include "component/CollisionComponent.h"
-#include <iostream>
+#include "utils/Logger.h"
 
 GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMachine<IGameState> &stateMachine, AnimationSystem &animationSystem, EventQueue &events)
     : input_(input), assets_(assets), stateMachine_(stateMachine), animationSystem_(animationSystem), events_(events)
@@ -64,12 +64,6 @@ void GameplayState::Update(float dt)
 
     if (input_.WasKeyPressed(Key::I))
     {
-        // NOTE: InventoryState's constructor previously took `Entity&`
-        // (*controller_->getPlayer()). The player is now an EntityID into
-        // the registry, not an owned object — I haven't seen InventoryState.h
-        // so I'm passing registry + id, which is the closest equivalent, but
-        // this line needs InventoryState's constructor updated to match.
-        // Send that file and I'll fix this call site for real.
         stateMachine_.Push(std::make_unique<InventoryState>(
             input_, stateMachine_, controller_->getWorld()->registry(), controller_->getPlayer(), events_));
         return; // don't also process movement the frame we open inventory
@@ -115,18 +109,21 @@ void GameplayState::Render(RenderSystem &renderSystem, float dt)
     // order here, so iteration order doesn't matter.
     for (EntityID id : registry.view<RenderComponent, PositionComponent>())
     {
+        // std::cout << "[GameplayState] Entity in (render, position) view:" << id.index << " " << id.generation << "\n"; 
         const auto *entRender = registry.get<RenderComponent>(id);
         const auto *entPos = registry.get<PositionComponent>(id);
 
         const auto *entCollision = registry.get<CollisionComponent>(id);
         float z = static_cast<float>(entPos->y);
 
+#ifdef ENGINE_DEBUG
         if (entCollision)
         {
             AABB box = entCollision->resolve(entPos->x, entPos->y);
             z = box.y + box.height;
             renderSystem.submitDebugRect(box.x, box.y, box.width, box.height);
         }
+#endif
 
         RenderComponent resolved = *entRender;
         resolved.renderX = entPos->x;
