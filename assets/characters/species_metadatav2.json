@@ -136,6 +136,10 @@
           {
             "type": "dialogue",
             "text": "Meow!"
+          },
+          {
+            "type": "dialogue",
+            "text": "Hello there! Welcome to the world of Pokemon!"
           }
         ]
       }

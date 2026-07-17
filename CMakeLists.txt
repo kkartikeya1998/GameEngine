@@ -63,8 +63,6 @@ add_executable(PokemonProject
     src/log/sinks/ConsoleSink.cpp
     src/log/sinks/FileSink.cpp
 
-    src/ui/DialogueBox.cpp
-    
     src/Game.cpp
     )
 

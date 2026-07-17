@@ -28,7 +28,8 @@ class PauseState : public IGameState
 {
 public:
     PauseState(InputManager &input,
-               StateMachine<IGameState> &stateMachine);
+               StateMachine<IGameState> &stateMachine,
+               std::filesystem::path fontPath = {});
 
     void Update(float dt) override;
     void Render(RenderSystem &renderSystem, float dt) override;
@@ -40,6 +41,5 @@ private:
     KeyBindings<MenuContext> navInput_; // Up/Down/Enter/Escape -> menu intent
     Panel<PauseActionContext> panel_;   // Continue / Quit options
 
-    static sf::Font s_font_;
-    const sf::Font &font_; // refers to s_font_
+    std::filesystem::path fontPath_;
 };

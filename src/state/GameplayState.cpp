@@ -31,7 +31,6 @@ GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMa
     bindings_.bind(Key::LShift, sprint);
     bindings_.bind(Key::Space, jump, TriggerMode::Press);
     bindings_.bind(Key::E, interact, TriggerMode::Press);
-
 }
 
 void GameplayState::OnEnter()

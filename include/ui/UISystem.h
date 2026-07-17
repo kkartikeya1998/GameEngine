@@ -1,10 +1,13 @@
 #pragma once
 #include "ui/Panel.h"
 #include "ui/MenuContext.h"
+#include "ui/DialogueBoxData.h"
+#include "ui/UIFont.h"
 #include "render/RenderSystem.h"
+#include "asset/AsssetPaths.h"
 #include <SFML/Graphics/Font.hpp>
 
-// Stateless navigation + rendering for Panel — mirrors MovementSystem's free-function pattern
+// Stateless navigation + rendering for UI data structs — mirrors MovementSystem's free-function pattern
 namespace UISystem
 {
     // Moves selectedIndex and fires the selected option's command on confirm
@@ -27,7 +30,7 @@ namespace UISystem
 
     // Draws panel background and each option, highlighting the current selection
     template <typename ActionContext>
-    void Render(const Panel<ActionContext> &panel, RenderSystem &renderSystem, const sf::Font &font)
+    void Render(const Panel<ActionContext> &panel, RenderSystem &renderSystem, const sf::Font &font = UIFont::GetShared(Assets::Fonts::PIXFAY))
     {
         renderSystem.submitRect(
             RenderLayer::ScreenOverlay, 1.f,
@@ -60,6 +63,35 @@ namespace UISystem
                 panel.x + paddingX, listStartY + i * lineHeight,
                 20u, color, true); // one line per option
         }
+    }
+
+    // Draws dialogue box background, optional speaker line, and body text
+    inline void Render(const DialogueBoxData &box, RenderSystem &renderSystem, const sf::Font &font)
+    {
+        constexpr RenderLayer kUiLayer = RenderLayer::UI;
+        constexpr float kUiZ = 0.f;
+
+        renderSystem.submitRect(
+            kUiLayer, kUiZ,
+            box.x, box.y, box.width, box.height,
+            sf::Color(0, 0, 0, 180),
+            /*screenSpace=*/true); // semi-transparent backdrop, matches old DialogueBox
+
+        float textY = box.y + 12.f;
+
+        if (!box.speaker.empty())
+        {
+            renderSystem.submitText(
+                kUiLayer, kUiZ, font, box.speaker,
+                box.x + 12.f, textY,
+                20u, sf::Color::Yellow, true);
+            textY += 26.f; // reserve a line for the speaker name
+        }
+
+        renderSystem.submitText(
+            kUiLayer, kUiZ, font, box.text,
+            box.x + 12.f, textY,
+            24u, sf::Color::White, true);
     }
 
     // Default "back = pop this state" behavior. Returns true if it fired, so the

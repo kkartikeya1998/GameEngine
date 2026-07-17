@@ -8,13 +8,12 @@
 #include "component/InventoryComponent.h"
 #include "events/EventQueue.h"
 
-#include <SFML/Graphics/Font.hpp>
+#include <string>
 
 class InputManager;
 
-// Context passed to inventory action commands — the component they mutate, plus a way to close
 struct InventoryActionContext {
-    InventoryComponent *inventory; // nullable — Close doesn't need it, UseItemCommand checks before use
+    InventoryComponent *inventory;
     StateMachine<IGameState> &stateMachine;
     EventQueue &events;
 };
@@ -27,13 +26,13 @@ public:
                    Registry &registry,
                    EntityID player,
                    EventQueue &events,
-                   bool *openFlag = nullptr); // GameplayState passes &inventoryOpen_ to guard re-push; PauseState leaves default, doesn't need it since Pause already blocks GameplayState's Update
+                   bool *openFlag = nullptr,
+                   std::filesystem::path fontPath = {}); //override per state if ever needed
 
     void OnEnter() override;
-    void OnExit() override; // clears *openFlag_ if set, so GameplayState knows it's safe to reopen
+    void OnExit() override;
     void Update(float dt) override;
     void Render(RenderSystem &renderSystem, float dt) override;
-    // bool BlocksUpdateBelow() const override { return false; }
 
 private:
     void RefreshOptions();
@@ -43,11 +42,10 @@ private:
     Registry &registry_;
     EntityID player_;
     EventQueue &events_;
-    bool *openFlag_; // non-owning, points at caller's tracking bool if given
+    bool *openFlag_;
 
     KeyBindings<MenuContext> navInput_;
     Panel<InventoryActionContext> panel_;
 
-    static sf::Font s_font_;
-    const sf::Font &font_;
+    std::filesystem::path fontPath_; // resolved through UIFont::GetShared at render time
 };

@@ -5,8 +5,6 @@
 #include "ui/UISystem.h"
 #include "state/MenuInput.h"
 
-sf::Font InventoryState::s_font_;
-
 class UseItemCommand : public ICommand<InventoryActionContext>
 {
 public:
@@ -45,21 +43,16 @@ InventoryState::InventoryState(InputManager &input,
                                Registry &registry,
                                EntityID player,
                                EventQueue &events,
-                               bool *openFlag)
-    : input_(input), stateMachine_(stateMachine), registry_(registry), player_(player), events_(events), openFlag_(openFlag), font_(s_font_)
+                               bool *openFlag,
+                               std::filesystem::path fontPath)
+    : input_(input), stateMachine_(stateMachine), registry_(registry), player_(player),
+      events_(events), openFlag_(openFlag)
 {
-    static bool s_loaded = false;
-    if (!s_loaded)
-    {
-        if (!s_font_.openFromFile(Assets::Fonts::PIXFAY))
-            std::cerr << "[InventoryState] Failed to load font\n";
-        else
-            s_loaded = true;
-    }
 
-    MenuInput::BindDefaults(navInput_); // Up/Down/Enter
+    fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
+    MenuInput::BindDefaults(navInput_);
     MenuInput::BindBackKey(navInput_, Key::Escape);
-    MenuInput::BindBackKey(navInput_, Key::I); // toggle-close
+    MenuInput::BindBackKey(navInput_, Key::I);
 
     panel_.type = UIType::NonDiegetic;
     panel_.title = "Inventory";
@@ -116,5 +109,5 @@ void InventoryState::Update(float dt)
 
 void InventoryState::Render(RenderSystem &renderSystem, float dt)
 {
-    UISystem::Render(panel_, renderSystem, font_);
+    UISystem::Render(panel_, renderSystem, UIFont::GetShared(fontPath_));
 }

@@ -1,36 +1,41 @@
 #include "state/DialogueState.h"
 #include "input/InputManager.h"
-#include "state/MenuInput.h"
 #include "asset/AsssetPaths.h"
+#include "ui/UISystem.h"
+#include "state/MenuInput.h"
+#include <iostream>
 
-sf::Font DialogueState::s_font_;
-
-DialogueState::DialogueState(InputManager &input, StateMachine<IGameState> &stateMachine, EventQueue &events, std::string text)
+DialogueState::DialogueState(InputManager &input, StateMachine<IGameState> &stateMachine, EventQueue &events,
+                             std::string text, std::filesystem::path fontPath)
     : input_(input), stateMachine_(stateMachine), events_(events), text_(std::move(text))
 {
-    static bool s_loaded = false;
-    if (!s_loaded)
-    {
-        if (!s_font_.openFromFile(Assets::Fonts::PIXFAY))
-            std::cerr << "[InventoryState] Failed to load font\n";
-        else
-            s_loaded = true;
-    }
-    MenuInput::BindDefaults(navInput_);
-    box_ = std::make_unique<DialogueBox>(s_font_, text_, 50.f, 400.f, 700.f, 120.f);
+    fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
+
+    // Advance/dismiss on Enter or E; Escape also dismisses — same "back = pop" intent as menus
+    navInput_.bind(Key::Enter, std::make_shared<ConfirmCommand>(), TriggerMode::Press);
+    navInput_.bind(Key::E, std::make_shared<ConfirmCommand>(), TriggerMode::Press);
+    MenuInput::BindBackKey(navInput_, Key::Escape);
+
+    box_.text = text_;
+    box_.x = 100.f;
+    box_.y = 400.f;
+    box_.width = 600.f;
+    box_.height = 150.f;
 }
 
 void DialogueState::Update(float dt)
 {
     MenuContext nav = navInput_.poll(input_);
-    if (nav.confirm)
+
+    if (nav.confirm || nav.cancel)
     {
-        stateMachine_.Pop();
-        events_.Push(DialogueFinished{});
+        events_.Push(DialogueFinished{}); // tell InteractionManager this interaction is over, so it can re-arm
+        stateMachine_.Pop();              // single-line dialogue: any acknowledge dismisses it
+        return;
     }
 }
 
 void DialogueState::Render(RenderSystem &renderSystem, float dt)
 {
-    box_->render(renderSystem);
+    UISystem::Render(box_, renderSystem, UIFont::GetShared(fontPath_));
 }

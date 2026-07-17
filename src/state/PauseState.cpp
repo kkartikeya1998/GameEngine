@@ -7,8 +7,6 @@
 #include "ui/UISystem.h"
 #include "state/MenuInput.h"
 
-sf::Font PauseState::s_font_;
-
 // Resumes gameplay by popping this state — OnResume() fires on GameplayState below
 class ResumeCommand : public ICommand<PauseActionContext>
 {
@@ -30,27 +28,11 @@ public:
 };
 
 PauseState::PauseState(InputManager &input,
-                       StateMachine<IGameState> &stateMachine)
-    : input_(input), stateMachine_(stateMachine), font_(s_font_)
+                       StateMachine<IGameState> &stateMachine,
+                       std::filesystem::path fontPath)
+    : input_(input), stateMachine_(stateMachine)
 {
-    // std::cout << "[PauseState] Created\n";
-
-    // Lazy initialization: load once on first construction
-    static bool s_loaded = false;
-    if (!s_loaded)
-    {
-        if (!s_font_.openFromFile(Assets::Fonts::PIXFAY))
-        {
-            std::cerr << "[PauseState] Failed to load font: "
-                      << Assets::Fonts::PIXFAY << "\n";
-        }
-        else
-        {
-            s_loaded = true;
-            // std::cout << "[PauseState] Font loaded: "
-            //           << Assets::Fonts::PIXFAY << "\n";
-        }
-    }
+    fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
 
     MenuInput::BindDefaults(navInput_); // Up/Down/Enter
     MenuInput::BindBackKey(navInput_, Key::Escape);
@@ -93,5 +75,5 @@ void PauseState::Render(RenderSystem &renderSystem, float dt)
         sf::Color(0, 0, 0, 150),
         /*screenSpace=*/true); // fullscreen dim, drawn beneath the panel
 
-    UISystem::Render(panel_, renderSystem, font_); // panel backdrop + options, replaces old hardcoded box/text
+    UISystem::Render(panel_, renderSystem, UIFont::GetShared(fontPath_)); // panel backdrop + options, replaces old hardcoded box/text
 }
