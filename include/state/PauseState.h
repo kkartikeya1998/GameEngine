@@ -31,6 +31,8 @@ public:
                StateMachine<IGameState> &stateMachine,
                std::filesystem::path fontPath = {});
 
+    void OnEnter() override;
+    void OnExit() override;
     void Update(float dt) override;
     void Render(RenderSystem &renderSystem, float dt) override;
 

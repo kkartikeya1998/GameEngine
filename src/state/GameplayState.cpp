@@ -35,6 +35,7 @@ GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMa
 
 void GameplayState::OnEnter()
 {
+    LOG_INFO("Entering GameplayState");
     // Map/player load happens on entering gameplay, not at app boot.
     controller_ = std::make_unique<GameController>(1, 600, 600, assets_, events_);
 
@@ -50,6 +51,7 @@ void GameplayState::OnEnter()
 
 void GameplayState::OnExit()
 {
+    LOG_INFO("Exiting GameplayState");
     // [TODO] Proper cleanup or save of world state, player state, etc.
     controller_.reset();
 }

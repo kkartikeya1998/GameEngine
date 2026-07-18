@@ -1,5 +1,6 @@
 #include "world/MapLoader.h"
 #include "world/Map.h"
+#include "log/Logger.h"
 #include "entities/npc/TileRestrictionComponent.h"
 #include "entities/pokemon/WildPokemon.h"
 #include "system/GameConstants.h"
@@ -55,6 +56,7 @@ void MapLoader::loadMetadata()
 
 void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
 {
+    LOG_INFO("Loading map ID: " + std::to_string(mapId));
     std::string mapPath;
 
     for (const auto &meta : maps_metadata_)
@@ -67,8 +69,12 @@ void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
     }
 
     if (mapPath.empty())
+    {
+        LOG_ERROR("Map ID " + std::to_string(mapId) + " not found in metadata");
         throw std::runtime_error("Map not found");
+    }
 
+    LOG_DEBUG("Loading map file: " + mapPath);
     std::ifstream file(mapPath);
 
     json j;
@@ -76,6 +82,7 @@ void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
 
     int width = j["width"];
     int height = j["height"];
+    LOG_INFO("Map loaded: " + mapPath + " (" + std::to_string(width) + "x" + std::to_string(height) + ")");
     map = Map(width, height);
 
     const auto &tiles_json = j["tiles"];

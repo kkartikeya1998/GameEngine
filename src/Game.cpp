@@ -26,7 +26,7 @@ void Game::Update(float dt)
     states_.Update(dt);
     events_.Drain([this](auto &&e) { // [TODO] NEEDS FIXING/ delegation
         using T = std::decay_t<decltype(e)>;
-        LOG_FATAL(std::string("Draining event: ") + typeid(T).name());
+        LOG_TRACE(std::string("Draining event: ") + typeid(T).name());
         if constexpr (std::is_same_v<T, ItemConsumed>)
         {
             if (Registry *reg = states_.FindFirst([](IGameState *s)
@@ -65,6 +65,7 @@ void Game::Render()
 
 void Game::Run()
 {
+    LOG_INFO("Engine startup complete. Entering main loop.");
     try
     {
         while (renderSystem_->isOpen())
@@ -90,6 +91,7 @@ void Game::Run()
     }
     catch (const std::exception &e)
     {
-        std::cout << "Error: " << e.what() << "\n";
+        LOG_FATAL(std::string("Unhandled exception in main loop: ") + e.what());
     }
+    LOG_INFO("Engine shutting down.");
 }

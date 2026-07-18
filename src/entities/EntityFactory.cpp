@@ -13,9 +13,13 @@ namespace EntityFactory
     void populate(Registry &registry, const AssetDatabase &db, EntityID id,
                   const std::string &archetypeId, float x, float y, RenderLayer layer)
     {
+        LOG_DEBUG("Populating entity " + std::to_string(id.index) + " with archetype: " + archetypeId);
         const ArchetypeDefinition *archetype = db.findArchetype(archetypeId);
         if (!archetype)
+        {
+            LOG_ERROR("EntityFactory: unknown archetype: " + archetypeId);
             throw std::runtime_error("EntityFactory: unknown archetype: " + archetypeId);
+        }
 
         registry.add<PositionComponent>(id, x, y);
 

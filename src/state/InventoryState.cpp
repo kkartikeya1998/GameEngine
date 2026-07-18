@@ -5,6 +5,7 @@
 #include "ui/UISystem.h"
 #include "state/MenuInput.h"
 #include "events/Events.h"
+#include "log/Logger.h"
 
 class UseItemCommand : public ICommand<InventoryActionContext>
 {
@@ -66,11 +67,13 @@ InventoryState::InventoryState(InputManager &input,
 
 void InventoryState::OnEnter()
 {
+    LOG_INFO("Entering InventoryState");
     RefreshOptions();
 }
 
 void InventoryState::OnExit()
 {
+    LOG_INFO("Exiting InventoryState");
     if (openFlag_)
         *openFlag_ = false;
 }

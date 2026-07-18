@@ -1,4 +1,5 @@
 #include "render/SFMLRenderer.h"
+#include "log/Logger.h"
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
 
@@ -11,6 +12,7 @@ SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight)
         sf::VideoMode(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT), 32),
         "Pokemon Game");
     window_->setFramerateLimit(GameConstants::FRAME_RATE);
+    LOG_INFO("SFML Renderer initialized: " + std::to_string(WINDOW_WIDTH) + "x" + std::to_string(WINDOW_HEIGHT));
 }
 
 SFMLRenderer::~SFMLRenderer() = default;
@@ -45,8 +47,12 @@ const sf::Texture &SFMLRenderer::getOrLoadTexture(const std::string &path)
 
     auto tex = std::make_unique<sf::Texture>();
     if (!tex->loadFromFile(path))
+    {
+        LOG_ERROR("Failed to load texture: " + path);
         throw std::runtime_error("Failed to load texture: " + path);
+    }
 
+    LOG_DEBUG("Loaded texture: " + path);
     auto [inserted, _] = textureCache_.emplace(path, std::move(tex));
     return *inserted->second;
 }

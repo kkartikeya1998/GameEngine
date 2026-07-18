@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "state/PauseState.h"
+#include "log/Logger.h"
 #include "state/StateMachine.h"
 #include "input/InputManager.h"
 #include "asset/AsssetPaths.h"
@@ -26,6 +27,16 @@ public:
         ctx.input.RequestQuit();
     }
 };
+
+void PauseState::OnEnter()
+{
+    LOG_INFO("Entering PauseState");
+}
+
+void PauseState::OnExit()
+{
+    LOG_INFO("Exiting PauseState");
+}
 
 PauseState::PauseState(InputManager &input,
                        StateMachine<IGameState> &stateMachine,

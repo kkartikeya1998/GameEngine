@@ -3,7 +3,18 @@
 #include "asset/AsssetPaths.h"
 #include "ui/UISystem.h"
 #include "state/MenuInput.h"
+#include "log/Logger.h"
 #include <iostream>
+
+void DialogueState::OnEnter()
+{
+    LOG_INFO("Entering DialogueState: " + text_);
+}
+
+void DialogueState::OnExit()
+{
+    LOG_INFO("Exiting DialogueState");
+}
 
 DialogueState::DialogueState(InputManager &input, StateMachine<IGameState> &stateMachine, EventQueue &events,
                              std::string text, std::filesystem::path fontPath)

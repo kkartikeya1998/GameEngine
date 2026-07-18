@@ -16,6 +16,8 @@ class DialogueState : public IGameState
 public:
     DialogueState(InputManager &input, StateMachine<IGameState> &stateMachine, EventQueue &events,
                   std::string text, std::filesystem::path fontPath = {});
+    void OnEnter() override;
+    void OnExit() override;
     void Update(float dt) override;
     void Render(RenderSystem &renderSystem, float dt) override;
     bool BlocksRenderBelow() const override { return false; }
