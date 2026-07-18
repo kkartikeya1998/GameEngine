@@ -23,6 +23,9 @@ namespace Assets
     inline const std::filesystem::path FONTS =
         ROOT / "fonts";
 
+    inline const std::filesystem::path ITEMS =
+        ROOT / "items";
+
     namespace Maps
     {
         inline const std::filesystem::path TILESET_METADATA =
@@ -37,8 +40,15 @@ namespace Assets
         inline const std::filesystem::path CHARACTERS_METADATA =
             CHARACTERS / "characters_metadatav2.json";
 
-        inline const std::filesystem::path SPECIES_METADATA = 
+        inline const std::filesystem::path SPECIES_METADATA =
             CHARACTERS / "species_metadatav2.json";
+
+    }
+
+    namespace Items
+    {
+        inline const std::filesystem::path ITEM_METADATA =
+            ITEMS / "item_metadatav2.json";
     }
 
     namespace Objects

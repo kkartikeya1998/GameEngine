@@ -67,7 +67,8 @@ void GameplayState::Update(float dt)
     if (input_.WasKeyPressed(Key::I))
     {
         stateMachine_.Push(std::make_unique<InventoryState>(
-            input_, stateMachine_, controller_->getWorld()->registry(), controller_->getPlayer(), events_));
+            input_, stateMachine_, controller_->getWorld()->registry(), controller_->getPlayer(),
+            events_, assets_));
         return; // don't also process movement the frame we open inventory
     }
 

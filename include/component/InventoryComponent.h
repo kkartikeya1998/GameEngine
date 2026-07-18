@@ -3,14 +3,14 @@
 #include <vector>
 #include "entities/Component.h"
 
-// One stack of a single item type — id for lookup, name for display, quantity to track count
+// One stack of a single item type. No displayName — resolved from
+// ItemMetadata via itemId at query/display time, so renaming an item
+// in JSON doesn't require touching every inventory that holds it.
 struct ItemStack {
     std::string itemId;
-    std::string displayName;
     int quantity = 0;
 };
 
-// Player-carried items — pure data, mutated by inventory action commands
 struct InventoryComponent : public Component {
     std::vector<ItemStack> items;
 };

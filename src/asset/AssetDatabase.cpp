@@ -36,6 +36,8 @@ AssetDatabase::AssetDatabase()
 
     loadFile(Assets::Maps::OBJECT_METADATA, jsonSource);
     loadFile(Assets::Maps::TILESET_METADATA, jsonSource);
+    loadFile(Assets::Items::ITEM_METADATA, jsonSource);
+
     loadFile(Assets::Characters::CHARACTERS_METADATA, jsonSource);
     loadFile(Assets::Characters::SPECIES_METADATA, jsonSource);
 
@@ -79,6 +81,11 @@ void AssetDatabase::loadFile(const std::filesystem::path &path, const IMetadataS
         {
             accumulate(interactionSection_, components["Interaction"]);
         }
+
+        if (components.contains("Item"))
+        {
+            accumulate(itemSection_, components["Item"]);
+        }
     }
 
     if (root.contains("archetypes"))
@@ -93,4 +100,5 @@ void AssetDatabase::finalize()
     animationRepo_ = std::make_unique<ComponentAssetRepository<AnimationAssetMetadata>>(animationSection_);
     pmdAnimationRepo_ = std::make_unique<ComponentAssetRepository<PmdAnimationSetMetadata>>(pmdAnimationSection_);
     interactionRepo_ = std::make_unique<ComponentAssetRepository<InteractionAssetMetadata>>(interactionSection_);
+    itemRepo_ = std::make_unique<ComponentAssetRepository<ItemMetadata>>(itemSection_);
 }

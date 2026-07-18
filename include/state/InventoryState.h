@@ -7,13 +7,17 @@
 #include "entities/Registry.h"
 #include "component/InventoryComponent.h"
 #include "events/EventQueue.h"
+#include "asset/AssetDatabase.h"
 
 #include <string>
 
 class InputManager;
 
-struct InventoryActionContext {
+struct InventoryActionContext
+{
     InventoryComponent *inventory;
+    const AssetDatabase &assets;
+    EntityID player;
     StateMachine<IGameState> &stateMachine;
     EventQueue &events;
 };
@@ -26,8 +30,9 @@ public:
                    Registry &registry,
                    EntityID player,
                    EventQueue &events,
+                   AssetDatabase &assets,
                    bool *openFlag = nullptr,
-                   std::filesystem::path fontPath = {}); //override per state if ever needed
+                   std::filesystem::path fontPath = {}); // override per state if ever needed
 
     void OnEnter() override;
     void OnExit() override;
@@ -42,6 +47,8 @@ private:
     Registry &registry_;
     EntityID player_;
     EventQueue &events_;
+    AssetDatabase &assets_;
+
     bool *openFlag_;
 
     KeyBindings<MenuContext> navInput_;

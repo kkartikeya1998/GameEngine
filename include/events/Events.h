@@ -7,18 +7,20 @@ struct PlayerJumped { sf::Vector2f position; };
 struct InventoryOpened {};
 struct GamePaused {};
 struct GameResumed {};
-struct ItemConsumed{};
 struct InteractionRequested { EntityID actor; EntityID target; std::string interactionId; };
 struct DialogueFinished {};
 struct BattleFinished {};
+struct ItemConsumed { EntityID owner; std::string itemId; };
+struct ItemPickedUp { EntityID owner; std::string itemId; int quantity; };
 
 using GameEvent = std::variant<
     PlayerJumped,
     InventoryOpened,
     GamePaused,
     GameResumed,
-    ItemConsumed,
     InteractionRequested,
     DialogueFinished,
-    BattleFinished
+    BattleFinished,
+    ItemConsumed,
+    ItemPickedUp
 >;

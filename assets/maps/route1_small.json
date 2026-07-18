@@ -61,6 +61,6 @@
     { "type": "SS_Object_BlueBanner", "origin": { "x": 635, "y": 870 } }
   ],
   "wild_pokemon": [
-    { "speciesId": 1, "level_min": 3, "level_max": 5, "origin": { "x": 320, "y": 480 } }
+    { "speciesId": 1, "level_min": 3, "level_max": 5, "origin": { "x": 320, "y": 480 }, "giftInteraction": "route1_wild_gift" }
   ]
 }

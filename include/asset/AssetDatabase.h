@@ -9,6 +9,7 @@
 #include "asset/metadata/PmdAnimationSetMetadata.h"
 #include "asset/metadata/ArchetypeDefinition.h"
 #include "asset/metadata/InteractionAssetMetadata.h"
+#include "asset/metadata/ItemMetadata.h"
 
 class AssetDatabase
 {
@@ -26,6 +27,7 @@ public:
     const ArchetypeDefinition *findArchetype(const std::string &id) const { return archetypeRepo_->find(id); }
     const PmdAnimationSetMetadata *findPmdAnimationSet(const std::string &id) const { return pmdAnimationRepo_->find(id); }
     const InteractionAssetMetadata *findInteraction(const std::string &id) const { return interactionRepo_->find(id); }
+    const ItemMetadata* findItem(const std::string& id) const { return itemRepo_->find(id); }
 
 private:
     nlohmann::json archetypeSection_ = nlohmann::json::object();
@@ -34,6 +36,7 @@ private:
     nlohmann::json animationSection_ = nlohmann::json::object();
     nlohmann::json pmdAnimationSection_ = nlohmann::json::object();
     nlohmann::json interactionSection_ = nlohmann::json::object();
+    nlohmann::json itemSection_ = nlohmann::json::object();
 
     std::unique_ptr<ComponentAssetRepository<ArchetypeDefinition>> archetypeRepo_;
     std::unique_ptr<ComponentAssetRepository<RenderAssetMetadata>> renderRepo_;
@@ -41,4 +44,5 @@ private:
     std::unique_ptr<ComponentAssetRepository<AnimationAssetMetadata>> animationRepo_;
     std::unique_ptr<ComponentAssetRepository<PmdAnimationSetMetadata>> pmdAnimationRepo_;
     std::unique_ptr<ComponentAssetRepository<InteractionAssetMetadata>> interactionRepo_;
+    std::unique_ptr<ComponentAssetRepository<ItemMetadata>> itemRepo_;
 };

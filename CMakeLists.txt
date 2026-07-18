@@ -37,6 +37,8 @@ add_executable(PokemonProject
     src/system/GameController.cpp
     src/system/CameraSystem.cpp
     src/system/CollisionSystem.cpp
+    src/system/InventorySystem.cpp
+    src/system/ItemPickupSystem.cpp
 
     src/input/InputManager.cpp
 
@@ -57,6 +59,7 @@ add_executable(PokemonProject
     src/asset/metadata/AnimationAssetMetadata.cpp
     src/asset/metadata/InteractionAssetMetadata.cpp
     src/asset/metadata/ArchetypeDefinition.cpp
+    src/asset/metadata/ItemMetadata.cpp
     src/asset/source/JsonMetadataSource.cpp
 
     src/log/Logger.cpp

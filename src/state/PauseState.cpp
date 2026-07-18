@@ -34,7 +34,7 @@ PauseState::PauseState(InputManager &input,
 {
     fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
 
-    MenuInput::BindDefaults(navInput_); // Up/Down/Enter
+    MenuInput::BindDefaults(navInput_);
     MenuInput::BindBackKey(navInput_, Key::Escape);
 
     const float boxWidth = 600.f;

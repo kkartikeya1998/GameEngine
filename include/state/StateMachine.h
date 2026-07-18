@@ -41,6 +41,11 @@ public:
         ApplyPendingOperations();
     }
 
+    State *Top() const
+    {
+        return states_.empty() ? nullptr : states_.back().get();
+    }
+
     void Render(RenderSystem &renderSystem, float dt)
     {
         std::vector<State *> toRender;
@@ -73,6 +78,17 @@ public:
         }
 
         renderSystem.endFrame();
+    }
+
+    template <typename Getter>
+    auto FindFirst(Getter &&getter) const -> decltype(getter(std::declval<State *>()))
+    {
+        for (auto it = states_.rbegin(); it != states_.rend(); ++it)
+        {
+            if (auto result = getter(it->get()))
+                return result;
+        }
+        return decltype(getter(std::declval<State *>())){};
     }
 
     bool Empty() const

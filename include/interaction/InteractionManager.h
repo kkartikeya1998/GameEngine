@@ -8,6 +8,7 @@
 #include "events/Events.h"
 #include "input/InputManager.h"
 #include "ui/UIFont.h"
+#include "log/Logger.h"
 
 class InteractionManager
 {
@@ -20,11 +21,13 @@ public:
         if (active_)
             return; // ignore re-triggers mid-interaction
         active_ = assets_.findInteraction(e.interactionId);
+        LOG_FATAL("findInteraction(" + e.interactionId + ") -> " + (active_ ? "FOUND, steps=" + std::to_string(active_->steps.size()) : "NULLPTR"));
         if (!active_ || active_->steps.empty())
         {
             active_ = nullptr;
             return;
         }
+        actor_ = e.actor;
         stepIndex_ = 0;
         RunStep(active_->steps[stepIndex_]);
     }
@@ -71,6 +74,7 @@ private:
 
     void RunStep(const InteractionStepData &step)
     {
+        LOG_FATAL("RunStep type=" + std::to_string(static_cast<int>(step.type)) + " stepIndex=" + std::to_string(stepIndex_));
         switch (step.type)
         {
         case InteractionStepType::Dialogue:
@@ -91,6 +95,10 @@ private:
         case InteractionStepType::Wait:
             waitTimer_ = 0.f;
             break;
+        case InteractionStepType::GrantItem:
+            events_.Push(ItemPickedUp{actor_, step.itemId, step.quantity});
+            Advance();
+            break;
         }
     }
 
@@ -98,7 +106,9 @@ private:
     StateMachine<IGameState> &stateMachine_;
     InputManager &input_;
     EventQueue &events_;
+    EntityID actor_{};
     const InteractionAssetMetadata *active_ = nullptr;
+
     std::size_t stepIndex_ = 0;
     float waitTimer_ = 0.f;
     bool waitingOnState_ = false;

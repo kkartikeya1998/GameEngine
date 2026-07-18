@@ -5,6 +5,8 @@
 #include "system/GameConstants.h"
 #include "entities/EntityFactory.h"
 #include "asset/AsssetPaths.h"
+#include "component/WorldItemComponent.h"
+#include "component/InteractableComponent.h"
 
 #include <cmath>
 #include <cstdlib>
@@ -146,7 +148,36 @@ void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
                 for (const auto &t : entry["allowedTiles"])
                     allowedTiles.insert(TileCoord{t["x"].get<int>(), t["y"].get<int>()});
 
-            makeWildPokemon(registry, speciesId, level, originX, originY, assets_, std::move(allowedTiles));
+            EntityID wildId = makeWildPokemon(registry, speciesId, level, originX, originY, assets_, std::move(allowedTiles));
+
+            // Per-instance override: replaces whatever InteractableComponent the
+            // archetype set, so only THIS map entry triggers the gift interaction —
+            // other species_1 spawns elsewhere keep the archetype default.
+            if (entry.contains("giftInteraction"))
+                registry.add<InteractableComponent>(wildId, entry["giftInteraction"].get<std::string>());
+        }
+    }
+
+    if (j.contains("item_pickups"))
+    {
+        for (const auto &entry : j["item_pickups"])
+        {
+            std::string archetype = entry["archetype"]; // visuals/collision only
+            std::string itemId = entry["itemId"];
+            int quantity = entry.value("quantity", 1);
+            float originX = entry["origin"]["x"];
+            float originY = entry["origin"]["y"];
+
+            EntityID id = registry.create();
+            try
+            {
+                EntityFactory::populate(registry, assets_, id, archetype, originX, originY, RenderLayer::Characters);
+                registry.add<WorldItemComponent>(id, itemId, quantity);
+            }
+            catch (const std::runtime_error &)
+            {
+                registry.destroy(id);
+            }
         }
     }
 }

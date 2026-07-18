@@ -4,6 +4,7 @@
 #include "render/SFMLRenderer.h"
 #include "state/GameplayState.h"
 #include "system/GameConstants.h"
+#include "system/InventorySystem.h"
 #include "log/Logger.h"
 
 Game::Game()
@@ -23,25 +24,37 @@ Game::Game()
 void Game::Update(float dt)
 {
     states_.Update(dt);
-    events_.Drain([this](auto &&e)
-                  {
-       using T = std::decay_t<decltype(e)>;
-       if constexpr (std::is_same_v<T, ItemConsumed>)
-       {
-           std::cout << "Item consumed\n";
-       }
-       else if constexpr (std::is_same_v<T, InteractionRequested>)
-       {
-           interactions_.HandleRequested(e);
-       }
-       else if constexpr (std::is_same_v<T, DialogueFinished>)
-       {
-           interactions_.HandleDialogueFinished(e);
-       }
-       else if constexpr (std::is_same_v<T, BattleFinished>)
-       {
-           interactions_.HandleBattleFinished(e);
-       } });
+    events_.Drain([this](auto &&e) { // [TODO] NEEDS FIXING/ delegation
+        using T = std::decay_t<decltype(e)>;
+        LOG_FATAL(std::string("Draining event: ") + typeid(T).name());
+        if constexpr (std::is_same_v<T, ItemConsumed>)
+        {
+            if (Registry *reg = states_.FindFirst([](IGameState *s)
+                                                  { return s->GetRegistry(); }))
+                InventorySystem::handleItemConsumed(*reg, e);
+        }
+        else if constexpr (std::is_same_v<T, InteractionRequested>)
+        {
+            interactions_.HandleRequested(e);
+        }
+        else if constexpr (std::is_same_v<T, DialogueFinished>)
+        {
+            interactions_.HandleDialogueFinished(e);
+        }
+        else if constexpr (std::is_same_v<T, BattleFinished>)
+        {
+            interactions_.HandleBattleFinished(e);
+        }
+        else if constexpr (std::is_same_v<T, ItemPickedUp>)
+        {
+            if (Registry *reg = states_.FindFirst([](IGameState *s)
+                                                  { return s->GetRegistry(); }))
+            {
+                if (auto *inv = reg->get<InventoryComponent>(e.owner))
+                    InventorySystem::addItem(*inv, assets_, e.itemId, e.quantity);
+            }
+        }
+    });
     interactions_.Update(dt); // new
 }
 

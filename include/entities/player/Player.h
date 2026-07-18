@@ -10,6 +10,7 @@
 #include "component/WalkCycleTimer.h"
 #include "component/RenderComponent.h"
 #include "component/PlayerControlComponent.h"
+#include "component/InventoryComponent.h"
 #include "system/GameConstants.h"
 #include "entities/EntityFactory.h"
 #include "asset/AsssetPaths.h"
@@ -33,6 +34,7 @@ inline EntityID makePlayer(
     registry.add<FreeMovementComponent>(id, movement_speed, sprintMultiplier);
     registry.add<MovementStateComponent>(id);
     registry.add<WalkCycleTimer>(id, walkCyclesPerSecond);
+    registry.add<InventoryComponent>(id);
     registry.add<PlayerControlComponent>(id);
 
     // std::cout << "Created player: " << id.index << " " << id.generation << std::endl;

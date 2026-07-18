@@ -17,7 +17,6 @@ namespace MenuInput
         bindings.bind(escapeKey, std::make_shared<CancelCommand>(), TriggerMode::Press);
     }
 
-    // Adds one more key that means "back" — call once per key a state wants to accept
     inline void BindBackKey(KeyBindings<MenuContext> &bindings, Key backKey)
     {
         bindings.bind(backKey, std::make_shared<CancelCommand>(), TriggerMode::Press);

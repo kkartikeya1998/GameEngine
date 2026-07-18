@@ -4,6 +4,7 @@
 #include "asset/AsssetPaths.h"
 #include "ui/UISystem.h"
 #include "state/MenuInput.h"
+#include "events/Events.h"
 
 class UseItemCommand : public ICommand<InventoryActionContext>
 {
@@ -17,11 +18,12 @@ public:
         if (itemIndex_ < 0 || itemIndex_ >= static_cast<int>(items.size()))
             return;
 
+        std::string consumedId = items[itemIndex_].itemId;
         items[itemIndex_].quantity -= 1;
         if (items[itemIndex_].quantity <= 0)
             items.erase(items.begin() + itemIndex_);
 
-        ctx.events.Push(ItemConsumed{});
+        ctx.events.Push(ItemConsumed{ctx.player, consumedId});
     }
 
 private:
@@ -34,7 +36,6 @@ public:
     void execute(InventoryActionContext &ctx) const override
     {
         ctx.stateMachine.Pop();
-        ctx.events.Push(ItemConsumed{}); // [TODO] : Remove. For testing purposes. Should show on selecting close, but not pressing I again
     }
 };
 
@@ -43,10 +44,11 @@ InventoryState::InventoryState(InputManager &input,
                                Registry &registry,
                                EntityID player,
                                EventQueue &events,
+                               AssetDatabase &assets,
                                bool *openFlag,
                                std::filesystem::path fontPath)
     : input_(input), stateMachine_(stateMachine), registry_(registry), player_(player),
-      events_(events), openFlag_(openFlag)
+      events_(events), assets_(assets), openFlag_(openFlag)
 {
 
     fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
@@ -82,8 +84,10 @@ void InventoryState::RefreshOptions()
         for (int i = 0; i < static_cast<int>(inv->items.size()); ++i)
         {
             const auto &stack = inv->items[i];
+            const auto *meta = assets_.findItem(stack.itemId); // ASSUMPTION: mirrors findRender/findInteraction naming — confirm against AssetDatabase.h
+            std::string label = meta ? meta->name : stack.itemId;
             panel_.options.push_back(
-                {stack.displayName + " x" + std::to_string(stack.quantity),
+                {label + " x" + std::to_string(stack.quantity),
                  std::make_shared<UseItemCommand>(i)});
         }
     }
@@ -100,7 +104,7 @@ void InventoryState::Update(float dt)
     if (UISystem::HandleDefaultBack(nav, stateMachine_))
         return; // OnExit() fires here, clearing openFlag_
 
-    InventoryActionContext actionCtx{registry_.get<InventoryComponent>(player_), stateMachine_, events_};
+    InventoryActionContext actionCtx{registry_.get<InventoryComponent>(player_), assets_, player_, stateMachine_, events_};
     UISystem::HandleNavigation(panel_, nav, actionCtx);
 
     if (nav.confirm)

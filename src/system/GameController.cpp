@@ -6,8 +6,10 @@
 #include "system/CollisionSystem.h"
 #include "system/AnimationSystem.h"
 #include "system/InteractionSystem.h"
+#include "system/ItemPickupSystem.h"
 #include "entities/npc/CreatureAISystem.h"
 #include "entities/npc/WanderAIComponent.h"
+#include "component/WorldItemComponent.h"
 #include "component/PositionComponent.h"
 #include "component/FreeMovementComponent.h"
 #include "component/CollisionComponent.h"
@@ -32,8 +34,9 @@ void GameController::update(float dt, const PlayerControlComponent &input)
     // post-move position, giving the player effective movement priority.
     MovementSystem::update(world_.registry(), playerId_, world_.getActiveMap(), dt, [this](const AABB &box)
                            { return isPositionBlockedFor(playerId_, box); }, &input);
+    // checkItemPickups();
     InteractionSystem::Update(world_.registry(), playerId_, events_, input);
-    
+
     auto *walkCycle = world_.registry().get<WalkCycleTimer>(playerId_);
     auto *movementState = world_.registry().get<MovementStateComponent>(playerId_);
     if (walkCycle && movementState)
@@ -59,4 +62,27 @@ void GameController::changeMap(int mapId, float newX, float newY)
 {
     world_.loadMap(mapId);
     playerId_ = makePlayer(world_.registry(), assets_, newX, newY);
+}
+
+void GameController::checkItemPickups()
+{
+    auto *playerPos = world_.registry().get<PositionComponent>(playerId_);
+    if (!playerPos)
+        return;
+    auto *playerCol = world_.registry().get<CollisionComponent>(playerId_);
+    AABB playerBox = playerCol ? playerCol->resolve(playerPos->x, playerPos->y)
+                               : AABB{playerPos->x, playerPos->y, 0.f, 0.f};
+
+    for (EntityID id : world_.registry().view<WorldItemComponent, PositionComponent>())
+    {
+        auto *itemPos = world_.registry().get<PositionComponent>(id);
+        auto *itemCol = world_.registry().get<CollisionComponent>(id);
+        AABB itemBox = itemCol ? itemCol->resolve(itemPos->x, itemPos->y)
+                               : AABB{itemPos->x, itemPos->y, GameConstants::TILE_SIZE, GameConstants::TILE_SIZE};
+
+        bool overlap = playerBox.x < itemBox.x + itemBox.width && playerBox.x + playerBox.width > itemBox.x &&
+                       playerBox.y < itemBox.y + itemBox.height && playerBox.y + playerBox.height > itemBox.y;
+        if (overlap)
+            ItemPickupSystem::pickup(world_.registry(), assets_, events_, playerId_, id);
+    }
 }

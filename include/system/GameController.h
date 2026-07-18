@@ -31,4 +31,6 @@ private:
     World world_;
     EntityID playerId_;
     bool isPositionBlockedFor(EntityID id, const AABB &box);
+    void checkItemPickups();
+
 };

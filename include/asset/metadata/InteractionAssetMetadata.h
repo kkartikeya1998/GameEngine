@@ -4,7 +4,7 @@
 #include "asset/metadata/AssetMetadataName.h"
 #include "external/json.hpp"
 
-enum class InteractionStepType { Dialogue, Animation, Battle, Wait };
+enum class InteractionStepType { Dialogue, Animation, Battle, Wait, GrantItem };
 
 struct InteractionStepData {
     InteractionStepType type;
@@ -13,6 +13,8 @@ struct InteractionStepData {
     std::string targetEntity; // Animation: "self" or an entity tag
     std::string trainerId;    // Battle
     float waitSeconds = 0.f;  // Wait
+    std::string itemId;       // GrantItem
+    int quantity = 1;         // GrantItem
 };
 
 struct InteractionAssetMetadata : public AssetMetadataName {

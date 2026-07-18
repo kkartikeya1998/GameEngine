@@ -119,6 +119,23 @@
       }
     },
     "Interaction": {
+      "route1_wild_gift": {
+        "steps": [
+          {
+            "type": "dialogue",
+            "text": "Meow?"
+          },
+          {
+            "type": "grant_item",
+            "itemId": "potion",
+            "quantity": 1
+          },
+          {
+            "type": "dialogue",
+            "text": "The wild Pokemon dropped something!"
+          }
+        ]
+      },
       "oak_intro": {
         "steps": [
           {
@@ -149,8 +166,7 @@
     "species_1": {
       "render": "species_1",
       "pmdAnimation": "species_1",
-      "collision": "species_1",
-      "interaction": "cat_meow"
+      "collision": "species_1"
     },
     "species_4": {
       "render": "species_4",
