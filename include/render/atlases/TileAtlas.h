@@ -11,7 +11,12 @@ public:
               const ComponentAssetRepository<RenderAssetMetadata>& renderRepository);
 
     const sf::Texture& getTileTexture() const { return texture(); }
-    SpriteRegion getTileSprite(const std::string& typeName) const;
+
+    // Recoverable: an unresolvable typeName is content data (a bad map
+    // tile id), not an engine invariant, and this is called once per
+    // visible tile every frame — see RenderSystem::submitTile for how a
+    // miss is handled (skip drawing that tile, log once).
+    Result<SpriteRegion, AssetError> getTileSprite(const std::string& typeName) const;
 
 private:
     const ComponentAssetRepository<RenderAssetMetadata>& renderRepository_;

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <unordered_map>
-#include <iostream>
 #include "asset/repositories/IAssetRepository.h"
 #include "external/json.hpp"
 
@@ -21,8 +20,6 @@ public:
     const TMetadata* find(const std::string& id) const
     {
         auto it = metadata_.find(id);
-        // std::cout << "Trying to find: " << id << " [";
-        // std::cout << (it == metadata_.end() ? "x": "o") << "]\n";
         return it == metadata_.end() ? nullptr : &it->second;
     }
 

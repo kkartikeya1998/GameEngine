@@ -15,7 +15,6 @@
 #include "entities/EntityFactory.h"
 #include "asset/AsssetPaths.h"
 #include "asset/AssetDatabase.h"
-#include <iostream>
 
 inline EntityID makePlayer(
     Registry &registry,
@@ -37,6 +36,5 @@ inline EntityID makePlayer(
     registry.add<InventoryComponent>(id);
     registry.add<PlayerControlComponent>(id);
 
-    // std::cout << "Created player: " << id.index << " " << id.generation << std::endl;
     return id;
 }

@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "system/GameController.h"
 #include "system/GameConstants.h"
 #include "system/MovementSystem.h"

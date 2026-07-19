@@ -1,8 +1,6 @@
-#include "asset/repositories/TileRepository.h"
-
 #include <fstream>
-#include <iostream>
 
+#include "asset/repositories/TileRepository.h"
 #include "external/json.hpp"
 #include "asset/metadata/MetadataParser.h"
 #include "system/GameConstants.h"
@@ -22,8 +20,8 @@ void TileRepository::load_from_file(
 
     if (!file)
     {
-        std::cerr << "Failed to open tile metadata file: "
-                  << path << '\n';
+        // std::cerr << "Failed to open tile metadata file: "
+        //           << path << '\n';
         return;
     }
 

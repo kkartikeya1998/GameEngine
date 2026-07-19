@@ -1,8 +1,8 @@
 #include "asset/source/JsonMetadataSource.h"
 #include "asset/AssetDatabase.h"
 #include "asset/AsssetPaths.h"
+#include "exceptions/EngineExceptions.h"
 #include "log/Logger.h"
-#include <stdexcept>
 
 namespace
 {
@@ -20,12 +20,15 @@ namespace
         }
     }
 
+    // Startup-only: every id here comes from mandatory engine content, so a
+    // duplicate is a broken build, not something a single lookup can route
+    // around later. Fatal, same as any other startup load failure.
     void accumulate(nlohmann::json &dest, const nlohmann::json &src)
     {
         for (auto it = src.begin(); it != src.end(); ++it)
         {
             if (dest.contains(it.key()))
-                throw std::runtime_error("AssetDatabase: duplicate asset id: " + it.key());
+                throw AssetLoadException("AssetDatabase: duplicate asset id: " + it.key());
             dest[it.key()] = it.value();
         }
     }
@@ -49,7 +52,19 @@ AssetDatabase::AssetDatabase()
 void AssetDatabase::loadFile(const std::filesystem::path &path, const IMetadataSource &source)
 {
     LOG_DEBUG(std::format("Loading metadata file: {}", path.string()));
-    nlohmann::json root = source.load(path);
+
+    // Every file loaded through this path (see the ctor above) is
+    // mandatory startup content, so a Result::Err here becomes a thrown
+    // AssetLoadException right at this boundary. IMetadataSource itself
+    // stays exception-free by design — this is the one call site that
+    // decides "for me, a miss is fatal." A future runtime metadata reload
+    // (mod support, hot-reload) would call source.load() directly and
+    // handle the Result without throwing.
+    Result<nlohmann::json, AssetError> loaded = source.load(path);
+    if (!loaded)
+        throw AssetLoadException("AssetDatabase: " + loaded.error().toString());
+
+    nlohmann::json root = std::move(loaded.value());
     nlohmann::json defaults = root.value("defaults", nlohmann::json::object());
 
     if (root.contains("components"))

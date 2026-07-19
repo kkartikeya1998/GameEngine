@@ -1,9 +1,8 @@
 #pragma once
 #include <SFML/Graphics/Font.hpp>
 #include <unordered_map>
+#include "log/Logger.h"
 #include <filesystem>
-#include <iostream>
-
 // Lazily loads and caches fonts by path
 
 namespace UIFont
@@ -17,7 +16,7 @@ namespace UIFont
 
         auto [it, inserted] = cache.emplace(path, sf::Font{});
         if (!it->second.openFromFile(path))
-            std::cerr << "[UIFont] Failed to load font: " << path << "\n";
+            LOG_WARNING("Failed to load font: " + path.string());
 
         return it->second;
     }

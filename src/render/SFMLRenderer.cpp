@@ -1,7 +1,8 @@
 #include "render/SFMLRenderer.h"
+#include "exceptions/EngineExceptions.h"
 #include "log/Logger.h"
 #include <SFML/Graphics.hpp>
-#include <stdexcept>
+#include <format>
 
 SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight)
 {
@@ -11,6 +12,18 @@ SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight)
     window_ = std::make_unique<sf::RenderWindow>(
         sf::VideoMode(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT), 32),
         "Pokemon Game");
+
+    if (!window_->isOpen())
+    {
+        // Unrecoverable: no display, driver failure, headless environment,
+        // etc. — there's nothing sensible to render into. Thrown with full
+        // context in the message and NOT logged here too; this propagates
+        // through Game's constructor to main()'s single top-level
+        // boundary, which logs it once (see main.cpp) rather than twice.
+        throw RendererInitException(
+            std::format("SFMLRenderer: failed to create window ({}x{})", WINDOW_WIDTH, WINDOW_HEIGHT));
+    }
+
     window_->setFramerateLimit(GameConstants::FRAME_RATE);
     LOG_INFO(std::format("SFML Renderer initialized: {}x{}", WINDOW_WIDTH, WINDOW_HEIGHT));
 }
@@ -39,6 +52,29 @@ bool SFMLRenderer::isOpen() const
     return window_ && window_->isOpen();
 }
 
+std::unique_ptr<sf::Texture> SFMLRenderer::buildMissingTexture()
+{
+    // The traditional magenta/black "missing texture" checkerboard —
+    // visible enough in-game to get noticed and reported, without taking
+    // the frame down over one bad asset reference.
+    constexpr unsigned kSize = 32;
+    sf::Image image({kSize, kSize}, sf::Color::Black);
+    for (unsigned y = 0; y < kSize; ++y)
+        for (unsigned x = 0; x < kSize; ++x)
+            if (((x / 8) + (y / 8)) % 2 == 0)
+                image.setPixel({x, y}, sf::Color::Magenta);
+
+    auto tex = std::make_unique<sf::Texture>();
+    if (!tex->loadFromImage(image))
+    {
+        // If even a procedurally-generated in-memory texture fails to
+        // load, the graphics context itself is broken — that's no longer
+        // a content problem, it's a renderer failure.
+        throw RendererInitException("SFMLRenderer: failed to create fallback placeholder texture");
+    }
+    return tex;
+}
+
 const sf::Texture &SFMLRenderer::getOrLoadTexture(const std::string &path)
 {
     auto it = textureCache_.find(path);
@@ -48,8 +84,22 @@ const sf::Texture &SFMLRenderer::getOrLoadTexture(const std::string &path)
     auto tex = std::make_unique<sf::Texture>();
     if (!tex->loadFromFile(path))
     {
-        LOG_ERROR(std::format("Failed to load texture: {}", path));
-        throw std::runtime_error("Failed to load texture: " + path);
+        // Recoverable: a bad/missing texture path is content data, not an
+        // engine invariant. Log once per unique path (see warnedMissingTextures_
+        // on why), then draw a placeholder instead of throwing — a wrong-
+        // looking sprite is far better than losing the whole session over
+        // one bad reference.
+        if (warnedMissingTextures_.insert(path).second)
+            LOG_ERROR(std::format("Failed to load texture: {} — using placeholder", path));
+
+        if (!missingTexture_)
+            missingTexture_ = buildMissingTexture();
+
+        // Cache under the requested path too, so repeated draws of the
+        // same broken reference hit the cache instead of retrying the
+        // failed disk read on every single call.
+        auto [inserted, _] = textureCache_.emplace(path, std::make_unique<sf::Texture>(*missingTexture_));
+        return *inserted->second;
     }
 
     LOG_DEBUG(std::format("Loaded texture: {}", path));

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <iostream>
 
 #include <SFML/Graphics.hpp>
 
@@ -46,7 +45,5 @@ struct RenderComponent : public Component
         float z = 0.f)
 
         : name(std::move(name)), assetId(this->name), texturePath(std::move(texturePath)), textureRect(textureRect), sourceTileSize(sourceTileSize), renderX(renderX), renderY(renderY), layer(layer), renderScale(renderScale), z(z)
-    {
-        // std::cout << "Creating render component: " << this->name << " " << this->assetId << std::endl;
-    }
+    {}
 };

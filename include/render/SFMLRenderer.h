@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <filesystem>
 #include <SFML/Graphics/Color.hpp>
@@ -23,6 +24,13 @@ namespace sf
 // Knows nothing about repositories or atlases; every RenderComponent it
 // receives already carries a resolved texturePath/textureRect. Its only
 // job is turning that into an sf::Sprite and drawing it.
+//
+// Error-handling contract: window/context creation is unrecoverable and
+// throws RendererInitException (exceptions/EngineExceptions.h) — see the ctor.
+// A missing/unloadable *texture* at draw time is a recoverable, content-
+// level failure: it never throws, it draws a placeholder instead (see
+// getOrLoadTexture). Other IRenderer implementations should follow the
+// same split.
 // ---------------------------------------------------------------------------
 class SFMLRenderer : public IRenderer
 {
@@ -52,4 +60,15 @@ private:
     // Textures cached by path so repeated entities sharing a sheet load it once
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textureCache_;
     const sf::Texture &getOrLoadTexture(const std::string &path);
+
+    // Fallback for a texture path that fails to load. Built lazily, once,
+    // on first miss — most sessions never need it.
+    std::unique_ptr<sf::Texture> missingTexture_;
+    std::unique_ptr<sf::Texture> buildMissingTexture();
+
+    // A broken texture path can be referenced by something drawn every
+    // frame (a tile, a common sprite). Without this, that's an ERROR log
+    // line at 60fps for as long as the map is loaded. Log once per unique
+    // path instead.
+    std::unordered_set<std::string> warnedMissingTextures_;
 };

@@ -9,6 +9,8 @@
 #include <filesystem>
 
 #include "system/GameConstants.h"
+#include "exceptions/Result.h"
+#include "asset/AssetError.h"
 
 // ---------------------------------------------------------------------------
 // SpriteRegion — a sub-rectangle within a texture, plus its size for
@@ -34,19 +36,34 @@ public:
 
 protected:
     void loadRegion(const std::string& name, int x, int y, int w, int h);
+
+    // NOTE: unlike regionFromRepository below, findRegion still throws on a
+    // miss. Nothing in the files I've seen (TileAtlas uses
+    // regionFromRepository instead) calls findRegion/loadRegion — they may
+    // be dead code left over from before the ComponentAssetRepository
+    // refactor. Left as-is rather than guessing a Result-based signature
+    // that could silently change behavior for a caller I can't see — flag
+    // whether this is still live and I'll bring it in line.
     const SpriteRegion& findRegion(const std::string& name) const;
 
     // Shared lookup-and-build logic for single-texture, repository-backed
     // atlases. Repository must expose: const Metadata* find(const KeyT&) const
     // Metadata must expose: sf::IntRect textureRect
+    //
+    // Returns Result rather than throwing: this is reachable from
+    // TileAtlas::getTileSprite, which RenderSystem::submitTile calls once
+    // per visible tile, every frame. A single unresolvable name here is
+    // recoverable content data, not grounds to take the whole frame (and
+    // via the old uncaught-throw path, the whole session) down.
     template <typename Repository, typename KeyT>
-    SpriteRegion regionFromRepository(const Repository& repo,
+    Result<SpriteRegion, AssetError> regionFromRepository(const Repository& repo,
                                        const KeyT& key,
                                        const std::string& notFoundLabel) const
     {
         const auto* meta = repo.find(key);
         if (!meta) {
-            throw std::runtime_error("No metadata found for: " + notFoundLabel);
+            return Result<SpriteRegion, AssetError>::Err(
+                AssetError{AssetErrorCode::UnknownId, notFoundLabel, "no render metadata found for this key"});
         }
 
         SpriteRegion region;
@@ -56,8 +73,8 @@ protected:
             static_cast<float>(meta->RenderData.textureRect.size.y)
         );
         region.sourceTileSize = meta->RenderData.sourceTileSize;
-        
-        return region;
+
+        return Result<SpriteRegion, AssetError>::Ok(std::move(region));
     }
 
 private:

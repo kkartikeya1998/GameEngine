@@ -1,5 +1,4 @@
 #include "render/atlases/TileAtlas.h"
-#include <stdexcept>
 
 TileAtlas::TileAtlas(const std::filesystem::path& spritesheet_path,
                       const ComponentAssetRepository<RenderAssetMetadata>& renderRepository)
@@ -8,7 +7,7 @@ TileAtlas::TileAtlas(const std::filesystem::path& spritesheet_path,
 {
 }
 
-SpriteRegion TileAtlas::getTileSprite(const std::string& typeName) const
+Result<SpriteRegion, AssetError> TileAtlas::getTileSprite(const std::string& typeName) const
 {
     return regionFromRepository(renderRepository_, typeName, typeName);
 }

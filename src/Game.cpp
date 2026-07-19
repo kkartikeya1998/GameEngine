@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "Game.h"
 #include "render/SFMLRenderer.h"
 #include "state/GameplayState.h"
@@ -32,6 +30,8 @@ void Game::Update(float dt)
             if (Registry *reg = states_.FindFirst([](IGameState *s)
                                                   { return s->GetRegistry(); }))
                 InventorySystem::handleItemConsumed(*reg, e);
+            else
+                LOG_WARNING("Game: ItemConsumed drained but no active state has a Registry — event dropped");
         }
         else if constexpr (std::is_same_v<T, InteractionRequested>)
         {
@@ -52,6 +52,12 @@ void Game::Update(float dt)
             {
                 if (auto *inv = reg->get<InventoryComponent>(e.owner))
                     InventorySystem::addItem(*inv, assets_, e.itemId, e.quantity);
+                else
+                    LOG_WARNING(std::format("Game: ItemPickedUp for entity {} with no InventoryComponent — item dropped", e.owner.index));
+            }
+            else
+            {
+                LOG_WARNING("Game: ItemPickedUp drained but no active state has a Registry — event dropped");
             }
         }
     });
@@ -65,33 +71,35 @@ void Game::Render()
 
 void Game::Run()
 {
+    // No try/catch here by design: everything this loop can throw is an
+    // EngineException-derived, unrecoverable failure (see
+    // exceptions/EngineExceptions.h) — asset/renderer init already happened
+    // successfully by the time we're here, so what's left to propagate is
+    // things like a corrupted map file mid-transition. Those belong at the
+    // single top-level boundary in main.cpp, which logs once and exits
+    // with a non-zero code. Catching and logging here too would let Run()
+    // return normally after a fatal error, so main() would report success
+    // (exit code 0) on a crash — see main.cpp.
     LOG_INFO("Engine startup complete. Entering main loop.");
-    try
+    while (renderSystem_->isOpen())
     {
-        while (renderSystem_->isOpen())
+        lastDt_ = gameClock_.restart().asSeconds();
+
+        // first check for qindow close events before polling input, so we don't miss a quit request
+        while (auto event = renderSystem_->pollEvent())
         {
-            lastDt_ = gameClock_.restart().asSeconds();
-
-            // first check for qindow close events before polling input, so we don't miss a quit request
-            while (auto event = renderSystem_->pollEvent())
-            {
-                input_.ProcessEvent(*event);
-            }
-
-            if (input_.ShouldQuit())
-            {
-                return;
-            }
-
-            input_.PollEvents();
-
-            Update(lastDt_);
-            Render();
+            input_.ProcessEvent(*event);
         }
-    }
-    catch (const std::exception &e)
-    {
-        LOG_FATAL(std::string("Unhandled exception in main loop: ") + e.what());
+
+        if (input_.ShouldQuit())
+        {
+            break; // fall through to the shutdown log below, instead of returning past it
+        }
+
+        input_.PollEvents();
+
+        Update(lastDt_);
+        Render();
     }
     LOG_INFO("Engine shutting down.");
 }

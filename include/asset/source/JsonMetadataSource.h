@@ -3,5 +3,5 @@
 
 class JsonMetadataSource : public IMetadataSource {
 public:
-    nlohmann::json load(const std::filesystem::path& path) const override;
+    Result<nlohmann::json, AssetError> load(const std::filesystem::path &path) const override;
 };

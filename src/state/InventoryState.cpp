@@ -1,4 +1,3 @@
-#include <iostream>
 #include "state/InventoryState.h"
 #include "input/InputManager.h"
 #include "asset/AsssetPaths.h"

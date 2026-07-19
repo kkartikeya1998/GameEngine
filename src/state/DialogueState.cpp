@@ -4,7 +4,6 @@
 #include "ui/UISystem.h"
 #include "state/MenuInput.h"
 #include "log/Logger.h"
-#include <iostream>
 
 void DialogueState::OnEnter()
 {

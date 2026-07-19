@@ -1,7 +1,9 @@
 #include "render/RenderSystem.h"
 #include "system/GameConstants.h"
+#include "exceptions/Assert.h"
+#include "log/Logger.h"
 #include <algorithm>
-#include <iostream>
+#include <format>
 
 RenderSystem::RenderSystem(std::unique_ptr<IRenderer> renderer,
                            const ComponentAssetRepository<RenderAssetMetadata> &renderRepository,
@@ -10,8 +12,14 @@ RenderSystem::RenderSystem(std::unique_ptr<IRenderer> renderer,
     , tileAtlas_(tileSpritesheetPath, renderRepository)
     , tileTexturePath_(tileSpritesheetPath.string())
 {
-    if (!renderer_)
-        throw std::invalid_argument("RenderSystem: renderer cannot be null");
+    // A null renderer here means the one call site that constructs
+    // RenderSystem (Game.cpp) was changed to pass something other than a
+    // freshly-made_unique concrete renderer — a wiring/logic bug, not a
+    // condition that can arise from bad data or a bad frame at runtime.
+    // That's an assertion, not an exception (exceptions/Assert.h): it fails
+    // loudly and immediately in every build rather than surfacing later
+    // as a null-deref somewhere in endFrame().
+    ENGINE_ASSERT_MSG(renderer_ != nullptr, "RenderSystem constructed with a null renderer");
 }
 
 void RenderSystem::beginFrame(const Camera &camera)
@@ -63,7 +71,17 @@ void RenderSystem::submitRect(RenderLayer layer, float z, float x, float y,
 void RenderSystem::submitTile(int gridX, int gridY,
                               const RenderComponent &tileRender)
 {
-    SpriteRegion region = tileAtlas_.getTileSprite(tileRender.name);
+    Result<SpriteRegion, AssetError> result = tileAtlas_.getTileSprite(tileRender.name);
+    if (!result)
+    {
+        // Recoverable: skip drawing this one tile rather than crashing the
+        // frame. Dedup by name — see warnedMissingTiles_ in RenderSystem.h.
+        if (warnedMissingTiles_.insert(tileRender.name).second)
+            LOG_ERROR(std::format("RenderSystem: {} — skipping tile draw", result.error().toString()));
+        return;
+    }
+
+    const SpriteRegion &region = result.value();
 
     RenderComponent resolved = tileRender;
     resolved.texturePath = tileTexturePath_;
@@ -83,8 +101,6 @@ void RenderSystem::submitText(RenderLayer layer, float z,
                               sf::Color color,
                               bool screenSpace)
 {
-
-    // std::cout << "[RenderSystem] submitText entered.\n";
     queue_.push_back(Renderable{
         layer,
         z,
@@ -100,12 +116,10 @@ void RenderSystem::submitText(RenderLayer layer, float z,
             renderer_->drawText(sfText);
         }});
 
-    // std::cout << "[RenderSystem] submitText exiting...\n";
 }
 
 void RenderSystem::endFrame()
 {
-    // std::cout << "[RenderSystem] endFrame entered.\n";
     renderer_->clear();
 
     // Sort by layer/z
@@ -143,7 +157,6 @@ void RenderSystem::endFrame()
     }
 
     renderer_->present();
-    // std::cout << "[RenderSystem] endFrame exiting.\n";
 }
 
 bool RenderSystem::isOpen() const

@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "state/PauseState.h"
 #include "log/Logger.h"
 #include "state/StateMachine.h"

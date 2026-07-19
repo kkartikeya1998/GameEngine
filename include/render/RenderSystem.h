@@ -4,6 +4,7 @@
 #include <optional>
 #include <functional>
 #include <vector>
+#include <unordered_set>
 #include <SFML/Window/Event.hpp>
 
 #include "render/IRenderer.h"
@@ -46,6 +47,8 @@ public:
 
     // Resolves a tile's texture rect via the atlas and submits it.
     // Kept here (not GameplayState) since it needs tileAtlas_/tileTexturePath_.
+    // If the tile's name doesn't resolve in the atlas, the tile is skipped
+    // (not drawn) and logged once — see RenderSystem.cpp.
     void submitTile(int gridX, int gridY, const RenderComponent &tileRender);
 
     void submitText(RenderLayer layer, float z,
@@ -77,4 +80,10 @@ private:
     Camera currentCamera_;
     std::vector<Renderable> queue_;
     std::vector<Renderable> debugQueue_; // rects drawn after the sorted pass
+
+    // A tile name that fails to resolve in the atlas is likely drawn every
+    // frame (it's part of the current map) — dedup so that's one ERROR log
+    // line, not one per frame. Same rationale as SFMLRenderer's
+    // warnedMissingTextures_.
+    std::unordered_set<std::string> warnedMissingTiles_;
 };

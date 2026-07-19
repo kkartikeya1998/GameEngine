@@ -19,6 +19,18 @@ enum class RenderAnchor
 // The renderer doesn't know or care about World, Player, or GameController.
 // It only knows how to draw a fully-resolved RenderComponent and debug
 // primitives. Name/texture resolution happens upstream in RenderSystem.
+//
+// Error-handling contract for implementers (see SFMLRenderer for the
+// reference implementation):
+//   - Failure to acquire a graphics context/window is unrecoverable and
+//     should be signaled by throwing from the constructor (a
+//     RendererInitException, exceptions/EngineExceptions.h) — never from
+//     drawEntity() or any per-frame method.
+//   - A RenderComponent that references a resource which fails to resolve
+//     at draw time (bad texture path, etc.) is a recoverable, content-level
+//     condition. drawEntity() must not throw for this — degrade visibly
+//     (e.g. a placeholder sprite) and log at most once per unique failing
+//     reference, not once per frame.
 // ---------------------------------------------------------------------------
 class IRenderer
 {

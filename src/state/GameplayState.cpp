@@ -114,7 +114,6 @@ void GameplayState::Render(RenderSystem &renderSystem, float dt)
     // order here, so iteration order doesn't matter.
     for (EntityID id : registry.view<RenderComponent, PositionComponent>())
     {
-        // std::cout << "[GameplayState] Entity in (render, position) view:" << id.index << " " << id.generation << "\n";
         const auto *entRender = registry.get<RenderComponent>(id);
         const auto *entPos = registry.get<PositionComponent>(id);
 
@@ -134,7 +133,6 @@ void GameplayState::Render(RenderSystem &renderSystem, float dt)
         resolved.renderX = entPos->x;
         resolved.renderY = entPos->y;
 
-        // std::cout << "Submitting :" << resolved.name << "\n";
         renderSystem.submit(resolved.layer, z, resolved, RenderAnchor::CenterBottom);
     }
 }
