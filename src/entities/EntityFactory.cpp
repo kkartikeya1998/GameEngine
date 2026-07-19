@@ -13,11 +13,11 @@ namespace EntityFactory
     void populate(Registry &registry, const AssetDatabase &db, EntityID id,
                   const std::string &archetypeId, float x, float y, RenderLayer layer)
     {
-        LOG_DEBUG("Populating entity " + std::to_string(id.index) + " with archetype: " + archetypeId);
+        LOG_DEBUG(std::format("Populating entity {} with archetype: {}", id.index, archetypeId));
         const ArchetypeDefinition *archetype = db.findArchetype(archetypeId);
         if (!archetype)
         {
-            LOG_ERROR("EntityFactory: unknown archetype: " + archetypeId);
+            LOG_ERROR(std::format("EntityFactory: unknown archetype: {}", archetypeId));
             throw std::runtime_error("EntityFactory: unknown archetype: " + archetypeId);
         }
 

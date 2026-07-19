@@ -7,7 +7,8 @@
 class FileSink : public ILogSink {
 public:
     explicit FileSink(const std::filesystem::path& path);
-    void Write(LogLevel level, std::string_view formattedLine) override;
+    void Write(const LogRecord& record) override;
+    void Flush() override;
 
 private:
     std::ofstream file_;

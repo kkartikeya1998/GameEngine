@@ -3,5 +3,6 @@
 
 class ConsoleSink : public ILogSink {
 public:
-    void Write(LogLevel level, std::string_view formattedLine) override;
+    void Write(const LogRecord& record) override;
+    void Flush() override;
 };

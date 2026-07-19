@@ -21,7 +21,7 @@ public:
         if (active_)
             return; // ignore re-triggers mid-interaction
         active_ = assets_.findInteraction(e.interactionId);
-        LOG_FATAL("findInteraction(" + e.interactionId + ") -> " + (active_ ? "FOUND, steps=" + std::to_string(active_->steps.size()) : "NULLPTR"));
+        LOG_TRACE("findInteraction(" + e.interactionId + ") -> " + (active_ ? "FOUND, steps=" + std::to_string(active_->steps.size()) : "NULLPTR"));
         if (!active_ || active_->steps.empty())
         {
             active_ = nullptr;
@@ -74,7 +74,7 @@ private:
 
     void RunStep(const InteractionStepData &step)
     {
-        LOG_FATAL("RunStep type=" + std::to_string(static_cast<int>(step.type)) + " stepIndex=" + std::to_string(stepIndex_));
+        LOG_TRACE("RunStep type=" + std::to_string(static_cast<int>(step.type)) + " stepIndex=" + std::to_string(stepIndex_));
         switch (step.type)
         {
         case InteractionStepType::Dialogue:

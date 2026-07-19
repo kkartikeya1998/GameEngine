@@ -56,7 +56,7 @@ void MapLoader::loadMetadata()
 
 void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
 {
-    LOG_INFO("Loading map ID: " + std::to_string(mapId));
+    LOG_INFO(std::format("Loading map ID: {}", mapId));
     std::string mapPath;
 
     for (const auto &meta : maps_metadata_)
@@ -70,11 +70,11 @@ void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
 
     if (mapPath.empty())
     {
-        LOG_ERROR("Map ID " + std::to_string(mapId) + " not found in metadata");
+        LOG_ERROR(std::format("Map ID {} not found in metadata", mapId));
         throw std::runtime_error("Map not found");
     }
 
-    LOG_DEBUG("Loading map file: " + mapPath);
+    LOG_DEBUG(std::format("Loading map file: {}", mapPath));
     std::ifstream file(mapPath);
 
     json j;
@@ -82,7 +82,7 @@ void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
 
     int width = j["width"];
     int height = j["height"];
-    LOG_INFO("Map loaded: " + mapPath + " (" + std::to_string(width) + "x" + std::to_string(height) + ")");
+    LOG_INFO(std::format("Map loaded: {} ({}x{})", mapPath, width, height));
     map = Map(width, height);
 
     const auto &tiles_json = j["tiles"];

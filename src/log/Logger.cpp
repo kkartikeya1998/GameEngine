@@ -1,7 +1,5 @@
 #include "log/Logger.h"
 
-#include <cstring>
-
 LogLevel Logger::minLevel_ =
 #ifdef ENGINE_DEBUG
     LogLevel::Trace;
@@ -10,44 +8,40 @@ LogLevel Logger::minLevel_ =
 #endif
 
 std::vector<std::unique_ptr<ILogSink>> Logger::sinks_;
-
-namespace {
-    const char* LevelName(LogLevel level) {
-        switch (level) {
-            case LogLevel::Trace:   return "TRACE";
-            case LogLevel::Debug:   return "DEBUG";
-            case LogLevel::Info:    return "INFO";
-            case LogLevel::Warning: return "WARN";
-            case LogLevel::Error:   return "ERROR";
-            case LogLevel::Fatal:   return "FATAL";
-        }
-        return "?";
-    }
-
-    const char* FileName(const char* path) {
-        const char* slash = std::strrchr(path, '/');
-        const char* backslash = std::strrchr(path, '\\');
-        const char* last = (slash > backslash) ? slash : backslash;
-        return last ? last + 1 : path;
-    }
-}
+std::mutex Logger::mutex_;
 
 void Logger::SetLevel(LogLevel level) {
+    std::lock_guard<std::mutex> lock(mutex_);
     minLevel_ = level;
 }
 
 void Logger::AddSink(std::unique_ptr<ILogSink> sink) {
+    std::lock_guard<std::mutex> lock(mutex_);
     sinks_.push_back(std::move(sink));
 }
 
-void Logger::Log(LogLevel level, const char* file, int line, const char* func, std::string_view message) {
-    if (level < minLevel_) return;
+void Logger::Log(LogLevel level, std::string_view message, std::source_location location) {
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (level < minLevel_) return;
+    }
 
-    std::string formatted = std::string("[") + LevelName(level) + "] " +
-                             FileName(file) + ":" + std::to_string(line) +
-                             " (" + func + ") - " + std::string(message);
+    LogRecord record {
+        .level = level,
+        .message = message,
+        .location = location,
+        .timestamp = std::chrono::system_clock::now()
+    };
 
+    std::lock_guard<std::mutex> lock(mutex_);
     for (auto& sink : sinks_) {
-        sink->Write(level, formatted);
+        sink->Write(record);
+    }
+}
+
+void Logger::Flush() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    for (auto& sink : sinks_) {
+        sink->Flush();
     }
 }

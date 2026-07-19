@@ -1,14 +1,23 @@
 #pragma once
 
-#include <string_view>
-#include "log/LogLevel.h"
+#include "log/LogRecord.h"
 
-// ---------------------------------------------------------------------------
-// ILogSink — output target for formatted log lines. Logger owns a list of
-// these and writes every accepted line to all of them.
-// ---------------------------------------------------------------------------
+/**
+ * @brief ILogSink — output target for log records.
+ * Logger owns a list of these and writes every accepted record to all of them.
+ */
 class ILogSink {
 public:
     virtual ~ILogSink() = default;
-    virtual void Write(LogLevel level, std::string_view formattedLine) = 0;
+
+    /**
+     * @brief Writes a log record to the sink.
+     * @param record The log record containing level, message, and metadata.
+     */
+    virtual void Write(const LogRecord& record) = 0;
+
+    /**
+     * @brief Flushes any buffered output in the sink.
+     */
+    virtual void Flush() {}
 };

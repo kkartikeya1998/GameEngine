@@ -6,7 +6,7 @@
 int InventorySystem::addItem(InventoryComponent& inv, const AssetDatabase& assets,
                              const std::string& itemId, int quantity)
 {
-    LOG_FATAL("Attempting to add item: " + itemId);
+    LOG_INFO("Attempting to add item: " + itemId);
     const ItemMetadata* meta = assets.findItem(itemId);
     int maxStack = meta ? meta->maxStack : 99;
 
@@ -28,6 +28,7 @@ int InventorySystem::addItem(InventoryComponent& inv, const AssetDatabase& asset
 
 int InventorySystem::removeItem(InventoryComponent& inv, const std::string& itemId, int quantity) {
     int removed = 0;
+    LOG_INFO("Attempting to remove item: " + itemId + ", quantity: " + std::to_string(quantity));
     for (auto it = inv.items.begin(); it != inv.items.end() && quantity > 0; ) {
         if (it->itemId != itemId) { ++it; continue; }
         int take = std::min(it->quantity, quantity);

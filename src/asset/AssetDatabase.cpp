@@ -33,7 +33,7 @@ namespace
 
 AssetDatabase::AssetDatabase()
 {
-    LOG_INFO("Initializing Asset Database");
+    LOG_INFO("Initializing Asset Database...");
     JsonMetadataSource jsonSource;
 
     loadFile(Assets::Maps::OBJECT_METADATA, jsonSource);
@@ -48,7 +48,7 @@ AssetDatabase::AssetDatabase()
 
 void AssetDatabase::loadFile(const std::filesystem::path &path, const IMetadataSource &source)
 {
-    LOG_DEBUG("Loading metadata file: " + path.string());
+    LOG_DEBUG(std::format("Loading metadata file: {}", path.string()));
     nlohmann::json root = source.load(path);
     nlohmann::json defaults = root.value("defaults", nlohmann::json::object());
 
@@ -97,7 +97,7 @@ void AssetDatabase::loadFile(const std::filesystem::path &path, const IMetadataS
 
 void AssetDatabase::finalize()
 {
-    LOG_INFO("Finalizing Asset Database repositories");
+    LOG_INFO("Finalizing Asset Database repositories...");
     archetypeRepo_ = std::make_unique<ComponentAssetRepository<ArchetypeDefinition>>(archetypeSection_);
     renderRepo_ = std::make_unique<ComponentAssetRepository<RenderAssetMetadata>>(renderSection_);
     collisionRepo_ = std::make_unique<ComponentAssetRepository<CollisionAssetMetadata>>(collisionSection_);
