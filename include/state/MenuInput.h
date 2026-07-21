@@ -1,6 +1,6 @@
 #pragma once
 #include "input/KeyBindings.h"
-#include "ui/MenuContext.h"
+#include "ui/MenuCommands.h"
 
 // Shared key-binding recipes for menu-driven states — keeps Up/Down/Select/Back
 // wiring in one place instead of copy-pasted into every state constructor.

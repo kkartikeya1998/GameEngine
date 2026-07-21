@@ -27,7 +27,7 @@ public:
     const ArchetypeDefinition *findArchetype(const std::string &id) const { return archetypeRepo_->find(id); }
     const PmdAnimationSetMetadata *findPmdAnimationSet(const std::string &id) const { return pmdAnimationRepo_->find(id); }
     const InteractionAssetMetadata *findInteraction(const std::string &id) const { return interactionRepo_->find(id); }
-    const ItemMetadata* findItem(const std::string& id) const { return itemRepo_->find(id); }
+    const ItemMetadata *findItem(const std::string &id) const { return itemRepo_->find(id); }
 
 private:
     nlohmann::json archetypeSection_ = nlohmann::json::object();

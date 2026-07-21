@@ -8,39 +8,44 @@
 
 // One clip (Walk, Attack, Idle...) within a PMD-style sprite set.
 // Row = direction (fixed order, see PmdDirectionOrder.h), column = frame.
-struct PmdClipMetadata {
+struct PmdClipMetadata
+{
+    std::string entity;
     std::string texturePath;
     int frameWidth = 0;
     int frameHeight = 0;
-    int frameCount = 0;                 // columns; same across all direction rows
-    std::vector<float> frameDurations;  // seconds, size == frameCount
+    int frameCount = 0;                // columns; same across all direction rows
+    std::vector<float> frameDurations; // seconds, size == frameCount
     bool loop = true;
 
-    sf::IntRect frameRect(int directionRow, int frameIndex) const {
+    sf::IntRect frameRect(int directionRow, int frameIndex) const
+    {
         return sf::IntRect{
             {frameIndex * frameWidth, directionRow * frameHeight},
-            {frameWidth, frameHeight}
-        };
+            {frameWidth, frameHeight}};
     }
 
-    static PmdClipMetadata fromJson(const nlohmann::json& j) {
+    static PmdClipMetadata fromJson(const nlohmann::json &j)
+    {
         PmdClipMetadata clip;
         clip.texturePath = j.at("texturePath").get<std::string>();
         clip.frameWidth = j.at("frameWidth").get<int>();
         clip.frameHeight = j.at("frameHeight").get<int>();
         clip.frameCount = j.at("frameCount").get<int>();
         clip.loop = j.value("loop", true);
-        for (const auto& d : j.at("frameDurations"))
-            clip.frameDurations.push_back(d.get<float>());
+        for (const auto &d : j.at("frameDurations"))
+            clip.frameDurations.push_back(d.get<float>() / 60.f);
         return clip;
     }
 };
 
 // One per creature/character: id -> its available named clips.
-struct PmdAnimationSetMetadata : public AssetMetadataName {
+struct PmdAnimationSetMetadata : public AssetMetadataName
+{
     std::unordered_map<std::string, PmdClipMetadata> clips;
 
-    static PmdAnimationSetMetadata fromJson(const std::string& id, const nlohmann::json& entry) {
+    static PmdAnimationSetMetadata fromJson(const std::string &id, const nlohmann::json &entry)
+    {
         PmdAnimationSetMetadata set;
         set.name = id;
         for (auto it = entry.begin(); it != entry.end(); ++it)
@@ -48,3 +53,41 @@ struct PmdAnimationSetMetadata : public AssetMetadataName {
         return set;
     }
 };
+
+#include <ostream>
+#include <sstream>
+
+inline std::ostream &operator<<(std::ostream &os, const PmdClipMetadata &clip)
+{
+    os << "{ entity=" << clip.entity
+       << ", texturePath=" << clip.texturePath
+       << ", frameWidth=" << clip.frameWidth
+       << ", frameHeight=" << clip.frameHeight
+       << ", frameCount=" << clip.frameCount
+       << ", frameDurations=[";
+    for (std::size_t i = 0; i < clip.frameDurations.size(); ++i)
+    {
+        if (i != 0)
+            os << ", ";
+        os << clip.frameDurations[i];
+    }
+    os << "]"
+       << ", loop=" << (clip.loop ? "true" : "false")
+       << " }";
+    return os;
+}
+
+inline std::ostream &operator<<(std::ostream &os, const PmdAnimationSetMetadata &set)
+{
+    os << "{ name=" << set.name << ", clips={";
+    bool first = true;
+    for (const auto &[clipName, clip] : set.clips)
+    {
+        if (!first)
+            os << ", ";
+        first = false;
+        os << clipName << ": " << clip;
+    }
+    os << "} }";
+    return os;
+}

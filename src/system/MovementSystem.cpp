@@ -1,5 +1,6 @@
 #include "system/MovementSystem.h"
 #include "system/GameConstants.h"
+#include <algorithm>
 
 namespace MovementSystem
 {
@@ -8,6 +9,8 @@ namespace MovementSystem
                 const std::function<bool(const AABB &)> &isBlocked,
                 const PlayerControlComponent *input)
     {
+        dt = std::min(dt, kMaxFrameDt);
+
         auto *position = registry.get<PositionComponent>(id);
         auto *velocity = registry.get<VelocityComponent>(id);
         auto *direction = registry.get<DirectionComponent>(id);
@@ -22,7 +25,7 @@ namespace MovementSystem
         {
             auto *movement = registry.get<FreeMovementComponent>(id);
             if (!movement)
-                return; // input-driven entities must have this
+                return;
 
             sprintRequested = input->sprinting;
             float effectiveSpeed = movement->speed * (sprintRequested ? movement->sprintMultiplier : 1.f);
@@ -51,9 +54,8 @@ namespace MovementSystem
             if (input->direction != Direction::NONE)
                 direction->facing = input->direction;
         }
-        // else: velocity and facing were already set upstream (CreatureAISystem).
 
-        auto *collision = registry.get<CollisionComponent>(id); // optional — species_1 has none
+        auto *collision = registry.get<CollisionComponent>(id);
         bool moved = false;
 
         if (velocity->vx != 0.f)
@@ -61,13 +63,13 @@ namespace MovementSystem
             float dx = velocity->vx * dt;
             AABB testX = collision ? collision->resolve(position->x + dx, position->y)
                                    : AABB{position->x + dx, position->y, 0.f, 0.f};
-            if (!isBlocked(testX) && mapBoundsCheck(map, testX))
+            if (!isBlocked(testX) && mapBoundsCheck(map, testX) && map.isWalkable(testX))
             {
                 position->x += dx;
                 moved = true;
             }
             else if (input)
-                velocity->vx = 0.f; // AI path recomputes vx next frame regardless
+                velocity->vx = 0.f;
         }
 
         if (velocity->vy != 0.f)
@@ -75,7 +77,7 @@ namespace MovementSystem
             float dy = velocity->vy * dt;
             AABB testY = collision ? collision->resolve(position->x, position->y + dy)
                                    : AABB{position->x, position->y + dy, 0.f, 0.f};
-            if (!isBlocked(testY) && mapBoundsCheck(map, testY))
+            if (!isBlocked(testY) && mapBoundsCheck(map, testY) && map.isWalkable(testY))
             {
                 position->y += dy;
                 moved = true;
@@ -84,8 +86,11 @@ namespace MovementSystem
                 velocity->vy = 0.f;
         }
 
-        state->current = !moved ? MovementState::Idle
-                                : (sprintRequested ? MovementState::Sprinting : MovementState::Walking);
+        if (input)
+        {
+            state->current = !moved ? MovementState::Idle
+                                    : (sprintRequested ? MovementState::Sprinting : MovementState::Walking);
+        }
     }
 
     bool mapBoundsCheck(const Map &map, const AABB &aabb)

@@ -1,6 +1,6 @@
 #pragma once
 #include "ui/Panel.h"
-#include "ui/MenuContext.h"
+#include "ui/MenuCommands.h"
 #include "ui/DialogueBoxData.h"
 #include "ui/UIFont.h"
 #include "render/RenderSystem.h"

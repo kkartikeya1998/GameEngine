@@ -8,9 +8,7 @@
 RenderSystem::RenderSystem(std::unique_ptr<IRenderer> renderer,
                            const ComponentAssetRepository<RenderAssetMetadata> &renderRepository,
                            const std::filesystem::path &tileSpritesheetPath)
-    : renderer_(std::move(renderer))
-    , tileAtlas_(tileSpritesheetPath, renderRepository)
-    , tileTexturePath_(tileSpritesheetPath.string())
+    : renderer_(std::move(renderer)), tileAtlas_(tileSpritesheetPath, renderRepository), tileTexturePath_(tileSpritesheetPath.string())
 {
     // A null renderer here means the one call site that constructs
     // RenderSystem (Game.cpp) was changed to pass something other than a
@@ -29,132 +27,92 @@ void RenderSystem::beginFrame(const Camera &camera)
     debugQueue_.clear();
 }
 
-void RenderSystem::submit(RenderLayer layer, float z,
-                          RenderComponent render, RenderAnchor anchor)
+void RenderSystem::submit(RenderLayer layer, float z, ResolvedSprite sprite, RenderAnchor anchor)
 {
-    queue_.push_back(Renderable{
-        layer,
-        z,
-        false,
-        [this, render, anchor]()
-        {
-            renderer_->drawEntity(render, anchor);
-        }});
+    queue_.push_back(Renderable{layer, z, false, SpriteDraw{std::move(sprite), anchor}});
 }
 
 void RenderSystem::submitDebugRect(float x, float y, float width, float height)
 {
-    debugQueue_.push_back(Renderable{
-        RenderLayer::ScreenOverlay,
-        0.f,
-        false,
-        [this, x, y, width, height]()
-        {
-            renderer_->drawDebugRect(x, y, width, height);
-        }});
+    debugQueue_.push_back(DebugRectDraw{x, y, width, height});
 }
 
 void RenderSystem::submitRect(RenderLayer layer, float z, float x, float y,
-                              float width, float height, sf::Color color,
-                              bool screenSpace)
+                              float width, float height, sf::Color color, bool screenSpace)
 {
-    queue_.push_back(Renderable{
-        layer,
-        z,
-        screenSpace,
-        [this, x, y, width, height, color, screenSpace]()
-        {
-            renderer_->drawRect(x, y, width, height, color, screenSpace);
-        }});
+    queue_.push_back(Renderable{layer, z, screenSpace, RectDraw{x, y, width, height, color}});
 }
 
-void RenderSystem::submitTile(int gridX, int gridY,
-                              const RenderComponent &tileRender)
+void RenderSystem::submitTile(int gridX, int gridY, const SpriteAssetComponent &tileAsset, const SpriteFrameComponent &tileFrame)
 {
-    Result<SpriteRegion, AssetError> result = tileAtlas_.getTileSprite(tileRender.name);
+    Result<SpriteRegion, AssetError> result = tileAtlas_.getTileSprite(tileFrame.name);
     if (!result)
     {
-        // Recoverable: skip drawing this one tile rather than crashing the
-        // frame. Dedup by name — see warnedMissingTiles_ in RenderSystem.h.
-        if (warnedMissingTiles_.insert(tileRender.name).second)
+        if (warnedMissingTiles_.insert(tileFrame.name).second)
             LOG_ERROR(std::format("RenderSystem: {} — skipping tile draw", result.error().toString()));
         return;
     }
 
     const SpriteRegion &region = result.value();
 
-    RenderComponent resolved = tileRender;
-    resolved.texturePath = tileTexturePath_;
-    resolved.textureRect = sf::IntRect(region.subrect);
-    resolved.sourceTileSize = region.sourceTileSize;
-    resolved.renderX = static_cast<float>(gridX) * GameConstants::TILE_SIZE;
-    resolved.renderY = static_cast<float>(gridY) * GameConstants::TILE_SIZE;
+    ResolvedSprite sprite;
+    sprite.texturePath = tileTexturePath_;
+    sprite.textureRect = sf::IntRect(region.subrect);
+    sprite.sourceTileSize = region.sourceTileSize;
+    sprite.renderScale = tileAsset.renderScale;
+    sprite.x = static_cast<float>(gridX) * GameConstants::TILE_SIZE;
+    sprite.y = static_cast<float>(gridY) * GameConstants::TILE_SIZE;
 
-    submit(resolved.layer, resolved.z, resolved, RenderAnchor::TopLeft);
+    submit(tileAsset.layer, tileAsset.z, sprite, RenderAnchor::TopLeft);
 }
 
 void RenderSystem::submitText(RenderLayer layer, float z,
-                              const sf::Font &font,
-                              const std::string &text,
-                              float x, float y,
-                              unsigned int characterSize,
-                              sf::Color color,
-                              bool screenSpace)
+                              const sf::Font &font, const std::string &text,
+                              float x, float y, unsigned int characterSize,
+                              sf::Color color, bool screenSpace)
 {
-    queue_.push_back(Renderable{
-        layer,
-        z,
-        screenSpace,
-        [this, font, text, x, y, characterSize, color, screenSpace]()
-        {
-            sf::Text sfText(font); // SFML 3.x requires font in ctor
-            sfText.setString(text);
-            sfText.setCharacterSize(characterSize);
-            sfText.setFillColor(color);
-            sfText.setPosition(sf::Vector2f{x, y});
+    sf::Text sfText(font);
+    sfText.setString(text);
+    sfText.setCharacterSize(characterSize);
+    sfText.setFillColor(color);
+    sfText.setPosition(sf::Vector2f{x, y});
 
-            renderer_->drawText(sfText);
-        }});
-
+    queue_.push_back(Renderable{layer, z, screenSpace, TextDraw{std::move(sfText)}});
 }
 
 void RenderSystem::endFrame()
 {
     renderer_->clear();
 
-    // Sort by layer/z
     std::stable_sort(queue_.begin(), queue_.end(),
                      [](const Renderable &a, const Renderable &b)
                      {
                          return a.layer != b.layer ? a.layer < b.layer : a.z < b.z;
                      });
+    auto draw = [this](const Renderable &r)
+    {
+        std::visit([this, screenSpace = r.screenSpace](const auto &payload)
+                   {
+            using T = std::decay_t<decltype(payload)>;
+            if constexpr (std::is_same_v<T, SpriteDraw>)
+                renderer_->drawEntity(payload.sprite, payload.anchor); // IRenderer::drawEntity signature must change to take ResolvedSprite
+            else if constexpr (std::is_same_v<T, RectDraw>)
+                renderer_->drawRect(payload.x, payload.y, payload.width, payload.height, payload.color, screenSpace);
+            else if constexpr (std::is_same_v<T, TextDraw>)
+                renderer_->drawText(payload.text); }, r.payload);
+    };
 
-    // 1. World-space pass (entities + debug), camera view.
     renderer_->beginWorldView(currentCamera_);
-
     for (auto &r : queue_)
-    {
         if (!r.screenSpace)
-        {
-            r.draw();
-        }
-    }
-
+            draw(r);
     for (auto &r : debugQueue_)
-    {
-        r.draw(); // debug is world-space
-    }
+        renderer_->drawDebugRect(r.x, r.y, r.width, r.height);
 
-    // 2. Screen-space pass (UI overlay), default view.
     renderer_->setDefaultView();
-
     for (auto &r : queue_)
-    {
         if (r.screenSpace)
-        {
-            r.draw();
-        }
-    }
+            draw(r);
 
     renderer_->present();
 }

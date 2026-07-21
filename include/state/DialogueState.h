@@ -4,7 +4,7 @@
 #include "IGameState.h"
 #include "state/StateMachine.h"
 #include "input/KeyBindings.h"
-#include "ui/MenuContext.h"
+#include "ui/MenuCommands.h"
 #include "ui/DialogueBoxData.h"
 #include "events/EventQueue.h"
 #include <SFML/Graphics/Font.hpp>

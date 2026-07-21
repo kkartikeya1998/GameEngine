@@ -82,8 +82,7 @@ private:
             waitingOnState_ = true;
             break;
         case InteractionStepType::Animation:
-            // TODO: needs AnimationSystem access for a one-shot clip — deferred,
-            // per your notes AnimationPlayerComponent integration is unresolved.
+            // TODO: needs AnimationSystem access for a one-shot clip
             Advance();
             break;
         case InteractionStepType::Battle:

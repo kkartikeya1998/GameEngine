@@ -5,4 +5,5 @@ struct CollisionData {
     float offsetY = 0.f;
     float width = 0.f;
     float height = 0.f;
+    bool solid = false;
 };

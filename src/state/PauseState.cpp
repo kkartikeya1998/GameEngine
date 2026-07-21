@@ -28,12 +28,12 @@ public:
 
 void PauseState::OnEnter()
 {
-    LOG_INFO("Entering PauseState");
+    LOG_INFO("Entering state");
 }
 
 void PauseState::OnExit()
 {
-    LOG_INFO("Exiting PauseState");
+    LOG_INFO("Exiting state");
 }
 
 PauseState::PauseState(InputManager &input,
@@ -41,6 +41,7 @@ PauseState::PauseState(InputManager &input,
                        std::filesystem::path fontPath)
     : input_(input), stateMachine_(stateMachine)
 {
+    LOG_INFO("Creating state");
     fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
 
     MenuInput::BindDefaults(navInput_);
@@ -60,10 +61,7 @@ PauseState::PauseState(InputManager &input,
 
 void PauseState::Update(float dt)
 {
-    // if (input_.WasKeyPressed(Key::Escape))
-    // {
-    //     input_.RequestQuit(); // direct quit shortcut, kept separate from panel cancel semantics — revisit once a submenu needs "back" instead of "quit"
-    // }
+    LOG_INFO("Updating state");
 
     MenuContext nav = navInput_.poll(input_); // translate raw keys to menu intent
 
@@ -76,6 +74,7 @@ void PauseState::Update(float dt)
 
 void PauseState::Render(RenderSystem &renderSystem, float dt)
 {
+    LOG_INFO("Rendering state");
     renderSystem.submitRect(
         RenderLayer::ScreenOverlay, 0.f,
         0.f, 0.f,

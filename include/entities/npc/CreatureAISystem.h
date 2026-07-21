@@ -13,16 +13,33 @@
 
 namespace CreatureAISystem
 {
+    constexpr float WANDER_RADIUS_TILES = 2.f;
+    constexpr float ARRIVE_THRESHOLD = 2.f;
+    constexpr float MOVING_TIMEOUT = 2.f;
+    constexpr float JUMP_DURATION = 0.6f;
+    constexpr float IDLE_TIMER_MIN = 2.f;
+    constexpr float IDLE_TIMER_MAX_ADD = 2.f;
+    constexpr float IDLE_AFTER_TIMEOUT = 0.5f;
+    constexpr int JUMP_CHANCE_DENOMINATOR = 5;
 
     inline int toTile(float worldCoord)
     {
         return static_cast<int>(worldCoord) / GameConstants::TILE_SIZE;
     }
 
+    inline void stopAndEnterIdle(VelocityComponent &vel, MovementStateComponent &moveState,
+                                  WanderAIComponent &ai, float timer)
+    {
+        vel.vx = 0.f;
+        vel.vy = 0.f;
+        moveState.current = MovementState::Idle;
+        ai.state = CreatureState::Idle;
+        ai.stateTimer = timer;
+        ai.movingElapsed = 0.f;
+    }
+
     inline void pickNewTarget(Registry &registry, EntityID id, WanderAIComponent &ai, const PositionComponent &pos)
     {
-        constexpr float WANDER_RADIUS_TILES = 2.f;
-
         int baseTileX = toTile(pos.x);
         int baseTileY = toTile(pos.y);
         const auto *restriction = registry.get<TileRestrictionComponent>(id);
@@ -35,7 +52,7 @@ namespace CreatureAISystem
             int candTileY = baseTileY + dy;
 
             if (restriction && !restriction->isAllowed(candTileX, candTileY))
-                continue; // re-roll — outside allowed tiles
+                continue;
 
             ai.targetX = (candTileX + 0.5f) * GameConstants::TILE_SIZE;
             ai.targetY = (candTileY + 0.5f) * GameConstants::TILE_SIZE;
@@ -62,8 +79,6 @@ namespace CreatureAISystem
         auto &moveState = *moveStatePtr;
         auto &ai = *aiPtr;
 
-        constexpr float MOVE_SPEED = GameConstants::WILD_POKEMON_SPEED; // see note below — doesn't exist yet
-
         switch (ai.state)
         {
         case CreatureState::Idle:
@@ -74,10 +89,10 @@ namespace CreatureAISystem
             ai.stateTimer -= dt;
             if (ai.stateTimer <= 0.f)
             {
-                if (std::rand() % 5 == 0)
+                if (std::rand() % JUMP_CHANCE_DENOMINATOR == 0)
                 {
                     ai.state = CreatureState::Jumping;
-                    ai.stateTimer = 0.6f;
+                    ai.stateTimer = JUMP_DURATION;
                 }
                 else
                 {
@@ -93,31 +108,21 @@ namespace CreatureAISystem
             float toY = ai.targetY - pos.y;
             float dist = std::sqrt(toX * toX + toY * toY);
 
-            if (dist < 2.f)
+            if (dist < ARRIVE_THRESHOLD)
             {
-                vel.vx = 0.f;
-                vel.vy = 0.f;
-                ai.state = CreatureState::Idle;
-                ai.stateTimer = 1.f + static_cast<float>(std::rand() % 200) / 100.f;
-                ai.movingElapsed = 0.f;
-                moveState.current = MovementState::Idle;
+                stopAndEnterIdle(vel, moveState, ai, IDLE_TIMER_MIN + static_cast<float>(std::rand() % 200) / 100.f);
                 break;
             }
 
             ai.movingElapsed += dt;
-            if (ai.movingElapsed > 2.f)
+            if (ai.movingElapsed > MOVING_TIMEOUT)
             { // gave up trying — target unreachable
-                vel.vx = 0.f;
-                vel.vy = 0.f;
-                ai.state = CreatureState::Idle;
-                ai.stateTimer = 0.5f;
-                ai.movingElapsed = 0.f;
-                moveState.current = MovementState::Idle;
+                stopAndEnterIdle(vel, moveState, ai, IDLE_AFTER_TIMEOUT);
                 break;
             }
 
-            vel.vx = (toX / dist) * MOVE_SPEED;
-            vel.vy = (toY / dist) * MOVE_SPEED;
+            vel.vx = (toX / dist) * ai.wanderSpeed;
+            vel.vy = (toY / dist) * ai.wanderSpeed;
             moveState.current = MovementState::Walking;
 
             if (std::abs(toX) > std::abs(toY))
@@ -135,7 +140,7 @@ namespace CreatureAISystem
             if (ai.stateTimer <= 0.f)
             {
                 ai.state = CreatureState::Idle;
-                ai.stateTimer = 1.f;
+                ai.stateTimer = IDLE_TIMER_MIN;
             }
             break;
         }

@@ -9,18 +9,29 @@
 // as distinct classes — they were all doing this exact loop, keyed by a
 // domain-specific metadata struct.
 template <typename TMetadata>
-class ComponentAssetRepository : public IAssetRepository {
+class ComponentAssetRepository : public IAssetRepository
+{
 public:
-    explicit ComponentAssetRepository(const nlohmann::json& section)
+    explicit ComponentAssetRepository(const nlohmann::json &section)
     {
         for (auto it = section.begin(); it != section.end(); ++it)
             metadata_.emplace(it.key(), TMetadata::fromJson(it.key(), it.value()));
     }
 
-    const TMetadata* find(const std::string& id) const
+    const TMetadata *find(const std::string &id) const
     {
         auto it = metadata_.find(id);
         return it == metadata_.end() ? nullptr : &it->second;
+    }
+
+    std::string debugString() const
+    {
+        std::ostringstream oss;
+        for (const auto &[id, meta] : metadata_)
+        {
+            oss << id << " => " << meta << '\n';
+        }
+        return oss.str();
     }
 
 private:

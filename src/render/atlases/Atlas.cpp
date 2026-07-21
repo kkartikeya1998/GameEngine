@@ -5,6 +5,7 @@
 
 Atlas::Atlas(const std::filesystem::path& spritesheet_path)
 {
+    LOG_INFO("Loading texture from: " + spritesheet_path.string());
     texture_ = std::make_unique<sf::Texture>();
     if (!texture_->loadFromFile(spritesheet_path)) {
         // Mandatory startup resource — every tile/entity drawn through this
@@ -18,6 +19,7 @@ Atlas::Atlas(const std::filesystem::path& spritesheet_path)
 
 void Atlas::loadRegion(const std::string& name, int x, int y, int w, int h)
 {
+    LOG_INFO("Loading sprite region by identifier:" + name);
     SpriteRegion region;
     region.subrect = sf::Rect<int>(
         sf::Vector2<int>(x, y),
@@ -29,6 +31,7 @@ void Atlas::loadRegion(const std::string& name, int x, int y, int w, int h)
 
 const SpriteRegion& Atlas::findRegion(const std::string& name) const
 {
+    LOG_INFO("Looking up sprite region: " + name);
     auto it = regions_.find(name);
     if (it == regions_.end()) {
         LOG_ERROR(std::format("Atlas: no region defined for '{}'", name));

@@ -9,29 +9,11 @@
 
 #include "system/GameConstants.h"
 #include "render/IRenderer.h"
-#include "component/RenderComponent.h"
+#include "render/ResolvedSprite.h"
 
-namespace sf
-{
-    class RenderWindow;
-    class Texture;
-    class Sprite;
-}
 
-// ---------------------------------------------------------------------------
-// SFMLRenderer — SFML-based concrete implementation of IRenderer.
-//
-// Knows nothing about repositories or atlases; every RenderComponent it
-// receives already carries a resolved texturePath/textureRect. Its only
-// job is turning that into an sf::Sprite and drawing it.
-//
-// Error-handling contract: window/context creation is unrecoverable and
-// throws RendererInitException (exceptions/EngineExceptions.h) — see the ctor.
-// A missing/unloadable *texture* at draw time is a recoverable, content-
-// level failure: it never throws, it draws a placeholder instead (see
-// getOrLoadTexture). Other IRenderer implementations should follow the
-// same split.
-// ---------------------------------------------------------------------------
+namespace sf { class RenderWindow; class Texture; class Sprite; }
+
 class SFMLRenderer : public IRenderer
 {
 public:
@@ -41,10 +23,9 @@ public:
     void clear() override;
     void beginWorldView(const Camera &camera) override;
     void setDefaultView() override;
-    void drawEntity(const RenderComponent &render, RenderAnchor anchor) override;
+    void drawEntity(const ResolvedSprite &sprite, RenderAnchor anchor) override;
     void drawDebugRect(float x, float y, float width, float height) override;
-    void drawRect(float x, float y, float width, float height,
-                  sf::Color color, bool screenSpace) override;
+    void drawRect(float x, float y, float width, float height, sf::Color color, bool screenSpace) override;
     void drawText(const sf::Text& text) override;
     void present() override;
     bool isOpen() const override;

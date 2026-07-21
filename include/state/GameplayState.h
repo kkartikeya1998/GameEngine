@@ -17,7 +17,9 @@ class InputManager;
 class GameplayState : public IGameState
 {
 public:
-    GameplayState(InputManager &input, AssetDatabase &assets, StateMachine<IGameState> &stateMachine, AnimationSystem &animationSystem, EventQueue &events);
+    GameplayState(InputManager &input, AssetDatabase &assets, StateMachine<IGameState> &stateMachine,
+                  AnimationSystem &animationSystem, EventQueue &events,
+                  std::filesystem::path fontPath = {});
 
     void OnEnter() override;
     void OnExit() override;
@@ -32,6 +34,9 @@ private:
     StateMachine<IGameState> &stateMachine_;
     AnimationSystem &animationSystem_;
     EventQueue &events_;
+    std::filesystem::path fontPath_;
+    sf::Font font_;
+    bool fontLoaded_ = false;
 
     KeyBindings<PlayerControlComponent> bindings_;
     std::unique_ptr<GameController> controller_;

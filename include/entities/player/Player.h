@@ -7,8 +7,8 @@
 #include "component/FreeMovementComponent.h"
 #include "component/CollisionComponent.h"
 #include "component/MovementStateComponent.h"
-#include "component/WalkCycleTimer.h"
-#include "component/RenderComponent.h"
+
+
 #include "component/PlayerControlComponent.h"
 #include "component/InventoryComponent.h"
 #include "system/GameConstants.h"
@@ -21,8 +21,7 @@ inline EntityID makePlayer(
     const AssetDatabase &assets,
     float x, float y,
     float movement_speed = GameConstants::PLAYER_SPEED,
-    float sprintMultiplier = 1.5f,
-    float walkCyclesPerSecond = 2.0f)
+    float sprintMultiplier = 1.5f)
 {
     EntityID id = registry.create();
 
@@ -32,7 +31,6 @@ inline EntityID makePlayer(
     registry.add<DirectionComponent>(id, Direction::DOWN);
     registry.add<FreeMovementComponent>(id, movement_speed, sprintMultiplier);
     registry.add<MovementStateComponent>(id);
-    registry.add<WalkCycleTimer>(id, walkCyclesPerSecond);
     registry.add<InventoryComponent>(id);
     registry.add<PlayerControlComponent>(id);
 

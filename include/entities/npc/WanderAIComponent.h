@@ -16,7 +16,8 @@ struct WanderAIComponent : public Component {
     float stateTimer = 0.f;
     float targetX = 0.f;
     float targetY = 0.f;
-    float movingElapsed = 0.f;   // new — time spent trying to reach current target
+    float movingElapsed = 0.f;
+    float wanderSpeed = GameConstants::WILD_POKEMON_SPEED; // per-entity — lets EntityFactory vary by species
 
     WanderAIComponent() = default;
 };

@@ -9,6 +9,7 @@ SFMLRenderer::SFMLRenderer(int windowWidth, int windowHeight)
     (void)windowWidth;
     (void)windowHeight;
 
+    LOG_INFO("Initializing renderer");
     window_ = std::make_unique<sf::RenderWindow>(
         sf::VideoMode(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT), 32),
         "Pokemon Game");
@@ -32,11 +33,13 @@ SFMLRenderer::~SFMLRenderer() = default;
 
 void SFMLRenderer::clear()
 {
+    LOG_TRACE("Clearing window");
     window_->clear(sf::Color::Black);
 }
 
 void SFMLRenderer::beginWorldView(const Camera &camera)
 {
+    LOG_TRACE("Setting world view");
     window_->setView(sf::View(
         sf::Vector2f(camera.centerX, camera.centerY),
         sf::Vector2f(camera.viewWidth, camera.viewHeight)));
@@ -44,6 +47,7 @@ void SFMLRenderer::beginWorldView(const Camera &camera)
 
 void SFMLRenderer::present()
 {
+    LOG_TRACE("Presenting window");
     window_->display();
 }
 
@@ -54,6 +58,7 @@ bool SFMLRenderer::isOpen() const
 
 std::unique_ptr<sf::Texture> SFMLRenderer::buildMissingTexture()
 {
+    LOG_WARNING("Procedurally generated missing texture");
     // The traditional magenta/black "missing texture" checkerboard —
     // visible enough in-game to get noticed and reported, without taking
     // the frame down over one bad asset reference.
@@ -77,6 +82,7 @@ std::unique_ptr<sf::Texture> SFMLRenderer::buildMissingTexture()
 
 const sf::Texture &SFMLRenderer::getOrLoadTexture(const std::string &path)
 {
+    LOG_TRACE("Fetching texture: " + path);
     auto it = textureCache_.find(path);
     if (it != textureCache_.end())
         return *it->second;
@@ -107,27 +113,25 @@ const sf::Texture &SFMLRenderer::getOrLoadTexture(const std::string &path)
     return *inserted->second;
 }
 
-void SFMLRenderer::drawEntity(const RenderComponent &render, RenderAnchor anchor)
+void SFMLRenderer::drawEntity(const ResolvedSprite &sprite, RenderAnchor anchor)
 {
-    const sf::Texture &tex = getOrLoadTexture(render.texturePath);
+    const sf::Texture &tex = getOrLoadTexture(sprite.texturePath);
 
-    sf::Sprite sprite(tex);
-    sprite.setTextureRect(render.textureRect);
+    sf::Sprite sfSprite(tex);
+    sfSprite.setTextureRect(sprite.textureRect);
 
-    const float scale = render.renderScale;
-    sprite.setScale(sf::Vector2f(scale, scale));
+    const float scale = sprite.renderScale;
+    sfSprite.setScale(sf::Vector2f(scale, scale));
 
-    const float width = render.textureRect.size.x * scale;
-    const float height = render.textureRect.size.y * scale;
+    const float width = sprite.textureRect.size.x * scale;
+    const float height = sprite.textureRect.size.y * scale;
 
-    // TopLeft: renderX/renderY is the top-left corner (tiles, grid-aligned)
-    // CenterBottom: renderX/renderY is the world-pixel center-bottom point
     sf::Vector2f pos = (anchor == RenderAnchor::TopLeft)
-                           ? sf::Vector2f(render.renderX, render.renderY)
-                           : sf::Vector2f(render.renderX - width * 0.5f, render.renderY - height);
+                           ? sf::Vector2f(sprite.x, sprite.y)
+                           : sf::Vector2f(sprite.x - width * 0.5f, sprite.y - height);
 
-    sprite.setPosition(pos);
-    window_->draw(sprite);
+    sfSprite.setPosition(pos);
+    window_->draw(sfSprite);
 }
 
 void SFMLRenderer::drawDebugRect(float x, float y, float width, float height)

@@ -1,8 +1,11 @@
 #include "entities/EntityFactory.h"
 #include "component/PositionComponent.h"
-#include "component/RenderComponent.h"
+#include "component/SpriteAssetComponent.h"
+#include "component/SpriteFrameComponent.h"
 #include "component/CollisionComponent.h"
+#include "component/AnimationComponent.h"
 #include "component/InteractableComponent.h"
+#include "component/AnimationComponent.h"
 #include "system/GameConstants.h"
 #include "log/Logger.h"
 
@@ -21,25 +24,20 @@ namespace EntityFactory
         }
 
         registry.add<PositionComponent>(id, x, y);
-
         if (archetype->renderId)
         {
             const RenderAssetMetadata *render = db.findRender(*archetype->renderId);
             if (render)
             {
-                registry.add<RenderComponent>(id,
-                                              render->name, render->RenderData.texturePath, render->RenderData.textureRect,
-                                              render->RenderData.sourceTileSize, x, y, layer,
-                                              render->RenderData.renderScale);
+                registry.add<SpriteAssetComponent>(id, render->name, layer, render->RenderData.renderScale);
+                registry.add<SpriteFrameComponent>(id, render->name,
+                                                   render->RenderData.texturePath, render->RenderData.textureRect,
+                                                   render->RenderData.sourceTileSize);
             }
             else
             {
-                // the entity was created without anyone
-                // being told its render reference didn't resolve. Now
-                // logged once, at the point that actually knows both the
-                // archetype and the dangling id.
                 LOG_WARNING(std::format(
-                    "EntityFactory: archetype '{}' references unknown render id '{}' — entity {} created without a RenderComponent",
+                    "EntityFactory: archetype '{}' references unknown render id '{}' — entity {} created without sprite components",
                     archetypeId, *archetype->renderId, id.index));
             }
         }
@@ -57,7 +55,8 @@ namespace EntityFactory
                 }
                 registry.add<CollisionComponent>(id,
                                                  collision->data.offsetX * scale, collision->data.offsetY * scale,
-                                                 collision->data.width * scale, collision->data.height * scale);
+                                                 collision->data.width * scale, collision->data.height * scale,
+                                                 collision->data.solid);
             }
             else
             {
@@ -80,6 +79,11 @@ namespace EntityFactory
                     "EntityFactory: archetype '{}' references unknown interaction id '{}' — entity {} created without an InteractableComponent",
                     archetypeId, *archetype->interactionId, id.index));
             }
+        }
+
+        if (archetype->animationId || archetype->pmdAnimationId)
+        {
+            registry.add<AnimationComponent>(id);
         }
 
         return Result<void, AssetError>::Ok();

@@ -7,18 +7,19 @@
 
 void DialogueState::OnEnter()
 {
-    LOG_INFO("Entering DialogueState: " + text_);
+    LOG_INFO("Entering state: " + text_);
 }
 
 void DialogueState::OnExit()
 {
-    LOG_INFO("Exiting DialogueState");
+    LOG_INFO("Exiting state");
 }
 
 DialogueState::DialogueState(InputManager &input, StateMachine<IGameState> &stateMachine, EventQueue &events,
                              std::string text, std::filesystem::path fontPath)
     : input_(input), stateMachine_(stateMachine), events_(events), text_(std::move(text))
 {
+    LOG_INFO("Creating state");
     fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
 
     // Advance/dismiss on Enter or E; Escape also dismisses — same "back = pop" intent as menus
@@ -35,6 +36,7 @@ DialogueState::DialogueState(InputManager &input, StateMachine<IGameState> &stat
 
 void DialogueState::Update(float dt)
 {
+    LOG_INFO("Updating state");
     MenuContext nav = navInput_.poll(input_);
 
     if (nav.confirm || nav.cancel)
@@ -47,5 +49,6 @@ void DialogueState::Update(float dt)
 
 void DialogueState::Render(RenderSystem &renderSystem, float dt)
 {
+    LOG_INFO("Rendering state");
     UISystem::Render(box_, renderSystem, UIFont::GetShared(fontPath_));
 }

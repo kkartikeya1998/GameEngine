@@ -21,14 +21,16 @@ namespace
     }
 
     // Startup-only: every id here comes from mandatory engine content, so a
-    // duplicate is a broken build, not something a single lookup can route
-    // around later. Fatal, same as any other startup load failure.
+    // duplicates shouldn't be propagated into our system. Keep only first one.
     void accumulate(nlohmann::json &dest, const nlohmann::json &src)
     {
         for (auto it = src.begin(); it != src.end(); ++it)
         {
             if (dest.contains(it.key()))
-                throw AssetLoadException("AssetDatabase: duplicate asset id: " + it.key());
+            {
+                LOG_WARNING("AssetDatabase: duplicate asset id: " + it.key());
+                continue;
+            }
             dest[it.key()] = it.value();
         }
     }
@@ -120,4 +122,7 @@ void AssetDatabase::finalize()
     pmdAnimationRepo_ = std::make_unique<ComponentAssetRepository<PmdAnimationSetMetadata>>(pmdAnimationSection_);
     interactionRepo_ = std::make_unique<ComponentAssetRepository<InteractionAssetMetadata>>(interactionSection_);
     itemRepo_ = std::make_unique<ComponentAssetRepository<ItemMetadata>>(itemSection_);
+
+    LOG_FATAL("Animation repo:\n" + animationRepo_->debugString());
+    LOG_FATAL("PmdAnimation repo:\n" + pmdAnimationRepo_->debugString());
 }

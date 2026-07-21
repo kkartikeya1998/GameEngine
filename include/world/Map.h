@@ -3,13 +3,8 @@
 #include <vector>
 
 #include "world/Tile.h"
+#include "component/PositionComponent.h" // for AABB
 
-// ---------------------------------------------------------------------------
-// Map — pure in-memory representation of a loaded map's static level data.
-//
-// Holds tiles only. No entities, no objects, no npcs — those live in
-// Registry now. Knows nothing about loading from file; MapLoader's job.
-// ---------------------------------------------------------------------------
 class Map {
 private:
     std::vector<Tile> tiles;
@@ -29,4 +24,9 @@ public:
     Tile& tile_at(int x, int y);
     const Tile& tile_at(int x, int y) const;
     void set_tile(int x, int y, Tile tile);
+
+    // Rejects the box if any tile it overlaps is TerrainType::Solid.
+    // Caller is expected to have already bounds-checked the box (see
+    // MovementSystem::mapBoundsCheck) — this does not clamp coordinates.
+    bool isWalkable(const AABB& box) const;
 };

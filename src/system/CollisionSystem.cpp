@@ -10,6 +10,9 @@ bool isAreaBlocked(Registry& registry, const AABB& box, EntityID self)
             continue;
 
         auto* collision = registry.get<CollisionComponent>(id);
+        if (!collision->solid)
+            continue; // triggers (ground items, warps) never block movement
+
         auto* position = registry.get<PositionComponent>(id);
 
         AABB objBox = collision->resolve(position->x, position->y);

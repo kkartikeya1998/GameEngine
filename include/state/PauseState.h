@@ -3,7 +3,7 @@
 #include "IGameState.h"
 #include "state/StateMachine.h"
 #include "input/KeyBindings.h"
-#include "ui/MenuContext.h"
+#include "ui/MenuCommands.h"
 #include "ui/Panel.h"
 
 #include <SFML/Graphics/Font.hpp>

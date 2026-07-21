@@ -50,6 +50,7 @@ InventoryState::InventoryState(InputManager &input,
     : input_(input), stateMachine_(stateMachine), registry_(registry), player_(player),
       events_(events), assets_(assets), openFlag_(openFlag)
 {
+    LOG_INFO("Creating state");
 
     fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
     MenuInput::BindDefaults(navInput_);
@@ -66,19 +67,20 @@ InventoryState::InventoryState(InputManager &input,
 
 void InventoryState::OnEnter()
 {
-    LOG_INFO("Entering InventoryState");
+    LOG_INFO("Entering state");
     RefreshOptions();
 }
 
 void InventoryState::OnExit()
 {
-    LOG_INFO("Exiting InventoryState");
+    LOG_INFO("Exiting state");
     if (openFlag_)
         *openFlag_ = false;
 }
 
 void InventoryState::RefreshOptions()
 {
+    LOG_INFO("Refreshing components");
     panel_.options.clear();
 
     if (auto *inv = registry_.get<InventoryComponent>(player_))
@@ -102,6 +104,7 @@ void InventoryState::RefreshOptions()
 
 void InventoryState::Update(float dt)
 {
+    LOG_INFO("Updating state");
     MenuContext nav = navInput_.poll(input_);
     if (UISystem::HandleDefaultBack(nav, stateMachine_))
         return; // OnExit() fires here, clearing openFlag_
@@ -115,5 +118,6 @@ void InventoryState::Update(float dt)
 
 void InventoryState::Render(RenderSystem &renderSystem, float dt)
 {
+    LOG_INFO("Rendering state");
     UISystem::Render(panel_, renderSystem, UIFont::GetShared(fontPath_));
 }

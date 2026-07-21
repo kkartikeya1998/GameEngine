@@ -4,6 +4,7 @@
 #include "system/GameConstants.h"
 #include "system/InventorySystem.h"
 #include "log/Logger.h"
+#include "asset/AsssetPaths.h"
 
 Game::Game()
     : assets_(),
@@ -16,7 +17,9 @@ Game::Game()
       interactions_(assets_, states_, input_, events_)
 {
     // straight to gameplay mode
-    states_.Push(std::make_unique<GameplayState>(input_, assets_, states_, animationSystem_, events_));
+    states_.Push(std::make_unique<GameplayState>(
+        input_, assets_, states_, animationSystem_, events_,
+        Assets::Fonts::PIXFAY));
 }
 
 void Game::Update(float dt)

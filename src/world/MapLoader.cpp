@@ -1,14 +1,17 @@
 #include "world/MapLoader.h"
 #include "world/Map.h"
 #include "log/Logger.h"
-#include "entities/npc/TileRestrictionComponent.h"
+#include "entities/npc/TileRestrictionComponent.h" // not actually being used
 #include "entities/pokemon/WildPokemon.h"
 #include "system/GameConstants.h"
 #include "entities/EntityFactory.h"
 #include "asset/AsssetPaths.h"
 #include "exceptions/EngineExceptions.h"
+
 #include "component/WorldItemComponent.h"
 #include "component/InteractableComponent.h"
+#include "component/SpriteAssetComponent.h"
+#include "component/SpriteFrameComponent.h"
 
 #include <cmath>
 #include <cstdlib>
@@ -137,17 +140,20 @@ void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
             }
 
             Tile tile;
-            RenderComponent tileRender(
+
+            SpriteAssetComponent tileAsset(
                 typeName,
-                tileMeta->RenderData.texturePath,
-                tileMeta->RenderData.textureRect,
-                tileMeta->RenderData.sourceTileSize,
-                static_cast<float>(x * GameConstants::TILE_SIZE),
-                static_cast<float>(y * GameConstants::TILE_SIZE),
                 RenderLayer::Terrain,
                 tileMeta->RenderData.renderScale);
 
-            tile.addRenderComponent(tileRender);
+            SpriteFrameComponent tileFrame(
+                typeName,
+                tileMeta->RenderData.texturePath,
+                tileMeta->RenderData.textureRect,
+                tileMeta->RenderData.sourceTileSize);
+
+            tile.setSpriteAsset(tileAsset);
+            tile.setSpriteFrame(tileFrame);
             map.set_tile(x, y, tile);
         }
     }
@@ -199,7 +205,7 @@ void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
 
             // Per-instance override: replaces whatever InteractableComponent the
             // archetype set, so only THIS map entry triggers the gift interaction —
-            // other species_1 spawns elsewhere keep the archetype default.
+            // other species1 spawns elsewhere keep the archetype default.
             if (entry.contains("giftInteraction"))
                 registry.add<InteractableComponent>(wildId, entry["giftInteraction"].get<std::string>());
         }

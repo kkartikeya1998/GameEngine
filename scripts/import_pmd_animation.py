@@ -49,7 +49,7 @@ def convert(species_folder: Path, species_id: str):
     return {species_id: clips}
 
 if __name__ == "__main__":
-    folder = Path(sys.argv[1])   # e.g. assets/characters/pokemon/species_1
-    species_id = sys.argv[2]     # e.g. "species_1"
+    folder = Path(sys.argv[1])   # e.g. assets/characters/pokemon/species1
+    species_id = sys.argv[2]     # e.g. "species1"
     out = convert(folder, species_id)
     print(json.dumps(out, indent=2))

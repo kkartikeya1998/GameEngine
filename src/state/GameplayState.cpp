@@ -1,17 +1,28 @@
+#include "input/InputManager.h"
+
+#include "render/RenderSystem.h"
+
+#include "system/CameraSystem.h"
+
 #include "state/GameplayState.h"
 #include "state/GameplayCommands.h"
-#include "input/InputManager.h"
-#include "render/RenderSystem.h"
 #include "state/PauseState.h"
-#include "system/CameraSystem.h"
+
 #include "component/PositionComponent.h"
-#include "component/RenderComponent.h"
+#include "component/SpriteAssetComponent.h"
+#include "component/SpriteFrameComponent.h"
+#include "component/TextRenderComponent.h"
 #include "component/CollisionComponent.h"
+#include "system/MovementAnimationSystem.h"
+#include "system/VelocityIntegrationSystem.h"
 #include "log/Logger.h"
 
-GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMachine<IGameState> &stateMachine, AnimationSystem &animationSystem, EventQueue &events)
-    : input_(input), assets_(assets), stateMachine_(stateMachine), animationSystem_(animationSystem), events_(events)
+GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMachine<IGameState> &stateMachine,
+                             AnimationSystem &animationSystem, EventQueue &events, std::filesystem::path fontPath)
+    : input_(input), assets_(assets), stateMachine_(stateMachine), animationSystem_(animationSystem),
+      events_(events), fontPath_(std::move(fontPath))
 {
+    LOG_INFO("Creating state");
     auto up = std::make_shared<MoveCommand>(Direction::UP);
     auto down = std::make_shared<MoveCommand>(Direction::DOWN);
     auto left = std::make_shared<MoveCommand>(Direction::LEFT);
@@ -35,9 +46,16 @@ GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMa
 
 void GameplayState::OnEnter()
 {
-    LOG_INFO("Entering GameplayState");
+    LOG_INFO("Entering State");
     // Map/player load happens on entering gameplay, not at app boot.
     controller_ = std::make_unique<GameController>(1, 600, 600, assets_, events_);
+
+    if (!fontPath_.empty())
+    {
+        fontLoaded_ = font_.openFromFile(fontPath_); // SFML 3 API
+        if (!fontLoaded_)
+            LOG_WARNING(std::format("GameplayState: failed to load font at {}", fontPath_.string()));
+    }
 
     // Center the camera on the player immediately, so the first
     // rendered frame isn't a flash at world-origin before the first
@@ -51,7 +69,7 @@ void GameplayState::OnEnter()
 
 void GameplayState::OnExit()
 {
-    LOG_INFO("Exiting GameplayState");
+    LOG_INFO("Exiting state");
     // [TODO] Proper cleanup or save of world state, player state, etc.
     controller_.reset();
 }
@@ -60,24 +78,30 @@ void GameplayState::OnExit()
 
 void GameplayState::Update(float dt)
 {
+    LOG_INFO("Updating State");
     if (input_.WasKeyPressed(Key::Escape))
     {
         stateMachine_.Push(std::make_unique<PauseState>(input_, stateMachine_));
         return;
     }
-
     if (input_.WasKeyPressed(Key::I))
     {
         stateMachine_.Push(std::make_unique<InventoryState>(
             input_, stateMachine_, controller_->getWorld()->registry(), controller_->getPlayer(),
             events_, assets_));
-        return; // don't also process movement the frame we open inventory
+        return;
     }
 
     PlayerControlComponent input = bindings_.poll(input_);
     controller_->update(dt, input);
 
+
     auto &registry = controller_->getWorld()->registry();
+
+    VelocityIntegrationSystem::update(registry, dt);
+    MovementAnimationSystem::update(registry); // new 
+    animationSystem_.update(registry, dt);     // moved from Render()
+
     if (auto *pos = registry.get<PositionComponent>(controller_->getPlayer()))
     {
         CameraSystem::update(*pos, controller_->getActiveMap(), camera_);
@@ -86,8 +110,7 @@ void GameplayState::Update(float dt)
 
 void GameplayState::Render(RenderSystem &renderSystem, float dt)
 {
-    animationSystem_.update(controller_->getWorld()->registry(), dt);
-
+    LOG_INFO("Rendering State");
     World *world = controller_->getWorld();
     if (!world)
         return;
@@ -95,44 +118,40 @@ void GameplayState::Render(RenderSystem &renderSystem, float dt)
     const Map &map = world->getActiveMap();
     Registry &registry = world->registry();
 
-    // ---- Terrain -----------------------------------------------------
     for (int y = 0; y < map.getHeight(); ++y)
-    {
         for (int x = 0; x < map.getWidth(); ++x)
         {
-            renderSystem.submitTile(x, y, map.tile_at(x, y).getRenderComponent());
+            // Tile::getRenderComponent() → getSpriteAsset()/getSpriteFrame(); needs Tile.h.
+            const auto &tile = map.tile_at(x, y);
+            renderSystem.submitTile(x, y, tile.getSpriteAsset(), tile.getSpriteFrame());
         }
-    }
 
-    // ---- Everything else: player, map objects, npcs — one pass -------
-    // Previously three separate loops (map objects / player / npcs) doing
-    // near-identical work. Now that all three live in the same registry
-    // there's nothing distinguishing them at draw time — a single
-    // RenderComponent+PositionComponent query covers all of them, in
-    // whatever order the registry happens to iterate. Depth ordering is
-    // handled by RenderSystem's (layer, z) sort on submit, not by draw
-    // order here, so iteration order doesn't matter.
-    for (EntityID id : registry.view<RenderComponent, PositionComponent>())
+    for (EntityID id : registry.view<SpriteAssetComponent, SpriteFrameComponent, PositionComponent>())
     {
-        const auto *entRender = registry.get<RenderComponent>(id);
-        const auto *entPos = registry.get<PositionComponent>(id);
+        const auto *asset = registry.get<SpriteAssetComponent>(id);
+        const auto *frame = registry.get<SpriteFrameComponent>(id);
+        const auto *pos = registry.get<PositionComponent>(id);
+        const auto *collision = registry.get<CollisionComponent>(id);
 
-        const auto *entCollision = registry.get<CollisionComponent>(id);
-        float z = static_cast<float>(entPos->y);
-
-#ifdef ENGINE_DEBUG
-        if (entCollision)
+        float z = static_cast<float>(pos->y);
+        if (collision)
         {
-            AABB box = entCollision->resolve(entPos->x, entPos->y);
+            AABB box = collision->resolve(pos->x, pos->y);
             z = box.y + box.height;
+            
+#ifdef ENGINE_DEBUG
             renderSystem.submitDebugRect(box.x, box.y, box.width, box.height);
-        }
 #endif
-
-        RenderComponent resolved = *entRender;
-        resolved.renderX = entPos->x;
-        resolved.renderY = entPos->y;
-
-        renderSystem.submit(resolved.layer, z, resolved, RenderAnchor::CenterBottom);
+        }
+        ResolvedSprite sprite{frame->texturePath, frame->textureRect, frame->sourceTileSize, asset->renderScale, pos->x, pos->y};
+        renderSystem.submit(asset->layer, z, sprite, RenderAnchor::CenterBottom);
     }
+
+    if (fontLoaded_)
+        for (EntityID id : registry.view<TextRenderComponent, PositionComponent>())
+        {
+            const auto *text = registry.get<TextRenderComponent>(id);
+            const auto *pos = registry.get<PositionComponent>(id);
+            renderSystem.submitText(text->layer, pos->y, font_, text->text, pos->x, pos->y, text->characterSize, text->color, false);
+        }
 }

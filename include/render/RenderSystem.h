@@ -11,10 +11,10 @@
 #include "render/Camera.h"
 #include "render/RenderLayer.h"
 #include "render/atlases/TileAtlas.h"
-#include "asset/repositories/TileRepository.h"
-#include "component/RenderComponent.h"
-#include "asset/repositories/ComponentAssetRepository.h"
-#include "asset/metadata/RenderAssetMetadata.h"
+#include "render/ResolvedSprite.h"
+
+#include "component/SpriteAssetComponent.h"
+#include "component/SpriteFrameComponent.h"
 
 // ---------------------------------------------------------------------------
 // RenderSystem.h — owns the frame's renderable queue and the layer/z sort.
@@ -34,7 +34,7 @@ public:
     void beginFrame(const Camera &camera);
 
     // Queue a sprite draw. Sorted by (layer, z) at endFrame().
-    void submit(RenderLayer layer, float z, RenderComponent render, RenderAnchor anchor);
+    void submit(RenderLayer layer, float z, ResolvedSprite sprite, RenderAnchor anchor);
 
     // Queue a debug rect outline (world-space). Drawn after the sorted pass,
     // same as today's debug overlay behavior.
@@ -42,22 +42,17 @@ public:
 
     // Queue a flat-colored rect, e.g. pause overlay. World-space by default;
     // screenSpace=true skips the camera view transform (fullscreen overlays).
-    void submitRect(RenderLayer layer, float z, float x, float y,
-                    float width, float height, sf::Color color, bool screenSpace = false);
+    void submitRect(RenderLayer layer, float z, float x, float y, float width, float height, sf::Color color, bool screenSpace = false);
 
     // Resolves a tile's texture rect via the atlas and submits it.
     // Kept here (not GameplayState) since it needs tileAtlas_/tileTexturePath_.
     // If the tile's name doesn't resolve in the atlas, the tile is skipped
     // (not drawn) and logged once — see RenderSystem.cpp.
-    void submitTile(int gridX, int gridY, const RenderComponent &tileRender);
+    void submitTile(int gridX, int gridY, const SpriteAssetComponent &tileAsset, const SpriteFrameComponent &tileFrame);
 
-    void submitText(RenderLayer layer, float z,
-                    const sf::Font &font,
-                    const std::string &text,
-                    float x, float y,
-                    unsigned int characterSize,
-                    sf::Color color,
-                    bool screenSpace = false);
+    void submitText(RenderLayer layer, float z, const sf::Font &font, const std::string &text,
+                    float x, float y, unsigned int characterSize, sf::Color color, bool screenSpace = false);
+
     // Sorts the queue, draws everything, clears the queue, presents.
     void endFrame();
 
@@ -65,25 +60,38 @@ public:
     bool isOpen() const;
 
 private:
+    struct SpriteDraw
+    {
+        ResolvedSprite sprite;
+        RenderAnchor anchor;
+    };
+    struct RectDraw
+    {
+        float x, y, width, height;
+        sf::Color color;
+    };
+    struct TextDraw
+    {
+        sf::Text text;
+    };
+
     struct Renderable
     {
         RenderLayer layer;
         float z;
         bool screenSpace;
-        std::function<void()> draw;
+        std::variant<SpriteDraw, RectDraw, TextDraw> payload;
     };
 
+    struct DebugRectDraw { float x, y, width, height; };
+    
     std::unique_ptr<IRenderer> renderer_;
     TileAtlas tileAtlas_;
     std::string tileTexturePath_;
 
     Camera currentCamera_;
-    std::vector<Renderable> queue_;
-    std::vector<Renderable> debugQueue_; // rects drawn after the sorted pass
 
-    // A tile name that fails to resolve in the atlas is likely drawn every
-    // frame (it's part of the current map) — dedup so that's one ERROR log
-    // line, not one per frame. Same rationale as SFMLRenderer's
-    // warnedMissingTextures_.
+    std::vector<Renderable> queue_;
+    std::vector<DebugRectDraw> debugQueue_;
     std::unordered_set<std::string> warnedMissingTiles_;
 };

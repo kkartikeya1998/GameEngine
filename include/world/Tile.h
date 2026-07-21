@@ -1,26 +1,38 @@
 #pragma once
 
-#include <string>
-#include "component/RenderComponent.h"
+#include "component/SpriteAssetComponent.h"
+#include "component/SpriteFrameComponent.h"
 
-// ---------------------------------------------------------------------------
-// A simple non-entity class but with a RenderComponent, representing a single tile in the map grid.
+#pragma once
+
+enum class TerrainType {
+    Normal,
+    Solid,  // blocks movement — trees, water edges, walls
+    Grass   // walkable, triggers wild encounter checks
+};
+
 class Tile {
 public:
     Tile() = default;
-
-    // copy operations
     Tile(const Tile&) = default;
     Tile& operator=(const Tile&) = default;
-
-    // move operations
     Tile(Tile&&) = default;
     Tile& operator=(Tile&&) = default;
 
-    RenderComponent& getRenderComponent() { return renderComponent; }
-    const RenderComponent& getRenderComponent() const {return renderComponent; }
-    
-    void addRenderComponent(const RenderComponent& render) { renderComponent = render; }
+    SpriteAssetComponent& getSpriteAsset() { return spriteAsset_; }
+    const SpriteAssetComponent& getSpriteAsset() const { return spriteAsset_; }
+
+    SpriteFrameComponent& getSpriteFrame() { return spriteFrame_; }
+    const SpriteFrameComponent& getSpriteFrame() const { return spriteFrame_; }
+
+    TerrainType getTerrain() const { return terrain_; }
+    void setTerrain(TerrainType terrain) { terrain_ = terrain; }
+
+    void setSpriteAsset(const SpriteAssetComponent& asset) { spriteAsset_ = asset; }
+    void setSpriteFrame(const SpriteFrameComponent& frame) { spriteFrame_ = frame; }
+
 private:
-    RenderComponent renderComponent;
+    SpriteAssetComponent spriteAsset_;
+    SpriteFrameComponent spriteFrame_;
+    TerrainType terrain_ = TerrainType::Normal; // defaults to walkable, non-grass
 };

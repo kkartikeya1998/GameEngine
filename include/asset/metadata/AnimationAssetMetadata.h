@@ -24,3 +24,16 @@ struct AnimationAssetMetadata : public AssetMetadataName
     static AnimationAssetMetadata fromJson(const std::string &id, const nlohmann::json &entry);
     sf::IntRect frameRect(const std::string &direction, int frameIndex) const;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const AnimationAssetMetadata &m)
+{
+    os << "{ texturePath=" << m.texturePath
+       << ", frameWidth=" << m.frameWidth
+       << ", frameHeight=" << m.frameHeight
+       << ", columns=" << m.columns
+       << ", frameDuration=" << m.frameDuration
+       << ", loop=" << (m.loop ? "true" : "false")
+       << ", directions=" << m.directions.size()
+       << " }";
+    return os;
+}

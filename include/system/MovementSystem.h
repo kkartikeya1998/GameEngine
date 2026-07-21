@@ -14,8 +14,8 @@
 
 namespace MovementSystem
 {
-    // input == nullptr: velocity/direction are used as already set by the
-    // caller (e.g. CreatureAISystem) rather than derived from input.
+    constexpr float kMaxFrameDt = 1.f / 20.f; // guards against tunneling through thin colliders on frame hitches
+
     void update(Registry &registry, EntityID id, const Map &map, float dt,
                 const std::function<bool(const AABB &)> &isBlocked,
                 const PlayerControlComponent *input = nullptr);
