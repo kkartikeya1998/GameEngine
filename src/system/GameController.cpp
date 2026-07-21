@@ -3,6 +3,7 @@
 #include "system/MovementSystem.h"
 #include "system/CollisionSystem.h"
 #include "system/AnimationSystem.h"
+#include "system/DirectionSystem.h"
 #include "system/InteractionSystem.h"
 #include "system/ItemPickupSystem.h"
 #include "system/MovementAnimationSystem.h"
@@ -31,6 +32,7 @@ void GameController::update(float dt, const PlayerControlComponent &input)
     MovementSystem::update(world_.registry(), playerId_, world_.getActiveMap(), dt,
                            [this](const AABB &box) { return isPositionBlockedFor(playerId_, box); }, &input);
 
+    DirectionSystem::update(world_.registry());                       
     checkItemPickups();
     InteractionSystem::Update(world_.registry(), playerId_, events_, input);
 

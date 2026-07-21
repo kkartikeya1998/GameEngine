@@ -30,29 +30,18 @@ namespace MovementSystem
             sprintRequested = input->sprinting;
             float effectiveSpeed = movement->speed * (sprintRequested ? movement->sprintMultiplier : 1.f);
 
-            velocity->vx = 0.f;
-            velocity->vy = 0.f;
+            sf::Vector2f move = input->move;
 
-            switch (input->direction)
+            float lengthSq = move.x * move.x + move.y * move.y;
+
+            if (lengthSq > 1.f)
             {
-            case Direction::UP:
-                velocity->vy = -effectiveSpeed;
-                break;
-            case Direction::DOWN:
-                velocity->vy = effectiveSpeed;
-                break;
-            case Direction::LEFT:
-                velocity->vx = -effectiveSpeed;
-                break;
-            case Direction::RIGHT:
-                velocity->vx = effectiveSpeed;
-                break;
-            case Direction::NONE:
-                break;
+                float invLength = 1.f / std::sqrt(lengthSq);
+                move *= invLength;
             }
 
-            if (input->direction != Direction::NONE)
-                direction->facing = input->direction;
+            velocity->vx = move.x * effectiveSpeed;
+            velocity->vy = move.y * effectiveSpeed;
         }
 
         auto *collision = registry.get<CollisionComponent>(id);

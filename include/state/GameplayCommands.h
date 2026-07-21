@@ -1,26 +1,49 @@
 #pragma once
-#include "input/ICommand.h"
+
+#include <SFML/System/Vector2.hpp>
 #include "component/PlayerControlComponent.h"
+#include "input/ICommand.h"
 
-class MoveCommand : public ICommand<PlayerControlComponent> {
+class MoveCommand : public ICommand<PlayerControlComponent>
+{
 public:
-    explicit MoveCommand(Direction dir) : direction_(dir) {}
-    void execute(PlayerControlComponent& playerControl) const override { playerControl.direction = direction_; }
+    explicit MoveCommand(sf::Vector2f movement)
+        : movement_(movement)
+    {
+    }
+
+    void execute(PlayerControlComponent &playerControl) const override
+    {
+        playerControl.move += movement_;
+    }
+
 private:
-    Direction direction_;
+    sf::Vector2f movement_;
 };
 
-class SprintCommand : public ICommand<PlayerControlComponent> {
+class SprintCommand : public ICommand<PlayerControlComponent>
+{
 public:
-    void execute(PlayerControlComponent& playerControl) const override { playerControl.sprinting = true; }
+    void execute(PlayerControlComponent &playerControl) const override
+    {
+        playerControl.sprinting = true;
+    }
 };
 
-class JumpCommand : public ICommand<PlayerControlComponent> {
+class JumpCommand : public ICommand<PlayerControlComponent>
+{
 public:
-    void execute(PlayerControlComponent& playerControl) const override { playerControl.jumpRequested = true; }
+    void execute(PlayerControlComponent &playerControl) const override
+    {
+        playerControl.jumpRequested = true;
+    }
 };
 
-class InteractCommand : public ICommand<PlayerControlComponent> {
+class InteractCommand : public ICommand<PlayerControlComponent>
+{
 public:
-    void execute(PlayerControlComponent& playerControl) const override { playerControl.interactRequested = true; }
+    void execute(PlayerControlComponent &playerControl) const override
+    {
+        playerControl.interactRequested = true;
+    }
 };

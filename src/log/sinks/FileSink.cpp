@@ -18,7 +18,7 @@ namespace {
 }
 
 FileSink::FileSink(const std::filesystem::path& path)
-    : file_(path, std::ios::out | std::ios::app) {
+    : file_(path, std::ios::out | std::ios::trunc) {
 }
 
 void FileSink::Write(const LogRecord& record) {

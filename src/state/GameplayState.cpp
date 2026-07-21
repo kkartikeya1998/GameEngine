@@ -23,10 +23,10 @@ GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMa
       events_(events), fontPath_(std::move(fontPath))
 {
     LOG_INFO("Creating state");
-    auto up = std::make_shared<MoveCommand>(Direction::UP);
-    auto down = std::make_shared<MoveCommand>(Direction::DOWN);
-    auto left = std::make_shared<MoveCommand>(Direction::LEFT);
-    auto right = std::make_shared<MoveCommand>(Direction::RIGHT);
+    auto up = std::make_shared<MoveCommand>(sf::Vector2f{0.f, -1.f});
+    auto down = std::make_shared<MoveCommand>(sf::Vector2f{0.f, 1.f});
+    auto left = std::make_shared<MoveCommand>(sf::Vector2f{-1.f, 0.f});
+    auto right = std::make_shared<MoveCommand>(sf::Vector2f{1.f, 0.f});
     auto sprint = std::make_shared<SprintCommand>();
     auto jump = std::make_shared<JumpCommand>();
     auto interact = std::make_shared<InteractCommand>();
@@ -95,11 +95,10 @@ void GameplayState::Update(float dt)
     PlayerControlComponent input = bindings_.poll(input_);
     controller_->update(dt, input);
 
-
     auto &registry = controller_->getWorld()->registry();
 
     VelocityIntegrationSystem::update(registry, dt);
-    MovementAnimationSystem::update(registry); // new 
+    MovementAnimationSystem::update(registry); // new
     animationSystem_.update(registry, dt);     // moved from Render()
 
     if (auto *pos = registry.get<PositionComponent>(controller_->getPlayer()))
@@ -138,7 +137,7 @@ void GameplayState::Render(RenderSystem &renderSystem, float dt)
         {
             AABB box = collision->resolve(pos->x, pos->y);
             z = box.y + box.height;
-            
+
 #ifdef ENGINE_DEBUG
             renderSystem.submitDebugRect(box.x, box.y, box.width, box.height);
 #endif
