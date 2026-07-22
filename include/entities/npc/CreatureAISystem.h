@@ -75,9 +75,9 @@ namespace CreatureAISystem
 
         auto &pos = *posPtr;
         auto &vel = *velPtr;
-        auto &dir = *dirPtr;
         auto &moveState = *moveStatePtr;
         auto &ai = *aiPtr;
+        (void)dirPtr; // presence-checked above; DirectionSystem writes facing, not this system
 
         switch (ai.state)
         {
@@ -125,10 +125,11 @@ namespace CreatureAISystem
             vel.vy = (toY / dist) * ai.wanderSpeed;
             moveState.current = MovementState::Walking;
 
-            if (std::abs(toX) > std::abs(toY))
-                dir.facing = toX > 0 ? Direction::RIGHT : Direction::LEFT;
-            else
-                dir.facing = toY > 0 ? Direction::DOWN : Direction::UP;
+            // Facing is no longer decided here — DirectionSystem::update
+            // resolves the full 8-way facing from vel.vx/vel.vy for every
+            // entity with a DirectionComponent, this one included. It must
+            // run after this system each frame (see GameController::update)
+            // so it picks up the velocity just set above.
             break;
         }
         case CreatureState::Jumping:

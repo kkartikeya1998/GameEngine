@@ -73,11 +73,17 @@
       }
     },
     "Collision": {
-      "player": {
+      "playerPolitoed": {
         "offset_x": 0.0,
-        "offset_y": -25.0,
+        "offset_y": -30.0,
         "width": 10.0,
         "height": 8.0
+      },
+      "playerAssasin": {
+        "offset_x": 0.0,
+        "offset_y": -110.0,
+        "width": 80.0,
+        "height": 50.0
       },
       "fox": {
         "offset_x": 0.0,
@@ -101,6 +107,22 @@
             4.0,
             4.0,
             10.0
+          ],
+          "loop": true
+        },
+        "run": {
+          "texturePath": "assets\\characters\\politoed\\Walk-Anim.png",
+          "frameWidth": 40,
+          "frameHeight": 72,
+          "frameCount": 7,
+          "frameDurations": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            5.0
           ],
           "loop": true
         },
@@ -167,7 +189,7 @@
   "archetypes": {
     "player": {
       "render": "player",
-      "collision": "player",
+      "collision": "playerPolitoed",
       "pmdAnimation": "player"
     },
     "fox": {

@@ -8,6 +8,7 @@
 #include "system/ItemPickupSystem.h"
 #include "system/MovementAnimationSystem.h"
 #include "system/LifetimeSystem.h"
+#include "system/FloatingTextSystem.h"
 #include "entities/npc/CreatureAISystem.h"
 #include "entities/npc/WanderAIComponent.h"
 #include "component/WorldItemComponent.h"
@@ -33,11 +34,17 @@ void GameController::update(float dt, const PlayerControlComponent &input)
     MovementSystem::update(world_.registry(), playerId_, world_.getActiveMap(), dt,
                            [this](const AABB &box) { return isPositionBlockedFor(playerId_, box); }, &input);
 
-    DirectionSystem::update(world_.registry());                       
     checkItemPickups();
     InteractionSystem::Update(world_.registry(), playerId_, events_, input);
 
     CreatureAISystem::update(world_.registry(), dt);
+
+    // Runs once, after both player and AI velocities are finalized for
+    // this frame, so it resolves full 8-way facing for everyone —
+    // including diagonal wander movement — instead of running too early
+    // and being overwritten (or missing AI velocity entirely).
+    DirectionSystem::update(world_.registry());
+
     for (EntityID id : world_.registry().view<WanderAIComponent>())
     {
         MovementSystem::update(world_.registry(), id, world_.getActiveMap(), dt,
@@ -45,6 +52,7 @@ void GameController::update(float dt, const PlayerControlComponent &input)
     }
 
     MovementAnimationSystem::update(world_.registry());
+    FloatingTextSystem::update(world_.registry());
     LifetimeSystem::update(world_.registry(), dt);
 }
 

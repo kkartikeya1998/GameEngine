@@ -2679,3 +2679,99 @@
     }
   }
 }
+
+
+,
+    "PmdAnimation" : {
+      "player": {
+        "walk": {
+          "texturePath": "assets\\characters\\politoed\\Walk-Anim.png",
+          "frameWidth": 40,
+          "frameHeight": 72,
+          "frameCount": 7,
+          "frameDurations": [
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            10.0
+          ],
+          "loop": true
+        },
+        "run": {
+          "texturePath": "assets\\characters\\politoed\\Walk-Anim.png",
+          "frameWidth": 40,
+          "frameHeight": 72,
+          "frameCount": 7,
+          "frameDurations": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            5
+          ],
+          "loop": true
+        },
+        "attack": {
+          "texturePath": "assets\\characters\\politoed\\Attack-Anim.png",
+          "frameWidth": 72,
+          "frameHeight": 104,
+          "frameCount": 12,
+          "frameDurations": [
+            4.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0
+          ],
+          "loop": false
+        },
+        "sleep": {
+          "texturePath": "assets\\characters\\politoed\\Sleep-Anim.png",
+          "frameWidth": 24,
+          "frameHeight": 32,
+          "frameCount": 2,
+          "frameDurations": [
+            30.0,
+            35.0
+          ],
+          "loop": true
+        },
+        "hurt": {
+          "texturePath": "assets\\characters\\politoed\\Hurt-Anim.png",
+          "frameWidth": 40,
+          "frameHeight": 56,
+          "frameCount": 2,
+          "frameDurations": [
+            2.0,
+            8.0
+          ],
+          "loop": false
+        },
+        "idle": {
+          "texturePath": "assets\\characters\\politoed\\Idle-Anim.png",
+          "frameWidth": 32,
+          "frameHeight": 64,
+          "frameCount": 5,
+          "frameDurations": [
+            40.0,
+            3.0,
+            5.0,
+            3.0,
+            6.0
+          ],
+          "loop": true
+        }
+      }
+    }

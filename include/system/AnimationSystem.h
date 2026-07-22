@@ -3,6 +3,7 @@
 #include <functional>
 #include <optional>
 #include <string>
+#include <unordered_set>
 
 #include "asset/AssetDatabase.h"
 #include "asset/metadata/DirectionNaming.h"
@@ -35,7 +36,16 @@ public:
             // resolveClip now needs assetId directly rather than via a RenderComponent:
             auto clip = resolveClip(*registry.get<SpriteAssetComponent>(id), player.currentAnimation);
             if (!clip)
+            {
+                const std::string &assetId = registry.get<SpriteAssetComponent>(id)->assetId;
+                std::string warnKey = assetId + "_" + player.currentAnimation;
+                if (warnedMissingClips_.insert(warnKey).second)
+                {
+                    LOG_WARNING("AnimationSystem: no clip '" + player.currentAnimation +
+                                "' for asset '" + assetId + "' — entity frame will freeze until this is fixed");
+                }
                 continue;
+            }
 
             advancePlayer(player, dt, *clip, direction.facing);
             writeSpriteFrame(frame, player, *clip, direction.facing);
@@ -58,6 +68,7 @@ private:
     };
 
     const AssetDatabase &assets_;
+    std::unordered_set<std::string> warnedMissingClips_;
 
     std::optional<ResolvedClip> resolveClip(const SpriteAssetComponent &render, const std::string &animName) const
     {
