@@ -5,6 +5,8 @@
 #include "state/MenuInput.h"
 #include "events/Events.h"
 #include "log/Logger.h"
+#include "events/EventQueue.h"     // needed: ctx.events.Push() requires complete EventQueue type
+#include "asset/AssetDatabase.h"   // needed: services_.assets.findItem() requires complete AssetDatabase type
 
 class UseItemCommand : public ICommand<InventoryActionContext>
 {
@@ -35,16 +37,12 @@ public:
     }
 };
 
-InventoryState::InventoryState(InputManager &input,
-                               StateMachine<IGameState> &stateMachine,
+InventoryState::InventoryState(GameServices services,
                                Registry &registry,
                                EntityID player,
-                               EventQueue &events,
-                               AssetDatabase &assets,
                                bool *openFlag,
                                std::filesystem::path fontPath)
-    : input_(input), stateMachine_(stateMachine), registry_(registry), player_(player),
-      events_(events), assets_(assets), openFlag_(openFlag)
+    : services_(services), registry_(registry), player_(player), openFlag_(openFlag)
 {
     LOG_INFO("Creating state");
 
@@ -84,7 +82,7 @@ void InventoryState::RefreshOptions()
         for (int i = 0; i < static_cast<int>(inv->items.size()); ++i)
         {
             const auto &stack = inv->items[i];
-            const auto *meta = assets_.findItem(stack.itemId); // ASSUMPTION: mirrors findRender/findInteraction naming — confirm against AssetDatabase.h
+            const auto *meta = services_.assets.findItem(stack.itemId); // ASSUMPTION: mirrors findRender/findInteraction naming — confirm against AssetDatabase.h
             std::string label = meta ? meta->name : stack.itemId;
             panel_.options.push_back(
                 {label + " x" + std::to_string(stack.quantity),
@@ -107,11 +105,11 @@ void InventoryState::Update(float dt)
         needsRefresh_ = false;
     }
 
-    MenuContext nav = navInput_.poll(input_);
-    if (UISystem::HandleDefaultBack(nav, stateMachine_))
+    MenuContext nav = navInput_.poll(services_.input);
+    if (UISystem::HandleDefaultBack(nav, services_.states))
         return; // OnExit() fires here, clearing openFlag_
 
-    InventoryActionContext actionCtx{registry_.get<InventoryComponent>(player_), assets_, player_, stateMachine_, events_};
+    InventoryActionContext actionCtx{registry_.get<InventoryComponent>(player_), services_.assets, player_, services_.states, services_.events};
     UISystem::HandleNavigation(panel_, nav, actionCtx);
 
     if (nav.confirm)

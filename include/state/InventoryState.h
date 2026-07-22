@@ -6,8 +6,7 @@
 #include "ui/Panel.h"
 #include "entities/Registry.h"
 #include "component/InventoryComponent.h"
-#include "events/EventQueue.h"
-#include "asset/AssetDatabase.h"
+#include "game/GameServices.h"
 
 #include <string>
 
@@ -25,14 +24,11 @@ struct InventoryActionContext
 class InventoryState : public IGameState
 {
 public:
-    InventoryState(InputManager &input,
-                   StateMachine<IGameState> &stateMachine,
+    InventoryState(GameServices services,
                    Registry &registry,
                    EntityID player,
-                   EventQueue &events,
-                   AssetDatabase &assets,
                    bool *openFlag = nullptr,
-                   std::filesystem::path fontPath = {}); // override per state if ever needed
+                   std::filesystem::path fontPath = {});
 
     void OnEnter() override;
     void OnExit() override;
@@ -42,12 +38,9 @@ public:
 private:
     void RefreshOptions();
 
-    InputManager &input_;
-    StateMachine<IGameState> &stateMachine_;
+    GameServices services_;
     Registry &registry_;
     EntityID player_;
-    EventQueue &events_;
-    AssetDatabase &assets_;
 
     bool *openFlag_;
     bool needsRefresh_ = false;
@@ -55,5 +48,5 @@ private:
     KeyBindings<MenuContext> navInput_;
     Panel<InventoryActionContext> panel_;
 
-    std::filesystem::path fontPath_; // resolved through UIFont::GetShared at render time
+    std::filesystem::path fontPath_;
 };

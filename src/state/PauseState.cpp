@@ -36,10 +36,9 @@ void PauseState::OnExit()
     LOG_INFO("Exiting state");
 }
 
-PauseState::PauseState(InputManager &input,
-                       StateMachine<IGameState> &stateMachine,
+PauseState::PauseState(GameServices services,
                        std::filesystem::path fontPath)
-    : input_(input), stateMachine_(stateMachine)
+    : services_(services)
 {
     LOG_INFO("Creating state");
     fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
@@ -63,12 +62,12 @@ void PauseState::Update(float dt)
 {
     LOG_INFO("Updating state");
 
-    MenuContext nav = navInput_.poll(input_); // translate raw keys to menu intent
+    MenuContext nav = navInput_.poll(services_.input); // translate raw keys to menu intent
 
-    if (UISystem::HandleDefaultBack(nav, stateMachine_))
+    if (UISystem::HandleDefaultBack(nav, services_.states))
         return; // Escape already popped — don't also run navigation this frame
 
-    PauseActionContext actionCtx{stateMachine_, input_}; // what Resume/Quit commands need
+    PauseActionContext actionCtx{services_.states, services_.input}; // what Resume/Quit commands need
     UISystem::HandleNavigation(panel_, nav, actionCtx);  // move cursor / fire selected command
 }
 

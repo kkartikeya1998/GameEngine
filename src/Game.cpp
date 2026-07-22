@@ -13,17 +13,13 @@ Game::Game()
           assets_.renderRepository(),
           Assets::Objects::SIMPLE_SUMMER_TILES)),
       animationSystem_(assets_),
-      interactions_(assets_, states_, input_, events_),
+      interactions_(GameServices{input_, assets_, states_, animationSystem_, events_}),
       dispatcher_(events_, assets_, *this, interactions_)
 {
     // straight to gameplay mode
     states_.Push(std::make_unique<GameplayState>(
         GameServices{
-            input_,
-            assets_,
-            states_,
-            animationSystem_,
-            events_},
+            input_, assets_, states_, animationSystem_, events_},
         Assets::Fonts::PIXFAY));
 }
 
@@ -52,15 +48,6 @@ void Game::Render()
 
 void Game::Run()
 {
-    // No try/catch here by design: everything this loop can throw is an
-    // EngineException-derived, unrecoverable failure (see
-    // exceptions/EngineExceptions.h) — asset/renderer init already happened
-    // successfully by the time we're here, so what's left to propagate is
-    // things like a corrupted map file mid-transition. Those belong at the
-    // single top-level boundary in main.cpp, which logs once and exits
-    // with a non-zero code. Catching and logging here too would let Run()
-    // return normally after a fatal error, so main() would report success
-    // (exit code 0) on a crash — see main.cpp.
     LOG_INFO("Engine startup complete. Entering main loop.");
     while (renderSystem_->isOpen())
     {
@@ -74,7 +61,7 @@ void Game::Run()
 
         if (input_.ShouldQuit())
         {
-            break; // fall through to the shutdown log below, instead of returning past it
+            break;
         }
 
         input_.PollEvents();

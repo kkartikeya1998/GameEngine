@@ -5,6 +5,7 @@
 #include "input/KeyBindings.h"
 #include "ui/MenuCommands.h"
 #include "ui/Panel.h"
+#include "game/GameServices.h"
 
 #include <SFML/Graphics/Font.hpp>
 
@@ -23,12 +24,10 @@ struct PauseActionContext
 // gameplay logic, BlocksRenderBelow=false lets the frozen world still
 // render behind whatever pause UI this draws.
 // ---------------------------------------------------------------------------
-
 class PauseState : public IGameState
 {
 public:
-    PauseState(InputManager &input,
-               StateMachine<IGameState> &stateMachine,
+    PauseState(GameServices services,
                std::filesystem::path fontPath = {});
 
     void OnEnter() override;
@@ -37,11 +36,10 @@ public:
     void Render(RenderSystem &renderSystem, float dt) override;
 
 private:
-    InputManager &input_;
-    StateMachine<IGameState> &stateMachine_;
+    GameServices services_;
 
-    KeyBindings<MenuContext> navInput_; // Up/Down/Enter/Escape -> menu intent
-    Panel<PauseActionContext> panel_;   // Continue / Quit options
+    KeyBindings<MenuContext> navInput_;
+    Panel<PauseActionContext> panel_;
 
     std::filesystem::path fontPath_;
 };

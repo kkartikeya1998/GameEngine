@@ -86,14 +86,13 @@ void GameplayState::Update(float dt)
     LOG_INFO("Updating State");
     if (services_.input.WasKeyPressed(Key::Escape))
     {
-        services_.states.Push(std::make_unique<PauseState>(services_.input, services_.states));
+        services_.states.Push(std::make_unique<PauseState>(services_));
         return;
     }
     if (services_.input.WasKeyPressed(Key::I))
     {
         services_.states.Push(std::make_unique<InventoryState>(
-            services_.input, services_.states, controller_->getWorld()->registry(), controller_->getPlayer(),
-            services_.events, services_.assets));
+            services_, controller_->getWorld()->registry(), controller_->getPlayer()));
         return;
     }
 

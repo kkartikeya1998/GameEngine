@@ -6,7 +6,7 @@
 #include "input/KeyBindings.h"
 #include "ui/MenuCommands.h"
 #include "ui/DialogueBoxData.h"
-#include "events/EventQueue.h"
+#include "game/GameServices.h"
 #include <SFML/Graphics/Font.hpp>
 
 class InputManager;
@@ -14,7 +14,7 @@ class InputManager;
 class DialogueState : public IGameState
 {
 public:
-    DialogueState(InputManager &input, StateMachine<IGameState> &stateMachine, EventQueue &events,
+    DialogueState(GameServices services,
                   std::string text, std::filesystem::path fontPath = {});
     void OnEnter() override;
     void OnExit() override;
@@ -23,9 +23,7 @@ public:
     bool BlocksRenderBelow() const override { return false; }
 
 private:
-    InputManager &input_;
-    StateMachine<IGameState> &stateMachine_;
-    EventQueue &events_;
+    GameServices services_;
     KeyBindings<MenuContext> navInput_;
     DialogueBoxData box_;
     std::string text_;

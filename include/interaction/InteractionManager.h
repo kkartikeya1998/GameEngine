@@ -9,18 +9,19 @@
 #include "input/InputManager.h"
 #include "ui/UIFont.h"
 #include "log/Logger.h"
+#include "game/GameServices.h"
 
 class InteractionManager
 {
 public:
-    InteractionManager(AssetDatabase &assets, StateMachine<IGameState> &stateMachine, InputManager &input, EventQueue &events)
-        : assets_(assets), stateMachine_(stateMachine), input_(input), events_(events) {}
+    explicit InteractionManager(GameServices services)
+        : services_(services) {}
 
     void HandleRequested(const InteractionRequested &e)
     {
         if (active_)
             return; // ignore re-triggers mid-interaction
-        active_ = assets_.findInteraction(e.interactionId);
+        active_ = services_.assets.findInteraction(e.interactionId);
         LOG_TRACE("findInteraction(" + e.interactionId + ") -> " + (active_ ? "FOUND, steps=" + std::to_string(active_->steps.size()) : "NULLPTR"));
         if (!active_ || active_->steps.empty())
         {
@@ -78,7 +79,7 @@ private:
         switch (step.type)
         {
         case InteractionStepType::Dialogue:
-            stateMachine_.Push(std::make_unique<DialogueState>(input_, stateMachine_, events_, step.text));
+            services_.states.Push(std::make_unique<DialogueState>(services_, step.text));
             waitingOnState_ = true;
             break;
         case InteractionStepType::Animation:
@@ -88,23 +89,20 @@ private:
         case InteractionStepType::Battle:
             // TODO: BattleState doesn't exist. Stub fires BattleFinished
             // immediately so the pipeline is provably wired end-to-end.
-            events_.Push(BattleFinished{});
+            services_.events.Push(BattleFinished{});
             waitingOnState_ = true;
             break;
         case InteractionStepType::Wait:
             waitTimer_ = 0.f;
             break;
         case InteractionStepType::GrantItem:
-            events_.Push(ItemPickedUp{actor_, step.itemId, step.quantity});
+            services_.events.Push(ItemPickedUp{actor_, step.itemId, step.quantity});
             Advance();
             break;
         }
     }
 
-    AssetDatabase &assets_;
-    StateMachine<IGameState> &stateMachine_;
-    InputManager &input_;
-    EventQueue &events_;
+    GameServices services_;
     EntityID actor_{};
     const InteractionAssetMetadata *active_ = nullptr;
 

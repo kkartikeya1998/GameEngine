@@ -4,6 +4,8 @@
 #include "ui/UISystem.h"
 #include "state/MenuInput.h"
 #include "log/Logger.h"
+#include "events/EventQueue.h"   // needed: services_.events.Push() requires complete EventQueue type
+#include "events/Events.h"       // needed: DialogueFinished lives here
 
 void DialogueState::OnEnter()
 {
@@ -15,9 +17,9 @@ void DialogueState::OnExit()
     LOG_INFO("Exiting state");
 }
 
-DialogueState::DialogueState(InputManager &input, StateMachine<IGameState> &stateMachine, EventQueue &events,
+DialogueState::DialogueState(GameServices services,
                              std::string text, std::filesystem::path fontPath)
-    : input_(input), stateMachine_(stateMachine), events_(events), text_(std::move(text))
+    : services_(services), text_(std::move(text))
 {
     LOG_INFO("Creating state");
     fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
@@ -37,12 +39,12 @@ DialogueState::DialogueState(InputManager &input, StateMachine<IGameState> &stat
 void DialogueState::Update(float dt)
 {
     LOG_INFO("Updating state");
-    MenuContext nav = navInput_.poll(input_);
+    MenuContext nav = navInput_.poll(services_.input);
 
     if (nav.confirm || nav.cancel)
     {
-        events_.Push(DialogueFinished{}); // tell InteractionManager this interaction is over, so it can re-arm
-        stateMachine_.Pop();              // single-line dialogue: any acknowledge dismisses it
+        services_.events.Push(DialogueFinished{}); // tell InteractionManager this interaction is over, so it can re-arm
+        services_.states.Pop();                    // single-line dialogue: any acknowledge dismisses it
         return;
     }
 }
