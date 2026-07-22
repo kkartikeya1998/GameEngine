@@ -3,7 +3,6 @@
 #include "state/GameplayState.h"
 #include "system/GameConstants.h"
 #include "system/InventorySystem.h"
-#include "log/Logger.h"
 #include "asset/AsssetPaths.h"
 
 Game::Game()
@@ -14,58 +13,36 @@ Game::Game()
           assets_.renderRepository(),
           Assets::Objects::SIMPLE_SUMMER_TILES)),
       animationSystem_(assets_),
-      interactions_(assets_, states_, input_, events_)
+      interactions_(assets_, states_, input_, events_),
+      dispatcher_(events_, assets_, *this, interactions_)
 {
     // straight to gameplay mode
     states_.Push(std::make_unique<GameplayState>(
-        input_, assets_, states_, animationSystem_, events_,
+        GameServices{
+            input_,
+            assets_,
+            states_,
+            animationSystem_,
+            events_},
         Assets::Fonts::PIXFAY));
+}
+
+Registry *Game::GetRegistry() const
+{
+    return states_.FindFirst(
+        [](IGameState *state)
+        {
+            return state->GetRegistry();
+        });
 }
 
 void Game::Update(float dt)
 {
     states_.Update(dt);
-    events_.Drain([this](auto &&e) { // [TODO] NEEDS FIXING/ delegation
-        using T = std::decay_t<decltype(e)>;
-        LOG_TRACE(std::string("Draining event: ") + typeid(T).name());
-        if constexpr (std::is_same_v<T, ItemConsumed>)
-        {
 
-            if (Registry *reg = states_.FindFirst([](IGameState *s)
-                                                  { return s->GetRegistry(); }))
-                InventorySystem::handleItemConsumed(*reg, assets_, e);
-            else
-                LOG_WARNING("Game: ItemConsumed drained but no active state has a Registry — event dropped");
-        }
-        else if constexpr (std::is_same_v<T, InteractionRequested>)
-        {
-            interactions_.HandleRequested(e);
-        }
-        else if constexpr (std::is_same_v<T, DialogueFinished>)
-        {
-            interactions_.HandleDialogueFinished(e);
-        }
-        else if constexpr (std::is_same_v<T, BattleFinished>)
-        {
-            interactions_.HandleBattleFinished(e);
-        }
-        else if constexpr (std::is_same_v<T, ItemPickedUp>)
-        {
-            if (Registry *reg = states_.FindFirst([](IGameState *s)
-                                                  { return s->GetRegistry(); }))
-            {
-                if (auto *inv = reg->get<InventoryComponent>(e.owner))
-                    InventorySystem::addItem(*inv, assets_, e.itemId, e.quantity);
-                else
-                    LOG_WARNING(std::format("Game: ItemPickedUp for entity {} with no InventoryComponent — item dropped", e.owner.index));
-            }
-            else
-            {
-                LOG_WARNING("Game: ItemPickedUp drained but no active state has a Registry — event dropped");
-            }
-        }
-    });
-    interactions_.Update(dt); // new
+    dispatcher_.Process();
+
+    interactions_.Update(dt);
 }
 
 void Game::Render()

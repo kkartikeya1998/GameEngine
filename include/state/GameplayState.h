@@ -2,24 +2,19 @@
 
 #include <memory>
 #include <string>
-#include "IGameState.h"
+#include "game/GameServices.h"
 #include "input/KeyBindings.h"
 #include "component/PlayerControlComponent.h"
-#include "asset/AssetDatabase.h"
 #include "system/GameController.h"
-#include "state/StateMachine.h"
-#include "system/AnimationSystem.h"
 #include "render/Camera.h"
-#include "events/EventQueue.h"
-
-class InputManager;
+#include "state/IGameState.h"
 
 class GameplayState : public IGameState
 {
 public:
-    GameplayState(InputManager &input, AssetDatabase &assets, StateMachine<IGameState> &stateMachine,
-                  AnimationSystem &animationSystem, EventQueue &events,
-                  std::filesystem::path fontPath = {});
+    GameplayState(
+        GameServices services,
+        std::filesystem::path fontPath = {});
 
     void OnEnter() override;
     void OnExit() override;
@@ -29,11 +24,7 @@ public:
     Registry *GetRegistry() const override { return controller_ ? &controller_->getWorld()->registry() : nullptr; }
 
 private:
-    InputManager &input_;
-    AssetDatabase &assets_;
-    StateMachine<IGameState> &stateMachine_;
-    AnimationSystem &animationSystem_;
-    EventQueue &events_;
+    GameServices services_;
     std::filesystem::path fontPath_;
     sf::Font font_;
     bool fontLoaded_ = false;

@@ -7,6 +7,7 @@
 #include "state/GameplayState.h"
 #include "state/GameplayCommands.h"
 #include "state/PauseState.h"
+#include "state/InventoryState.h"
 
 #include "component/PositionComponent.h"
 #include "component/SpriteAssetComponent.h"
@@ -15,14 +16,15 @@
 #include "component/CollisionComponent.h"
 #include "system/MovementAnimationSystem.h"
 #include "system/VelocityIntegrationSystem.h"
+#include "system/AnimationSystem.h"
 #include "log/Logger.h"
 
-GameplayState::GameplayState(InputManager &input, AssetDatabase &assets, StateMachine<IGameState> &stateMachine,
-                             AnimationSystem &animationSystem, EventQueue &events, std::filesystem::path fontPath)
-    : input_(input), assets_(assets), stateMachine_(stateMachine), animationSystem_(animationSystem),
-      events_(events), fontPath_(std::move(fontPath))
+GameplayState::GameplayState(GameServices services, std::filesystem::path fontPath)
+    : services_(services),
+      fontPath_(std::move(fontPath))
 {
     LOG_INFO("Creating state");
+
     auto up = std::make_shared<MoveCommand>(sf::Vector2f{0.f, -1.f});
     auto down = std::make_shared<MoveCommand>(sf::Vector2f{0.f, 1.f});
     auto left = std::make_shared<MoveCommand>(sf::Vector2f{-1.f, 0.f});
@@ -48,7 +50,12 @@ void GameplayState::OnEnter()
 {
     LOG_INFO("Entering State");
     // Map/player load happens on entering gameplay, not at app boot.
-    controller_ = std::make_unique<GameController>(1, 600, 600, assets_, events_);
+    controller_ = std::make_unique<GameController>(
+        1,
+        600,
+        600,
+        services_.assets,
+        services_.events);
 
     if (!fontPath_.empty())
     {
@@ -74,32 +81,30 @@ void GameplayState::OnExit()
     controller_.reset();
 }
 
-#include "state/InventoryState.h" // new include, alongside PauseState's
-
 void GameplayState::Update(float dt)
 {
     LOG_INFO("Updating State");
-    if (input_.WasKeyPressed(Key::Escape))
+    if (services_.input.WasKeyPressed(Key::Escape))
     {
-        stateMachine_.Push(std::make_unique<PauseState>(input_, stateMachine_));
+        services_.states.Push(std::make_unique<PauseState>(services_.input, services_.states));
         return;
     }
-    if (input_.WasKeyPressed(Key::I))
+    if (services_.input.WasKeyPressed(Key::I))
     {
-        stateMachine_.Push(std::make_unique<InventoryState>(
-            input_, stateMachine_, controller_->getWorld()->registry(), controller_->getPlayer(),
-            events_, assets_));
+        services_.states.Push(std::make_unique<InventoryState>(
+            services_.input, services_.states, controller_->getWorld()->registry(), controller_->getPlayer(),
+            services_.events, services_.assets));
         return;
     }
 
-    PlayerControlComponent input = bindings_.poll(input_);
+    PlayerControlComponent input = bindings_.poll(services_.input);
     controller_->update(dt, input);
 
     auto &registry = controller_->getWorld()->registry();
 
     VelocityIntegrationSystem::update(registry, dt);
-    MovementAnimationSystem::update(registry); // new
-    animationSystem_.update(registry, dt);     // moved from Render()
+    MovementAnimationSystem::update(registry);
+    services_.animations.update(registry, dt);
 
     if (auto *pos = registry.get<PositionComponent>(controller_->getPlayer()))
     {

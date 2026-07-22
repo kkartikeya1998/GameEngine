@@ -1,7 +1,9 @@
 #pragma once
-#include <variant>
 #include <SFML/System/Vector2.hpp>
 #include "entities/EntityID.h"
+
+#include <string> 
+#include <variant>
 
 struct PlayerJumped { sf::Vector2f position; };
 struct InventoryOpened {};

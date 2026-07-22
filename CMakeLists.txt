@@ -66,6 +66,8 @@ add_executable(PokemonProject
     src/log/sinks/ConsoleSink.cpp
     src/log/sinks/FileSink.cpp
 
+    src/events/EventDispatcher.cpp
+
     src/Game.cpp
     )
 

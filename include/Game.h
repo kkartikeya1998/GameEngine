@@ -12,15 +12,20 @@
 #include "system/AnimationSystem.h"
 #include "interaction/InteractionManager.h"
 #include "events/EventQueue.h"
+#include "events/EventDispatcher.h"
+#include "game/IGameContext.h"
+#include "log/Logger.h"
 // ---------------------------------------------------------------------------
 // Game — top-level owner of long-lived systems and the main loop.
 //
 // ---------------------------------------------------------------------------
-class Game {
+class Game : public IGameContext{
 public:
     Game();
 
     void Run();
+
+    Registry* GetRegistry() const override;
 
 private:
     std::string assetsRoot_;
@@ -30,6 +35,7 @@ private:
     StateMachine<IGameState> states_;
     AnimationSystem animationSystem_;
     EventQueue events_;
+    EventDispatcher dispatcher_;
     InteractionManager interactions_;
     std::unique_ptr<RenderSystem> renderSystem_;
 
