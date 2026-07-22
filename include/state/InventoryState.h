@@ -50,6 +50,7 @@ private:
     AssetDatabase &assets_;
 
     bool *openFlag_;
+    bool needsRefresh_ = false;
 
     KeyBindings<MenuContext> navInput_;
     Panel<InventoryActionContext> panel_;

@@ -123,6 +123,7 @@ void AssetDatabase::finalize()
     interactionRepo_ = std::make_unique<ComponentAssetRepository<InteractionAssetMetadata>>(interactionSection_);
     itemRepo_ = std::make_unique<ComponentAssetRepository<ItemMetadata>>(itemSection_);
 
-    LOG_FATAL("Animation repo:\n" + animationRepo_->debugString());
-    LOG_FATAL("PmdAnimation repo:\n" + pmdAnimationRepo_->debugString());
+    LOG_TRACE("Animation repo:\n" + animationRepo_->debugString());
+    LOG_TRACE("PmdAnimation repo:\n" + pmdAnimationRepo_->debugString());
+    // Add as needed for debugging...
 }

@@ -19,10 +19,6 @@ public:
             return;
 
         std::string consumedId = items[itemIndex_].itemId;
-        items[itemIndex_].quantity -= 1;
-        if (items[itemIndex_].quantity <= 0)
-            items.erase(items.begin() + itemIndex_);
-
         ctx.events.Push(ItemConsumed{ctx.player, consumedId});
     }
 
@@ -105,6 +101,12 @@ void InventoryState::RefreshOptions()
 void InventoryState::Update(float dt)
 {
     LOG_INFO("Updating state");
+    if (needsRefresh_)
+    {
+        RefreshOptions();
+        needsRefresh_ = false;
+    }
+
     MenuContext nav = navInput_.poll(input_);
     if (UISystem::HandleDefaultBack(nav, stateMachine_))
         return; // OnExit() fires here, clearing openFlag_
@@ -113,7 +115,7 @@ void InventoryState::Update(float dt)
     UISystem::HandleNavigation(panel_, nav, actionCtx);
 
     if (nav.confirm)
-        RefreshOptions();
+        needsRefresh_ = true;
 }
 
 void InventoryState::Render(RenderSystem &renderSystem, float dt)
