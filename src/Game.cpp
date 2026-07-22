@@ -30,9 +30,10 @@ void Game::Update(float dt)
         LOG_TRACE(std::string("Draining event: ") + typeid(T).name());
         if constexpr (std::is_same_v<T, ItemConsumed>)
         {
+
             if (Registry *reg = states_.FindFirst([](IGameState *s)
                                                   { return s->GetRegistry(); }))
-                InventorySystem::handleItemConsumed(*reg, e);
+                InventorySystem::handleItemConsumed(*reg, assets_, e);
             else
                 LOG_WARNING("Game: ItemConsumed drained but no active state has a Registry — event dropped");
         }

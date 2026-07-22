@@ -20,6 +20,7 @@ ItemMetadata ItemMetadata::fromJson(const std::string& id, const nlohmann::json&
     m.category    = categoryFromString(entry.value("category", "misc"));
     m.icon        = entry.value("icon", "");
     m.maxStack    = entry.value("maxStack", 99);
+    m.healAmount  = entry.value("healAmount", 0);
     m.interactionId = entry.value("interactionId", "");
     return m;
 }

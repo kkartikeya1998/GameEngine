@@ -13,6 +13,7 @@ struct ItemMetadata : public AssetMetadataName {
     ItemCategory category = ItemCategory::Misc;
     std::string icon;            // key into render/atlas lookup, same convention as RenderAssetMetadata's sprite key
     int maxStack = 99;
+    int healAmount = 0;          // 0 = item has no direct HP effect (e.g. key items, poke balls)
     std::string interactionId;   // empty = item has no direct "use" (e.g. a plot key item); non-empty -> InteractionManager
     static ItemMetadata fromJson(const std::string& id, const nlohmann::json& entry);
 };

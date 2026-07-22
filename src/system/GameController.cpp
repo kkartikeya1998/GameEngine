@@ -7,6 +7,7 @@
 #include "system/InteractionSystem.h"
 #include "system/ItemPickupSystem.h"
 #include "system/MovementAnimationSystem.h"
+#include "system/LifetimeSystem.h"
 #include "entities/npc/CreatureAISystem.h"
 #include "entities/npc/WanderAIComponent.h"
 #include "component/WorldItemComponent.h"
@@ -44,6 +45,7 @@ void GameController::update(float dt, const PlayerControlComponent &input)
     }
 
     MovementAnimationSystem::update(world_.registry());
+    LifetimeSystem::update(world_.registry(), dt);
 }
 
 void GameController::changeMap(int mapId, float newX, float newY)

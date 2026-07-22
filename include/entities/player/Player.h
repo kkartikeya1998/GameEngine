@@ -11,6 +11,7 @@
 
 #include "component/PlayerControlComponent.h"
 #include "component/InventoryComponent.h"
+#include "component/HealthComponent.h"
 #include "system/GameConstants.h"
 #include "entities/EntityFactory.h"
 #include "asset/AsssetPaths.h"
@@ -21,7 +22,8 @@ inline EntityID makePlayer(
     const AssetDatabase &assets,
     float x, float y,
     float movement_speed = GameConstants::PLAYER_SPEED,
-    float sprintMultiplier = 1.5f)
+    float sprintMultiplier = 1.5f,
+    int maxHP = 100)
 {
     EntityID id = registry.create();
 
@@ -33,6 +35,7 @@ inline EntityID makePlayer(
     registry.add<MovementStateComponent>(id);
     registry.add<InventoryComponent>(id);
     registry.add<PlayerControlComponent>(id);
+    registry.add<HealthComponent>(id, maxHP, maxHP);
 
     return id;
 }
