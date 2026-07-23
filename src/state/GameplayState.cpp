@@ -6,8 +6,7 @@
 
 #include "state/GameplayState.h"
 #include "state/GameplayCommands.h"
-#include "state/PauseState.h"
-#include "state/InventoryState.h"
+#include "state/StateFactory.h"
 
 #include "component/PositionComponent.h"
 #include "component/SpriteAssetComponent.h"
@@ -86,12 +85,12 @@ void GameplayState::Update(float dt)
     LOG_INFO("Updating State");
     if (services_.input.WasKeyPressed(Key::Escape))
     {
-        services_.states.Push(std::make_unique<PauseState>(services_));
+        services_.states.Push(StateFactory::MakePause(services_));
         return;
     }
     if (services_.input.WasKeyPressed(Key::I))
     {
-        services_.states.Push(std::make_unique<InventoryState>(
+        services_.states.Push(StateFactory::MakeInventory(
             services_, controller_->getWorld()->registry(), controller_->getPlayer()));
         return;
     }

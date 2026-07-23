@@ -1,10 +1,8 @@
 #pragma once
-#include "asset/AssetDatabase.h"
+
 #include "asset/AsssetPaths.h"
-#include "state/StateMachine.h"
-#include "state/IGameState.h"
 #include "state/DialogueState.h"
-#include "events/EventQueue.h"
+#include "state/StateFactory.h"
 #include "events/Events.h"
 #include "input/InputManager.h"
 #include "ui/UIFont.h"
@@ -79,7 +77,7 @@ private:
         switch (step.type)
         {
         case InteractionStepType::Dialogue:
-            services_.states.Push(std::make_unique<DialogueState>(services_, step.text));
+            services_.states.Push(StateFactory::MakeDialogue(services_, step.text));
             waitingOnState_ = true;
             break;
         case InteractionStepType::Animation:

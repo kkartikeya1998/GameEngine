@@ -14,7 +14,7 @@ class GameplayState : public IGameState
 public:
     GameplayState(
         GameServices services,
-        std::filesystem::path fontPath = {});
+        std::filesystem::path fontPath = Assets::Fonts::PIXFAY);
 
     void OnEnter() override;
     void OnExit() override;

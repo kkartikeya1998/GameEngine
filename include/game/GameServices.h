@@ -1,15 +1,11 @@
 #pragma once
 
-class InputManager;
-class AssetDatabase;
-class AnimationSystem;
-class EventQueue;
-
-template<typename>
-class StateMachine;
-
-class IGameState;
-
+#include "input/InputManager.h"
+#include "asset/AssetDatabase.h"
+#include "state/StateMachine.h"
+#include "state/IGameState.h"
+#include "events/EventQueue.h"
+#include "system/AnimationSystem.h"
 
 struct GameServices
 {

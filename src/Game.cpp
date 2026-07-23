@@ -4,6 +4,7 @@
 #include "system/GameConstants.h"
 #include "system/InventorySystem.h"
 #include "asset/AsssetPaths.h"
+#include "state/StateFactory.h"
 
 Game::Game()
     : assets_(),
@@ -17,10 +18,9 @@ Game::Game()
       dispatcher_(events_, assets_, *this, interactions_)
 {
     // straight to gameplay mode
-    states_.Push(std::make_unique<GameplayState>(
+    states_.Push(StateFactory::MakeGameplay(
         GameServices{
-            input_, assets_, states_, animationSystem_, events_},
-        Assets::Fonts::PIXFAY));
+            input_, assets_, states_, animationSystem_, events_}));
 }
 
 Registry *Game::GetRegistry() const
