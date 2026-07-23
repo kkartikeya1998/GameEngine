@@ -28,8 +28,9 @@ void FileSink::Write(const LogRecord& record) {
     std::string filename = std::filesystem::path(record.location.file_name()).filename().string();
 
     // [YYYY-MM-DD HH:MM:SS.sss] [LEVEL] [FILE:LINE] (FUNC) - MESSAGE
-    file_ << std::format("[{:%Y-%m-%d %H:%M:%S}] [{}] [{}:{}] ({}) - {}\n",
+    file_ << std::format("[{:%H:%M:%S}] [Frame#{}] [{}] [{}:{}] ({}) - {}\n",
                          time,
+                         record.frameNumber,
                          LevelName(record.level),
                          filename,
                          record.location.line(),

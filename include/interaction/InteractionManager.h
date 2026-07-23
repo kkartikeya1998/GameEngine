@@ -42,23 +42,26 @@ public:
             Advance();
     }
 
-    void Update(float dt)
+    void Update()
     {
         if (!active_ || waitingOnState_)
             return;
         const auto &step = active_->steps[stepIndex_];
-        if (step.type == InteractionStepType::Wait)
+        if (step.type == InteractionStepType::Wait && services_.clock.TotalTime() - waitStart_ >= step.waitSeconds)
         {
-            waitTimer_ += dt;
-            if (waitTimer_ >= step.waitSeconds)
-            {
-                waitTimer_ = 0.f;
-                Advance();
-            }
+            Advance();
         }
     }
 
 private:
+    GameServices services_;
+    EntityID actor_{};
+    const InteractionAssetMetadata *active_ = nullptr;
+
+    std::size_t stepIndex_ = 0;
+    double waitStart_ = 0.0;
+    bool waitingOnState_ = false;
+
     void Advance()
     {
         waitingOnState_ = false;
@@ -91,7 +94,7 @@ private:
             waitingOnState_ = true;
             break;
         case InteractionStepType::Wait:
-            waitTimer_ = 0.f;
+            waitStart_ = services_.clock.TotalTime();
             break;
         case InteractionStepType::GrantItem:
             services_.events.Push(ItemPickedUp{actor_, step.itemId, step.quantity});
@@ -99,12 +102,4 @@ private:
             break;
         }
     }
-
-    GameServices services_;
-    EntityID actor_{};
-    const InteractionAssetMetadata *active_ = nullptr;
-
-    std::size_t stepIndex_ = 0;
-    float waitTimer_ = 0.f;
-    bool waitingOnState_ = false;
 };

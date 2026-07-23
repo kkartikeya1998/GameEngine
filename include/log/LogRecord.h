@@ -13,10 +13,10 @@ struct LogRecord {
     std::string_view message;
     std::source_location location;
     std::chrono::system_clock::time_point timestamp;
-
+    uint64_t frameNumber;
+    
     // Potential future metadata can be added here without breaking existing sinks
 
     // std::thread::id threadId;
-    // uint64_t frameNumber;
     // std::string_view subsystem;
 };

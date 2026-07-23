@@ -14,13 +14,12 @@ Game::Game()
           assets_.renderRepository(),
           Assets::Objects::SIMPLE_SUMMER_TILES)),
       animationSystem_(assets_),
-      interactions_(GameServices{input_, assets_, states_, animationSystem_, events_}),
+      interactions_(GameServices{input_, assets_, states_, animationSystem_, events_, clock_}),
       dispatcher_(events_, assets_, *this, interactions_)
 {
-    // straight to gameplay mode
     states_.Push(StateFactory::MakeGameplay(
         GameServices{
-            input_, assets_, states_, animationSystem_, events_}));
+            input_, assets_, states_, animationSystem_, events_, clock_}));
 }
 
 Registry *Game::GetRegistry() const
@@ -32,18 +31,18 @@ Registry *Game::GetRegistry() const
         });
 }
 
-void Game::Update(float dt)
+void Game::Update(const GameClock &clock)
 {
-    states_.Update(dt);
+    states_.Update(static_cast<float>(clock.DeltaTime()));
 
     dispatcher_.Process();
 
-    interactions_.Update(dt);
+    interactions_.Update();
 }
 
 void Game::Render()
 {
-    states_.Render(*renderSystem_, lastDt_);
+    states_.Render(*renderSystem_, static_cast<float>(clock_.DeltaTime()));
 }
 
 void Game::Run()
@@ -51,9 +50,9 @@ void Game::Run()
     LOG_INFO("Engine startup complete. Entering main loop.");
     while (renderSystem_->isOpen())
     {
-        lastDt_ = gameClock_.restart().asSeconds();
+        clock_.BeginFrame(wallClock_.restart().asSeconds());
+        Logger::SetFrameNumber(clock_.FrameNumber());
 
-        // first check for qindow close events before polling input, so we don't miss a quit request
         while (auto event = renderSystem_->pollEvent())
         {
             input_.ProcessEvent(*event);
@@ -66,8 +65,16 @@ void Game::Run()
 
         input_.PollEvents();
 
-        Update(lastDt_);
+        // Fixed-step slot — no-op today, ready for Physics/AI FixedUpdate once those exist:
+        // while (clock_.ShouldRunFixedUpdate())
+        // {
+        //     clock_.ConsumeFixedStep();
+        // }
+
+        Update(clock_);
         Render();
+
+        clock_.EndFrame();
     }
     LOG_INFO("Engine shutting down.");
 }

@@ -14,6 +14,7 @@
 #include "events/EventQueue.h"
 #include "events/EventDispatcher.h"
 #include "game/IGameContext.h"
+#include "time/GameClock.h"
 #include "log/Logger.h"
 // ---------------------------------------------------------------------------
 // Game — top-level owner of long-lived systems and the main loop.
@@ -39,9 +40,9 @@ private:
     InteractionManager interactions_;
     std::unique_ptr<RenderSystem> renderSystem_;
 
-    sf::Clock gameClock_;
-    float lastDt_ = 0.f;
+    sf::Clock wallClock_;   // renamed from gameClock_ — raw OS clock, private to Game
+    GameClock clock_;       // canonical engine clock
 
-    void Update(float dt);
+    void Update(const GameClock& clock);
     void Render();
 };
