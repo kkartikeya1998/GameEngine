@@ -1,5 +1,5 @@
 #pragma once
-#include "entities/Registry.h"
+#include "engine/ecs/Registry.h"
 #include "component/LifetimeComponent.h"
 
 // Ticks down any entity carrying a LifetimeComponent and destroys it at zero.

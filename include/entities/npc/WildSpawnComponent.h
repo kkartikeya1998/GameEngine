@@ -1,5 +1,5 @@
 #pragma once
-#include "entities/Component.h"
+#include "engine/ecs/Component.h"
 
 // Marks an overworld entity as a wild Pokemon encounter. Deliberately
 // just id+level — never a Pokemon/WildPokemon instance. The real

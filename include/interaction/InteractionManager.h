@@ -1,13 +1,13 @@
 #pragma once
 
-#include "asset/AsssetPaths.h"
-#include "state/DialogueState.h"
-#include "state/StateFactory.h"
-#include "events/Events.h"
-#include "input/InputManager.h"
-#include "ui/UIFont.h"
-#include "log/Logger.h"
-#include "game/GameServices.h"
+#include "engine/assets/AsssetPaths.h"
+#include "game/state/DialogueState.h"
+#include "game/state/StateFactory.h"
+#include "engine/events/Events.h"
+#include "engine/input/InputManager.h"
+#include "game/ui/UIFont.h"
+#include "engine/logging/Logger.h"
+#include "engine/services/GameServices.h"
 
 class InteractionManager
 {

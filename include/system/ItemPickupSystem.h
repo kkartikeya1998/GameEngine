@@ -1,7 +1,7 @@
 #pragma once
-#include "entities/Registry.h"
-#include "asset/AssetDatabase.h"
-#include "events/EventQueue.h"
+#include "engine/ecs/Registry.h"
+#include "engine/assets/AssetDatabase.h"
+#include "engine/events/EventQueue.h"
 
 namespace ItemPickupSystem {
     // Adds the world item's contents to `player`'s inventory, pushes

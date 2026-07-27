@@ -1,4 +1,4 @@
-#include "world/World.h"
+#include "game/world/World.h"
 
 World::World(const AssetDatabase& assets)
     : loader_(assets)

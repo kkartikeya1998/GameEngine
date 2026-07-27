@@ -1,12 +1,13 @@
-#include "world/MapLoader.h"
-#include "world/Map.h"
-#include "log/Logger.h"
+#include "game/world/MapLoader.h"
+#include "game/world/Map.h"
+#include "engine/logging/Logger.h"
 #include "entities/npc/TileRestrictionComponent.h" // not actually being used
-#include "entities/pokemon/WildPokemon.h"
+#include "game/ecs/factories/WildPokemon.h"
 #include "system/GameConstants.h"
-#include "entities/EntityFactory.h"
-#include "asset/AsssetPaths.h"
-#include "exceptions/EngineExceptions.h"
+#include "engine/ecs/EntityFactory.h"
+#include "engine/assets/AsssetPaths.h"
+#include "engine/utility/EngineExceptions.h"
+#include "engine/assets/metadata/CollisionAssetMetadata.h"
 
 #include "component/WorldItemComponent.h"
 #include "component/InteractableComponent.h"
@@ -135,12 +136,22 @@ void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
                 // blank tile is far easier to spot and fix in content than
                 // a crash on load.
                 LOG_ERROR(std::format("MapLoader: unknown tile render id '{}' at ({},{}) in {} — leaving tile blank",
-                                       typeName, x, y, mapPath));
+                                      typeName, x, y, mapPath));
                 continue;
             }
 
             Tile tile;
 
+            const CollisionAssetMetadata *tileCollision = assets_.findCollision(typeName);
+            if (tileCollision)
+            {
+                if (tileCollision->data.solid)
+                    tile.setTerrain(TerrainType::Wall);
+                else if (any(tileCollision->data.movementFlags & MovementMode::Surfing) &&
+                         !any(tileCollision->data.movementFlags & MovementMode::Walking))
+                    tile.setTerrain(TerrainType::Water);
+                tile.setMovementFlags(tileCollision->data.movementFlags);
+            }
             SpriteAssetComponent tileAsset(
                 typeName,
                 RenderLayer::Terrain,

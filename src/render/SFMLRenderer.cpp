@@ -1,6 +1,6 @@
-#include "render/SFMLRenderer.h"
-#include "exceptions/EngineExceptions.h"
-#include "log/Logger.h"
+#include "engine/render/SFMLRenderer.h"
+#include "engine/utility/EngineExceptions.h"
+#include "engine/logging/Logger.h"
 #include <SFML/Graphics.hpp>
 #include <format>
 

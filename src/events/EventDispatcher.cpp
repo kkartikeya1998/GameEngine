@@ -1,11 +1,11 @@
-#include "events/EventDispatcher.h"
+#include "engine/events/EventDispatcher.h"
 
-#include "asset/AssetDatabase.h"
+#include "engine/assets/AssetDatabase.h"
 #include "interaction/InteractionManager.h"
 #include "system/InventorySystem.h"
 #include "component/InventoryComponent.h"
-#include "entities/Registry.h"
-#include "log/Logger.h"
+#include "engine/ecs/Registry.h"
+#include "engine/logging/Logger.h"
 
 #include <string>
 

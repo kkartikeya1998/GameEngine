@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "entities/Component.h"
+#include "engine/ecs/Component.h"
 
 // One stack of a single item type. No displayName — resolved from
 // ItemMetadata via itemId at query/display time, so renaming an item

@@ -3,7 +3,7 @@
     "Render": {
       "species1": {
         "texture": "assets/characters/pokemon.jpeg",
-        "tile_size": 64,
+        "tile_size": 24,
         "x": 0,
         "y": 0,
         "w": 0,
@@ -11,7 +11,7 @@
       },
       "species4": {
         "texture": "assets/characters/pokemon.jpeg",
-        "tile_size": 32,
+        "tile_size": 24,
         "x": 32,
         "y": 0,
         "w": 32,

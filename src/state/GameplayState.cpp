@@ -1,22 +1,22 @@
-#include "input/InputManager.h"
+#include "engine/input/InputManager.h"
 
-#include "render/RenderSystem.h"
+#include "engine/render/RenderSystem.h"
 
 #include "system/CameraSystem.h"
 
-#include "state/GameplayState.h"
-#include "state/GameplayCommands.h"
-#include "state/StateFactory.h"
+#include "game/state/GameplayState.h"
+#include "game/state/GameplayCommands.h"
+#include "game/state/StateFactory.h"
 
-#include "component/PositionComponent.h"
+#include "game/ecs/actor/PositionComponent.h"
 #include "component/SpriteAssetComponent.h"
 #include "component/SpriteFrameComponent.h"
 #include "component/TextRenderComponent.h"
-#include "component/CollisionComponent.h"
+#include "game/ecs/actor/CollisionComponent.h"
 #include "system/MovementAnimationSystem.h"
-#include "system/VelocityIntegrationSystem.h"
+#include "game/ecs/actor/VelocityIntegrationSystem.h"
 #include "system/AnimationSystem.h"
-#include "log/Logger.h"
+#include "engine/logging/Logger.h"
 
 GameplayState::GameplayState(GameServices services, std::filesystem::path fontPath)
     : services_(services),
@@ -50,9 +50,9 @@ void GameplayState::OnEnter()
     LOG_INFO("Entering State");
     // Map/player load happens on entering gameplay, not at app boot.
     controller_ = std::make_unique<GameController>(
-        1,
-        600,
-        600,
+        1, // map-id
+        100, // spawning position
+        100,
         services_.assets,
         services_.events);
 

@@ -2,6 +2,8 @@
 
 class Registry;
 
+
+// NEED TO REMOVE SOMEHOW. Exists so the services dont know about the game itself.
 class IGameContext
 {
 public:

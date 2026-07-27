@@ -1,8 +1,8 @@
 #pragma once
 #include <algorithm>
-#include "entities/Registry.h"
+#include "engine/ecs/Registry.h"
 #include "component/FloatingTextComponent.h"
-#include "component/PositionComponent.h"
+#include "game/ecs/actor/PositionComponent.h"
 #include "component/TextRenderComponent.h"
 #include "component/LifetimeComponent.h"
 

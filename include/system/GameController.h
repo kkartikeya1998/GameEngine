@@ -3,11 +3,11 @@
 #include <memory>
 #include <string>
 
-#include "world/World.h"
-#include "entities/Registry.h"
-#include "entities/player/Player.h"
+#include "game/world/World.h"
+#include "engine/ecs/Registry.h"
+#include "game/ecs/factories/Player.h"
 #include "component/PlayerControlComponent.h"
-#include "events/EventQueue.h"
+#include "engine/events/EventQueue.h"
 
 // ---------------------------------------------------------------------------
 // GameController — manages World and Player lifecycle.

@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/System/Vector2.hpp>
-#include "entities/Component.h"
-#include "entities/EntityID.h"
+#include "engine/ecs/Component.h"
+#include "engine/ecs/EntityID.h"
 
 // Attaches a presentation-only entity (e.g. a "+10 HP" popup) to an owner
 // entity so it can track the owner's position and animate independently

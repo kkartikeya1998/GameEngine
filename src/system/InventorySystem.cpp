@@ -1,12 +1,12 @@
 #include "system/InventorySystem.h"
-#include "entities/Registry.h"
+#include "engine/ecs/Registry.h"
 #include "component/HealthComponent.h"
-#include "component/PositionComponent.h"
+#include "game/ecs/actor/PositionComponent.h"
 #include "component/TextRenderComponent.h"
 #include "component/LifetimeComponent.h"
 #include "component/FloatingTextComponent.h"
 #include "system/GameConstants.h"
-#include "log/Logger.h"
+#include "engine/logging/Logger.h"
 #include <algorithm>
 
 int InventorySystem::addItem(InventoryComponent& inv, const AssetDatabase& assets,

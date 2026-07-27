@@ -1,6 +1,6 @@
 // WanderAIComponent.h
 #pragma once
-#include "entities/Component.h"
+#include "engine/ecs/Component.h"
 
 enum class CreatureState {
     Idle,

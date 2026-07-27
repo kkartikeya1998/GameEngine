@@ -1,4 +1,4 @@
-#include "system/MovementSystem.h"
+#include "game/ecs/actor/MovementSystem.h"
 #include "system/GameConstants.h"
 #include <algorithm>
 
@@ -15,9 +15,12 @@ namespace MovementSystem
         auto *velocity = registry.get<VelocityComponent>(id);
         auto *direction = registry.get<DirectionComponent>(id);
         auto *state = registry.get<MovementStateComponent>(id);
+        auto *capability = registry.get<MovementCapabilityComponent>(id);
 
         if (!position || !velocity || !direction || !state)
             return;
+
+        MovementMode allowedModes = capability ? capability->flags : MovementMode::Walking;
 
         bool sprintRequested = false;
 
@@ -52,7 +55,7 @@ namespace MovementSystem
             float dx = velocity->vx * dt;
             AABB testX = collision ? collision->resolve(position->x + dx, position->y)
                                    : AABB{position->x + dx, position->y, 0.f, 0.f};
-            if (!isBlocked(testX) && mapBoundsCheck(map, testX) && map.isWalkable(testX))
+            if (!isBlocked(testX) && mapBoundsCheck(map, testX) && map.isPassable(testX, allowedModes))
             {
                 position->x += dx;
                 moved = true;
@@ -66,7 +69,7 @@ namespace MovementSystem
             float dy = velocity->vy * dt;
             AABB testY = collision ? collision->resolve(position->x, position->y + dy)
                                    : AABB{position->x, position->y + dy, 0.f, 0.f};
-            if (!isBlocked(testY) && mapBoundsCheck(map, testY) && map.isWalkable(testY))
+            if (!isBlocked(testY) && mapBoundsCheck(map, testY) && map.isPassable(testY, allowedModes))
             {
                 position->y += dy;
                 moved = true;

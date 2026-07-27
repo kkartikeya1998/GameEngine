@@ -1,8 +1,8 @@
 #pragma once
-#include "entities/Registry.h"
+#include "engine/ecs/Registry.h"
 #include "component/MovementStateComponent.h"
 #include "component/AnimationComponent.h"
-#include "log/Logger.h"
+#include "engine/logging/Logger.h"
 
 // ---------------------------------------------------------------------------
 // MovementAnimationSystem — the ONLY place "movement state" maps to

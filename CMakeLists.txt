@@ -53,15 +53,15 @@ add_executable(PokemonProject
     src/render/atlases/Atlas.cpp
     src/render/atlases/TileAtlas.cpp
 
-    src/asset/AssetDatabase.cpp
-    src/asset/metadata/AnimationAssetMetadata.cpp
-    src/asset/metadata/CollisionAssetMetadata.cpp
-    src/asset/metadata/RenderAssetMetadata.cpp
-    src/asset/metadata/AnimationAssetMetadata.cpp
-    src/asset/metadata/InteractionAssetMetadata.cpp
-    src/asset/metadata/ArchetypeDefinition.cpp
-    src/asset/metadata/ItemMetadata.cpp
-    src/asset/source/JsonMetadataSource.cpp
+    src/engine/assets/AssetDatabase.cpp
+    src/engine/assets/metadata/AnimationAssetMetadata.cpp
+    src/engine/assets/metadata/CollisionAssetMetadata.cpp
+    src/engine/assets/metadata/RenderAssetMetadata.cpp
+    src/engine/assets/metadata/AnimationAssetMetadata.cpp
+    src/engine/assets/metadata/InteractionAssetMetadata.cpp
+    src/engine/assets/metadata/ArchetypeDefinition.cpp
+    src/engine/assets/metadata/ItemMetadata.cpp
+    src/engine/assets/source/JsonMetadataSource.cpp
 
     src/log/Logger.cpp
     src/log/sinks/ConsoleSink.cpp

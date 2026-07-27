@@ -2,10 +2,10 @@
 
 #include <cstdlib>
 #include <cmath>
-#include "entities/Registry.h"
-#include "component/PositionComponent.h"
-#include "component/VelocityComponent.h"
-#include "component/DirectionComponent.h"
+#include "engine/ecs/Registry.h"
+#include "game/ecs/actor/PositionComponent.h"
+#include "game/ecs/actor/VelocityComponent.h"
+#include "game/ecs/actor/DirectionComponent.h"
 #include "component/MovementStateComponent.h"
 #include "entities/npc/WanderAIComponent.h"
 #include "entities/npc/TileRestrictionComponent.h"

@@ -1,8 +1,8 @@
 #pragma once
 #include "component/InventoryComponent.h"
-#include "asset/AssetDatabase.h"
-#include "events/Events.h"
-#include "entities/Registry.h"
+#include "engine/assets/AssetDatabase.h"
+#include "engine/events/Events.h"
+#include "engine/ecs/Registry.h"
 // Owns inventory mutation rules (stacking/capacity) and the ItemConsumed
 // event handler. Does NOT own item behavior — that's InteractionManager's
 // job via ItemMetadata::interactionId.

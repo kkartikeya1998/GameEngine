@@ -1,8 +1,8 @@
 #pragma once
 
-#include "component/PositionComponent.h"
-#include "world/Map.h"
-#include "render/Camera.h"
+#include "game/ecs/actor/PositionComponent.h"
+#include "game/world/Map.h"
+#include "engine/render/Camera.h"
 
 // ---------------------------------------------------------------------------
 // CameraSystem — stateless free function, same shape as MovementSystem.

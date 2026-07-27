@@ -1,8 +1,8 @@
-#include "state/StateFactory.h"
-#include "state/PauseState.h"
-#include "state/InventoryState.h"
-#include "state/DialogueState.h"
-#include "state/GameplayState.h"
+#include "game/state/StateFactory.h"
+#include "game/state/PauseState.h"
+#include "game/state/InventoryState.h"
+#include "game/state/DialogueState.h"
+#include "game/state/GameplayState.h"
 
 namespace StateFactory
 {

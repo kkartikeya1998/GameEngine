@@ -1,10 +1,10 @@
-#include "state/PauseState.h"
-#include "log/Logger.h"
-#include "state/StateMachine.h"
-#include "input/InputManager.h"
-#include "asset/AsssetPaths.h"
-#include "ui/UISystem.h"
-#include "state/MenuInput.h"
+#include "game/state/PauseState.h"
+#include "engine/logging/Logger.h"
+#include "game/state/StateMachine.h"
+#include "engine/input/InputManager.h"
+#include "engine/assets/AsssetPaths.h"
+#include "game/ui/UISystem.h"
+#include "game/state/MenuInput.h"
 
 // Resumes gameplay by popping this state — OnResume() fires on GameplayState below
 class ResumeCommand : public ICommand<PauseActionContext>

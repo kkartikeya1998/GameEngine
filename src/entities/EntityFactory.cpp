@@ -1,13 +1,13 @@
-#include "entities/EntityFactory.h"
-#include "component/PositionComponent.h"
+#include "engine/ecs/EntityFactory.h"
+#include "game/ecs/actor/PositionComponent.h"
 #include "component/SpriteAssetComponent.h"
 #include "component/SpriteFrameComponent.h"
-#include "component/CollisionComponent.h"
+#include "game/ecs/actor/CollisionComponent.h"
 #include "component/AnimationComponent.h"
 #include "component/InteractableComponent.h"
 #include "component/AnimationComponent.h"
 #include "system/GameConstants.h"
-#include "log/Logger.h"
+#include "engine/logging/Logger.h"
 
 namespace EntityFactory
 {

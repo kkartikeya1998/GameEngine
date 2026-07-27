@@ -1,6 +1,6 @@
-#include "world/Map.h"
+#include "game/world/Map.h"
 #include "system/GameConstants.h"
-#include "exceptions/Assert.h"
+#include "engine/utility/Assert.h"
 
 #include <stdexcept>
 #include <utility>
@@ -33,16 +33,31 @@ void Map::set_tile(int x, int y, Tile tile) {
 }
 
 bool Map::isWalkable(const AABB& box) const {
-    // -0.01f pulls the far edge back so a box exactly flush against a tile
-    // boundary doesn't count the next tile over as overlapped.
+    return isPassable(box, MovementMode::Walking);
+}
+
+bool Map::isPassable(const AABB& box, MovementMode allowedModes) const {
     int startX = static_cast<int>(box.x) / GameConstants::TILE_SIZE;
     int startY = static_cast<int>(box.y) / GameConstants::TILE_SIZE;
     int endX = static_cast<int>(box.x + box.width - 0.01f) / GameConstants::TILE_SIZE;
     int endY = static_cast<int>(box.y + box.height - 0.01f) / GameConstants::TILE_SIZE;
 
-    for (int y = startY; y <= endY; ++y)
-        for (int x = startX; x <= endX; ++x)
-            if (tile_at(x, y).getTerrain() == TerrainType::Solid)
+    for (int y = startY; y <= endY; ++y) {
+        for (int x = startX; x <= endX; ++x) {
+            const Tile& t = tile_at(x, y);
+
+            if (t.getTerrain() == TerrainType::Wall)
+                return false; // walls block every mode, including flight
+
+            if (t.getTerrain() == TerrainType::Water) {
+                if (!any(allowedModes & (MovementMode::Surfing | MovementMode::Flying)))
+                    return false;
+                continue;
+            }
+
+            if (!any(t.getMovementFlags() & allowedModes))
                 return false;
+        }
+    }
     return true;
 }

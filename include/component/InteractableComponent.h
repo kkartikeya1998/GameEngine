@@ -1,5 +1,5 @@
 #pragma once
-#include "entities/Component.h"
+#include "engine/ecs/Component.h"
 #include <string>
 
 struct InteractableComponent : public Component {

@@ -1,7 +1,7 @@
-#include "render/RenderSystem.h"
+#include "engine/render/RenderSystem.h"
 #include "system/GameConstants.h"
-#include "exceptions/Assert.h"
-#include "log/Logger.h"
+#include "engine/utility/Assert.h"
+#include "engine/logging/Logger.h"
 #include <algorithm>
 #include <format>
 

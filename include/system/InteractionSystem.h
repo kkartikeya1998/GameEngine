@@ -1,14 +1,14 @@
 #pragma once
-#include "entities/Registry.h"
-#include "events/EventQueue.h"
-#include "events/Events.h"
-#include "component/PositionComponent.h"
-#include "component/DirectionComponent.h"
+#include "engine/ecs/Registry.h"
+#include "engine/events/EventQueue.h"
+#include "engine/events/Events.h"
+#include "game/ecs/actor/PositionComponent.h"
+#include "game/ecs/actor/DirectionComponent.h"
 #include "component/InteractableComponent.h"
 #include "component/PlayerControlComponent.h"
-#include "component/CollisionComponent.h"
+#include "game/ecs/actor/CollisionComponent.h"
 #include "system/GameConstants.h"
-#include "log/Logger.h"
+#include "engine/logging/Logger.h"
 
 namespace InteractionSystem
 {

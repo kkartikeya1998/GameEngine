@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "render/RenderLayer.h"
+#include "engine/render/RenderLayer.h"
 
 // Identity + placement metadata for a renderable entity. Set once at
 // EntityFactory::populate() time; AnimationSystem never touches this.

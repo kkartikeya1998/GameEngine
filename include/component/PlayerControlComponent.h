@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
-#include "entities/Component.h"
+#include "engine/ecs/Component.h"
 
 struct PlayerControlComponent : public Component
 {

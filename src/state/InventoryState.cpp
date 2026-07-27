@@ -1,12 +1,12 @@
-#include "state/InventoryState.h"
-#include "input/InputManager.h"
-#include "asset/AsssetPaths.h"
-#include "ui/UISystem.h"
-#include "state/MenuInput.h"
-#include "events/Events.h"
-#include "log/Logger.h"
-#include "events/EventQueue.h"     // needed: ctx.events.Push() requires complete EventQueue type
-#include "asset/AssetDatabase.h"   // needed: services_.assets.findItem() requires complete AssetDatabase type
+#include "game/state/InventoryState.h"
+#include "engine/input/InputManager.h"
+#include "engine/assets/AsssetPaths.h"
+#include "game/ui/UISystem.h"
+#include "game/state/MenuInput.h"
+#include "engine/events/Events.h"
+#include "engine/logging/Logger.h"
+#include "engine/events/EventQueue.h"     // needed: ctx.events.Push() requires complete EventQueue type
+#include "engine/assets/AssetDatabase.h"   // needed: services_.assets.findItem() requires complete AssetDatabase type
 
 class UseItemCommand : public ICommand<InventoryActionContext>
 {

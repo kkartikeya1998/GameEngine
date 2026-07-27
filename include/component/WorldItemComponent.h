@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "entities/Component.h"
+#include "engine/ecs/Component.h"
 
 // Marks an entity as a ground item pickup. Render/collision come from the
 // entity's normal archetype — this component

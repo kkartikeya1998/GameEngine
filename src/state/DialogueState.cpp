@@ -1,11 +1,11 @@
-#include "state/DialogueState.h"
-#include "input/InputManager.h"
-#include "asset/AsssetPaths.h"
-#include "ui/UISystem.h"
-#include "state/MenuInput.h"
-#include "log/Logger.h"
-#include "events/EventQueue.h"   // needed: services_.events.Push() requires complete EventQueue type
-#include "events/Events.h"       // needed: DialogueFinished lives here
+#include "game/state/DialogueState.h"
+#include "engine/input/InputManager.h"
+#include "engine/assets/AsssetPaths.h"
+#include "game/ui/UISystem.h"
+#include "game/state/MenuInput.h"
+#include "engine/logging/Logger.h"
+#include "engine/events/EventQueue.h"   // needed: services_.events.Push() requires complete EventQueue type
+#include "engine/events/Events.h"       // needed: DialogueFinished lives here
 
 void DialogueState::OnEnter()
 {

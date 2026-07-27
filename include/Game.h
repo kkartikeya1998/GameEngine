@@ -4,18 +4,18 @@
 #include <string>
 #include <SFML/System/Clock.hpp>
 
-#include "asset/AssetDatabase.h"
-#include "input/InputManager.h"
-#include "state/StateMachine.h"
-#include "render/RenderSystem.h"
-#include "state/IGameState.h"
+#include "engine/assets/AssetDatabase.h"
+#include "engine/input/InputManager.h"
+#include "game/state/StateMachine.h"
+#include "engine/render/RenderSystem.h"
+#include "game/state/IGameState.h"
 #include "system/AnimationSystem.h"
 #include "interaction/InteractionManager.h"
-#include "events/EventQueue.h"
-#include "events/EventDispatcher.h"
+#include "engine/events/EventQueue.h"
+#include "engine/events/EventDispatcher.h"
 #include "game/IGameContext.h"
-#include "time/GameClock.h"
-#include "log/Logger.h"
+#include "engine/time/GameClock.h"
+#include "engine/logging/Logger.h"
 // ---------------------------------------------------------------------------
 // Game — top-level owner of long-lived systems and the main loop.
 //

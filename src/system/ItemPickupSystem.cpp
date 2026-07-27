@@ -2,7 +2,7 @@
 #include "component/InventoryComponent.h"
 #include "component/WorldItemComponent.h"
 #include "system/InventorySystem.h"
-#include "events/Events.h"
+#include "engine/events/Events.h"
 
 void ItemPickupSystem::pickup(Registry& registry, const AssetDatabase& assets, EventQueue& events,
                                EntityID player, EntityID worldItem) {

@@ -1,7 +1,7 @@
 #include "Game.h"
-#include "log/Logger.h"
-#include "log/ConsoleSink.h"
-#include "log/FileSink.h"
+#include "engine/logging/Logger.h"
+#include "engine/logging/ConsoleSink.h"
+#include "engine/logging/FileSink.h"
 
 #include <stdexcept>
 

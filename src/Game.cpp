@@ -1,10 +1,10 @@
 #include "Game.h"
-#include "render/SFMLRenderer.h"
-#include "state/GameplayState.h"
+#include "engine/render/SFMLRenderer.h"
+#include "game/state/GameplayState.h"
 #include "system/GameConstants.h"
 #include "system/InventorySystem.h"
-#include "asset/AsssetPaths.h"
-#include "state/StateFactory.h"
+#include "engine/assets/AsssetPaths.h"
+#include "game/state/StateFactory.h"
 
 Game::Game()
     : assets_(),

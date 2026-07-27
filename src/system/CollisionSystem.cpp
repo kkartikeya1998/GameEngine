@@ -1,5 +1,5 @@
-#include "system/CollisionSystem.h"
-#include "component/CollisionComponent.h"
+#include "game/ecs/actor/CollisionSystem.h"
+#include "game/ecs/actor/CollisionComponent.h"
 
 namespace CollisionSystem {
 

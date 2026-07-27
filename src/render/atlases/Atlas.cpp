@@ -1,6 +1,6 @@
-#include "render/atlases/Atlas.h"
-#include "exceptions/EngineExceptions.h"
-#include "log/Logger.h"
+#include "engine/render/atlases/Atlas.h"
+#include "engine/utility/EngineExceptions.h"
+#include "engine/logging/Logger.h"
 #include <format>
 
 Atlas::Atlas(const std::filesystem::path& spritesheet_path)

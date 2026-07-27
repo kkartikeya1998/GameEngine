@@ -1,6 +1,6 @@
 #pragma once
 #include <algorithm>
-#include "entities/Component.h"
+#include "engine/ecs/Component.h"
 
 // Authoritative HP for any entity that can take damage or be healed.
 // currentHP is the single source of truth — presentation (health bar fill,

@@ -5,19 +5,19 @@
 #include <string>
 #include <unordered_set>
 
-#include "asset/AssetDatabase.h"
-#include "asset/metadata/DirectionNaming.h"
-#include "asset/metadata/PmdDirectionOrder.h"
+#include "engine/assets/AssetDatabase.h"
+#include "engine/assets/metadata/DirectionNaming.h"
+#include "engine/assets/metadata/PmdDirectionOrder.h"
 
-#include "entities/Registry.h"
+#include "engine/ecs/Registry.h"
 
 #include "component/SpriteFrameComponent.h"
-#include "component/DirectionComponent.h"
+#include "game/ecs/actor/DirectionComponent.h"
 #include "component/AnimationComponent.h"
 
 #include "system/MovementAnimationSystem.h"
 
-#include "log/Logger.h"
+#include "engine/logging/Logger.h"
 
 class AnimationSystem
 {

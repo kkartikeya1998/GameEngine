@@ -1,0 +1,28 @@
+#pragma once
+#include <SFML/System/Vector2.hpp>
+#include "engine/ecs/EntityID.h"
+
+#include <string> 
+#include <variant>
+
+struct PlayerJumped { sf::Vector2f position; };
+struct InventoryOpened {};
+struct GamePaused {};
+struct GameResumed {};
+struct InteractionRequested { EntityID actor; EntityID target; std::string interactionId; };
+struct DialogueFinished {};
+struct BattleFinished {};
+struct ItemConsumed { EntityID owner; std::string itemId; };
+struct ItemPickedUp { EntityID owner; std::string itemId; int quantity; };
+
+using GameEvent = std::variant<
+    PlayerJumped,
+    InventoryOpened,
+    GamePaused,
+    GameResumed,
+    InteractionRequested,
+    DialogueFinished,
+    BattleFinished,
+    ItemConsumed,
+    ItemPickedUp
+>;
