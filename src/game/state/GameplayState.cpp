@@ -20,6 +20,7 @@
 
 GameplayState::GameplayState(GameServices services, std::filesystem::path fontPath)
     : services_(services),
+      animationSystem_(services.assets),
       fontPath_(std::move(fontPath))
 {
     LOG_INFO("Creating state");
@@ -50,7 +51,7 @@ void GameplayState::OnEnter()
     LOG_INFO("Entering State");
     // Map/player load happens on entering gameplay, not at app boot.
     controller_ = std::make_unique<GameController>(
-        1, // map-id
+        1,   // map-id
         100, // spawning position
         100,
         services_.assets,
@@ -102,7 +103,7 @@ void GameplayState::Update(float dt)
 
     VelocityIntegrationSystem::update(registry, dt);
     MovementAnimationSystem::update(registry);
-    services_.animations.update(registry, dt);
+    animationSystem_.update(registry, dt);
 
     if (auto *pos = registry.get<PositionComponent>(controller_->getPlayer()))
     {

@@ -13,13 +13,12 @@ Game::Game()
               GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H),
           assets_.renderRepository(),
           Assets::Objects::SIMPLE_SUMMER_TILES)),
-      animationSystem_(assets_),
-      interactions_(GameServices{input_, assets_, states_, animationSystem_, events_, clock_}),
+      interactions_(GameServices{input_, assets_, states_, events_, clock_}),
       dispatcher_(events_, assets_, *this, interactions_)
 {
     states_.Push(StateFactory::MakeGameplay(
         GameServices{
-            input_, assets_, states_, animationSystem_, events_, clock_}));
+            input_, assets_, states_, events_, clock_}));
 }
 
 Registry *Game::GetRegistry() const

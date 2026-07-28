@@ -9,7 +9,6 @@
 #include "game/state/StateMachine.h"
 #include "engine/render/RenderSystem.h"
 #include "game/state/IGameState.h"
-#include "game/ecs/animation/AnimationSystem.h"
 #include "game/ecs/interaction/InteractionManager.h"
 #include "engine/events/EventQueue.h"
 #include "engine/events/EventDispatcher.h"
@@ -34,7 +33,6 @@ private:
     AssetDatabase assets_;
     InputManager input_;
     StateMachine<IGameState> states_;
-    AnimationSystem animationSystem_;
     EventQueue events_;
     EventDispatcher dispatcher_;
     InteractionManager interactions_;

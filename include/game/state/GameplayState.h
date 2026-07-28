@@ -5,6 +5,7 @@
 #include "engine/services/GameServices.h"
 #include "engine/input/KeyBindings.h"
 #include "game/ecs/player/PlayerControlComponent.h"
+#include "game/ecs/animation/AnimationSystem.h"
 #include "game/gameplay/GameController.h"
 #include "engine/render/Camera.h"
 #include "game/state/IGameState.h"
@@ -29,6 +30,7 @@ private:
     sf::Font font_;
     bool fontLoaded_ = false;
 
+    AnimationSystem animationSystem_;
     KeyBindings<PlayerControlComponent> bindings_;
     std::unique_ptr<GameController> controller_;
     Camera camera_;
