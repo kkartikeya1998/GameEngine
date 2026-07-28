@@ -4,7 +4,7 @@
 #include "game/ui/DialogueBoxData.h"
 #include "game/ui/UIFont.h"
 #include "engine/render/RenderSystem.h"
-#include "engine/assets/AsssetPaths.h"
+#include "engine/assets/AssetPaths.h"
 #include <SFML/Graphics/Font.hpp>
 
 // Stateless navigation + rendering for UI data structs — mirrors MovementSystem's free-function pattern

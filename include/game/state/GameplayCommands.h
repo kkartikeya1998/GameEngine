@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
-#include "component/PlayerControlComponent.h"
+#include "game/ecs/player/PlayerControlComponent.h"
 #include "engine/input/ICommand.h"
 
 class MoveCommand : public ICommand<PlayerControlComponent>

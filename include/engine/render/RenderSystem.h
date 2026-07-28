@@ -13,8 +13,8 @@
 #include "engine/render/atlases/TileAtlas.h"
 #include "engine/render/ResolvedSprite.h"
 
-#include "component/SpriteAssetComponent.h"
-#include "component/SpriteFrameComponent.h"
+#include "game/ecs/graphics/SpriteAssetComponent.h"
+#include "game/ecs/graphics/SpriteFrameComponent.h"
 
 // ---------------------------------------------------------------------------
 // RenderSystem.h — owns the frame's renderable queue and the layer/z sort.

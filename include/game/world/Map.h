@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "game/world/Tile.h"
-#include "game/ecs/actor/PositionComponent.h" // for AABB
+#include "game/ecs/movement/PositionComponent.h" // for AABB
 
 class Map
 {

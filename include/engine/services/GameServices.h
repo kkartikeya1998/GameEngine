@@ -5,7 +5,7 @@
 #include "game/state/StateMachine.h"
 #include "game/state/IGameState.h"
 #include "engine/events/EventQueue.h"
-#include "system/AnimationSystem.h"
+#include "game/ecs/animation/AnimationSystem.h"
 #include "engine/time/GameClock.h"
 
 struct GameServices

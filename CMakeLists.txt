@@ -27,31 +27,31 @@ FetchContent_MakeAvailable(SFML)
 add_executable(PokemonProject
     src/main.cpp
 
-    src/world/World.cpp
-    src/world/MapLoader.cpp
-    src/world/Map.cpp
+    src/game/world/World.cpp
+    src/game/world/MapLoader.cpp
+    src/game/world/Map.cpp
 
-    src/entities/EntityFactory.cpp
+    src/engine/ecs/EntityFactory.cpp
 
-    src/system/MovementSystem.cpp
-    src/system/GameController.cpp
-    src/system/CameraSystem.cpp
-    src/system/CollisionSystem.cpp
-    src/system/InventorySystem.cpp
-    src/system/ItemPickupSystem.cpp
+    src/game/ecs/movement/MovementSystem.cpp
+    src/game/gameplay/GameController.cpp
+    src/game/gameplay/CameraSystem.cpp
+    src/game/ecs/collision/CollisionSystem.cpp
+    src/game/ecs/inventory/InventorySystem.cpp
+    src/game/ecs/interaction/ItemPickupSystem.cpp
 
-    src/input/InputManager.cpp
+    src/engine/input/InputManager.cpp
 
-    src/state/GameplayState.cpp
-    src/state/PauseState.cpp
-    src/state/InventoryState.cpp
-    src/state/DialogueState.cpp
-    src/state/StateFactory.cpp
+    src/game/state/GameplayState.cpp
+    src/game/state/PauseState.cpp
+    src/game/state/InventoryState.cpp
+    src/game/state/DialogueState.cpp
+    src/game/state/StateFactory.cpp
 
-    src/render/RenderSystem.cpp
-    src/render/SFMLRenderer.cpp
-    src/render/atlases/Atlas.cpp
-    src/render/atlases/TileAtlas.cpp
+    src/engine/render/RenderSystem.cpp
+    src/engine/render/SFMLRenderer.cpp
+    src/engine/render/atlases/Atlas.cpp
+    src/engine/render/atlases/TileAtlas.cpp
 
     src/engine/assets/AssetDatabase.cpp
     src/engine/assets/metadata/AnimationAssetMetadata.cpp
@@ -63,11 +63,11 @@ add_executable(PokemonProject
     src/engine/assets/metadata/ItemMetadata.cpp
     src/engine/assets/source/JsonMetadataSource.cpp
 
-    src/log/Logger.cpp
-    src/log/sinks/ConsoleSink.cpp
-    src/log/sinks/FileSink.cpp
+    src/engine/logging/Logger.cpp
+    src/engine/logging/sinks/ConsoleSink.cpp
+    src/engine/logging/sinks/FileSink.cpp
 
-    src/events/EventDispatcher.cpp
+    src/engine/events/EventDispatcher.cpp
 
     src/Game.cpp
     )

@@ -7,7 +7,7 @@
 #include <filesystem>
 #include <SFML/Graphics/Color.hpp>
 
-#include "system/GameConstants.h"
+#include "game/GameConstants.h"
 #include "engine/render/IRenderer.h"
 #include "engine/render/ResolvedSprite.h"
 

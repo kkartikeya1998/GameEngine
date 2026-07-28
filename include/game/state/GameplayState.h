@@ -4,8 +4,8 @@
 #include <string>
 #include "engine/services/GameServices.h"
 #include "engine/input/KeyBindings.h"
-#include "component/PlayerControlComponent.h"
-#include "system/GameController.h"
+#include "game/ecs/player/PlayerControlComponent.h"
+#include "game/gameplay/GameController.h"
 #include "engine/render/Camera.h"
 #include "game/state/IGameState.h"
 

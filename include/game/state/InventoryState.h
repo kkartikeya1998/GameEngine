@@ -5,7 +5,7 @@
 #include "game/ui/MenuCommands.h"
 #include "game/ui/Panel.h"
 #include "engine/ecs/Registry.h"
-#include "component/InventoryComponent.h"
+#include "game/ecs/inventory/InventoryComponent.h"
 #include "engine/services/GameServices.h"
 
 #include <string>

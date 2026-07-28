@@ -1,6 +1,6 @@
 #pragma once
 
-#include "system/GameConstants.h"
+#include "game/GameConstants.h"
 
 // ---------------------------------------------------------------------------
 // Camera — World-space center point the renderer should

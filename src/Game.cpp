@@ -1,9 +1,9 @@
 #include "Game.h"
 #include "engine/render/SFMLRenderer.h"
 #include "game/state/GameplayState.h"
-#include "system/GameConstants.h"
-#include "system/InventorySystem.h"
-#include "engine/assets/AsssetPaths.h"
+#include "game/GameConstants.h"
+#include "game/ecs/inventory/InventorySystem.h"
+#include "engine/assets/AssetPaths.h"
 #include "game/state/StateFactory.h"
 
 Game::Game()

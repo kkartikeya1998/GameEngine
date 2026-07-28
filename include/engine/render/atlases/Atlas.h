@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <filesystem>
 
-#include "system/GameConstants.h"
+#include "game/GameConstants.h"
 #include "engine/utility/Result.h"
 #include "engine/assets/AssetError.h"
 

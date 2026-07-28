@@ -1,8 +1,8 @@
 #pragma once
 
-#include "component/SpriteAssetComponent.h"
-#include "component/SpriteFrameComponent.h"
-#include "game/ecs/actor/MovementMode.h"
+#include "game/ecs/graphics/SpriteAssetComponent.h"
+#include "game/ecs/graphics/SpriteFrameComponent.h"
+#include "game/ecs/movement/MovementMode.h"
 
 #pragma once
 
