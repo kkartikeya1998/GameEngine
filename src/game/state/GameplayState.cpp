@@ -15,11 +15,12 @@
 #include "game/ecs/collision/CollisionComponent.h"
 #include "game/ecs/animation/MovementAnimationSystem.h"
 #include "game/ecs/movement/VelocityIntegrationSystem.h"
-#include "game/ecs/animation/AnimationSystem.h"
 #include "engine/logging/Logger.h"
 
-GameplayState::GameplayState(GameServices services, std::filesystem::path fontPath)
+GameplayState::GameplayState(GameServices services, InteractionManager& interactions,
+                              std::filesystem::path fontPath)
     : services_(services),
+      interactions_(interactions),
       animationSystem_(services.assets),
       fontPath_(std::move(fontPath))
 {
@@ -56,6 +57,9 @@ void GameplayState::OnEnter()
         100,
         services_.assets,
         services_.events);
+    eventHandler_ = std::make_unique<GameplayEventHandler>(
+        services_.events, services_.assets,
+        controller_->getWorld()->registry(), interactions_);
 
     if (!fontPath_.empty())
     {
@@ -78,6 +82,7 @@ void GameplayState::OnExit()
 {
     LOG_INFO("Exiting state");
     // [TODO] Proper cleanup or save of world state, player state, etc.
+    eventHandler_.reset();
     controller_.reset();
 }
 
@@ -102,13 +107,16 @@ void GameplayState::Update(float dt)
     auto &registry = controller_->getWorld()->registry();
 
     VelocityIntegrationSystem::update(registry, dt);
-    MovementAnimationSystem::update(registry);
+    // MovementAnimationSystem::update(registry);
     animationSystem_.update(registry, dt);
 
     if (auto *pos = registry.get<PositionComponent>(controller_->getPlayer()))
     {
         CameraSystem::update(*pos, controller_->getActiveMap(), camera_);
     }
+
+    if (eventHandler_)
+        eventHandler_->Process();
 }
 
 void GameplayState::Render(RenderSystem &renderSystem, float dt)

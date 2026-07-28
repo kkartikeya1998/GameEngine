@@ -11,35 +11,29 @@
 #include "game/state/IGameState.h"
 #include "game/ecs/interaction/InteractionManager.h"
 #include "engine/events/EventQueue.h"
-#include "engine/events/EventDispatcher.h"
-#include "game/IGameContext.h"
 #include "engine/time/GameClock.h"
 #include "engine/logging/Logger.h"
 // ---------------------------------------------------------------------------
 // Game — top-level owner of long-lived systems and the main loop.
 //
 // ---------------------------------------------------------------------------
-class Game : public IGameContext{
+class Game{
 public:
     Game();
 
     void Run();
 
-    Registry* GetRegistry() const override;
+    Registry* GetRegistry() const;
 
 private:
-    std::string assetsRoot_;
-
     AssetDatabase assets_;
     InputManager input_;
     StateMachine<IGameState> states_;
     EventQueue events_;
-    EventDispatcher dispatcher_;
     InteractionManager interactions_;
     std::unique_ptr<RenderSystem> renderSystem_;
-
-    sf::Clock wallClock_;   // renamed from gameClock_ — raw OS clock, private to Game
-    GameClock clock_;       // canonical engine clock
+    sf::Clock wallClock_;
+    GameClock clock_;
 
     void Update(const GameClock& clock);
     void Render();

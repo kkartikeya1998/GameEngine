@@ -6,9 +6,9 @@
 
 namespace StateFactory
 {
-    std::unique_ptr<IGameState> MakeGameplay(GameServices services)
+    std::unique_ptr<IGameState> MakeGameplay(GameServices services, InteractionManager& interactions)
     {
-        return std::make_unique<GameplayState>(services);
+        return std::make_unique<GameplayState>(services, interactions);
     }
 
     std::unique_ptr<IGameState> MakePause(GameServices services)

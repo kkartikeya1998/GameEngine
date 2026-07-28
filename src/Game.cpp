@@ -13,12 +13,11 @@ Game::Game()
               GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H),
           assets_.renderRepository(),
           Assets::Objects::SIMPLE_SUMMER_TILES)),
-      interactions_(GameServices{input_, assets_, states_, events_, clock_}),
-      dispatcher_(events_, assets_, *this, interactions_)
+      interactions_(GameServices{input_, assets_, states_, events_, clock_})
 {
     states_.Push(StateFactory::MakeGameplay(
-        GameServices{
-            input_, assets_, states_, events_, clock_}));
+        GameServices{input_, assets_, states_, events_, clock_},
+        interactions_));
 }
 
 Registry *Game::GetRegistry() const
@@ -33,9 +32,6 @@ Registry *Game::GetRegistry() const
 void Game::Update(const GameClock &clock)
 {
     states_.Update(static_cast<float>(clock.DeltaTime()));
-
-    dispatcher_.Process();
-
     interactions_.Update();
 }
 
