@@ -5,8 +5,8 @@
 #include "game/state/MenuInput.h"
 #include "engine/events/Events.h"
 #include "engine/logging/Logger.h"
-#include "engine/events/EventQueue.h"     // needed: ctx.events.Push() requires complete EventQueue type
-#include "engine/assets/AssetDatabase.h"   // needed: services_.assets.findItem() requires complete AssetDatabase type
+#include "engine/events/EventQueue.h"    // needed: ctx.events.Push() requires complete EventQueue type
+#include "engine/assets/AssetDatabase.h" // needed: services_.assets.findItem() requires complete AssetDatabase type
 
 class UseItemCommand : public ICommand<InventoryActionContext>
 {
@@ -53,10 +53,11 @@ InventoryState::InventoryState(GameServices services,
 
     panel_.type = UIType::NonDiegetic;
     panel_.title = "Inventory";
-    panel_.x = 200.f;
-    panel_.y = 100.f;
-    panel_.width = 400.f;
-    panel_.height = 300.f;
+    panel_.layout = {
+        HorizontalAnchor::Center,
+        VerticalAnchor::Center,
+        {.mode = UISizeMode::Fixed, .value = {400.f, 300.f}},
+        {.x = 0.f, .y = 0.f}};
 }
 
 void InventoryState::OnEnter()

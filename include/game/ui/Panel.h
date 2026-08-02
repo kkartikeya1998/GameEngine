@@ -4,6 +4,7 @@
 #include <vector>
 #include "engine/input/ICommand.h"
 #include "game/ui/UIType.h"
+#include "game/ui/UILayout.h"
 
 // One selectable entry in a Panel — label plus the action it triggers on confirm
 template <typename ActionContext>
@@ -19,8 +20,5 @@ struct Panel {
     std::string title;
     std::vector<MenuOption<ActionContext>> options;
     int selectedIndex = 0;
-    float x = 0.f;
-    float y = 0.f;
-    float width = 0.f;
-    float height = 0.f;
+    UILayout layout; // resolved to a UIRect at render time by UILayoutResolver
 };

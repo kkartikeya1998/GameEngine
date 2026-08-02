@@ -50,10 +50,11 @@ PauseState::PauseState(GameServices services,
     const float boxHeight = 120.f;
 
     panel_.type = UIType::NonDiegetic; // pause menu is pure UI, not in-world
-    panel_.x = (GameConstants::GAME_RESOLUTION_W - boxWidth) * 0.5f;
-    panel_.y = (GameConstants::GAME_RESOLUTION_H - boxHeight) * 0.7f;
-    panel_.width = boxWidth;
-    panel_.height = boxHeight;
+    panel_.layout = {
+        HorizontalAnchor::Center,
+        VerticalAnchor::Top, // Top + offset reproduces the old *0.7f ratio exactly
+        {.mode = UISizeMode::Fixed, .value = {boxWidth, boxHeight}},
+        {.x = 0.f, .y = (GameConstants::GAME_RESOLUTION_H - boxHeight) * 0.7f}};
     panel_.options.push_back({"Continue", std::make_shared<ResumeCommand>()}); // index 0, default selection
     panel_.options.push_back({"Quit", std::make_shared<QuitCommand>()});       // index 1
 }
@@ -68,7 +69,7 @@ void PauseState::Update(float dt)
         return; // Escape already popped — don't also run navigation this frame
 
     PauseActionContext actionCtx{services_.states, services_.input}; // what Resume/Quit commands need
-    UISystem::HandleNavigation(panel_, nav, actionCtx);  // move cursor / fire selected command
+    UISystem::HandleNavigation(panel_, nav, actionCtx);              // move cursor / fire selected command
 }
 
 void PauseState::Render(RenderSystem &renderSystem, float dt)

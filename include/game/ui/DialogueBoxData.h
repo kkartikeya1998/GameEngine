@@ -1,12 +1,10 @@
 #pragma once
 #include <string>
+#include "game/ui/UILayout.h"
 
 // Plain data for a dialogue box
 struct DialogueBoxData {
     std::string speaker; // empty if unused
     std::string text;
-    float x = 0.f;
-    float y = 0.f;
-    float width = 0.f;
-    float height = 0.f;
+    UILayout layout; // resolved to a UIRect at render time by UILayoutResolver
 };

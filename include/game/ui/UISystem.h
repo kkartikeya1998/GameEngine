@@ -1,8 +1,10 @@
+// UISystem.h
 #pragma once
 #include "game/ui/Panel.h"
 #include "game/ui/MenuCommands.h"
 #include "game/ui/DialogueBoxData.h"
 #include "game/ui/UIFont.h"
+#include "game/ui/UILayoutResolver.h"
 #include "engine/render/RenderSystem.h"
 #include "engine/assets/AssetPaths.h"
 #include <SFML/Graphics/Font.hpp>
@@ -32,9 +34,11 @@ namespace UISystem
     template <typename ActionContext>
     void Render(const Panel<ActionContext> &panel, RenderSystem &renderSystem, const sf::Font &font = UIFont::GetShared(Assets::Fonts::PIXFAY))
     {
+        const UIRect rect = UILayoutResolver::Resolve(panel.layout); // layout math ends here — everything below is pure drawing
+
         renderSystem.submitRect(
             RenderLayer::ScreenOverlay, 1.f,
-            panel.x, panel.y, panel.width, panel.height,
+            rect.x, rect.y, rect.width, rect.height,
             sf::Color(0, 0, 0, 200),
             /*screenSpace=*/true); // panel backdrop, above whatever tint the caller drew first
 
@@ -46,11 +50,11 @@ namespace UISystem
         {
             renderSystem.submitText(
                 RenderLayer::ScreenOverlay, 2.f, font, panel.title,
-                panel.x + paddingX, panel.y + paddingY,
+                rect.x + paddingX, rect.y + paddingY,
                 24u, sf::Color::White, true); // title line
         }
 
-        const float listStartY = panel.y + paddingY + (panel.title.empty() ? 0.f : lineHeight);
+        const float listStartY = rect.y + paddingY + (panel.title.empty() ? 0.f : lineHeight);
 
         for (int i = 0; i < static_cast<int>(panel.options.size()); ++i)
         {
@@ -60,7 +64,7 @@ namespace UISystem
 
             renderSystem.submitText(
                 RenderLayer::ScreenOverlay, 2.f, font, prefix + panel.options[i].label,
-                panel.x + paddingX, listStartY + i * lineHeight,
+                rect.x + paddingX, listStartY + i * lineHeight,
                 20u, color, true); // one line per option
         }
     }
@@ -71,26 +75,28 @@ namespace UISystem
         constexpr RenderLayer kUiLayer = RenderLayer::UI;
         constexpr float kUiZ = 0.f;
 
+        const UIRect rect = UILayoutResolver::Resolve(box.layout);
+
         renderSystem.submitRect(
             kUiLayer, kUiZ,
-            box.x, box.y, box.width, box.height,
+            rect.x, rect.y, rect.width, rect.height,
             sf::Color(0, 0, 0, 180),
             /*screenSpace=*/true); // semi-transparent backdrop, matches old DialogueBox
 
-        float textY = box.y + 12.f;
+        float textY = rect.y + 12.f;
 
         if (!box.speaker.empty())
         {
             renderSystem.submitText(
                 kUiLayer, kUiZ, font, box.speaker,
-                box.x + 12.f, textY,
+                rect.x + 12.f, textY,
                 20u, sf::Color::Yellow, true);
             textY += 26.f; // reserve a line for the speaker name
         }
 
         renderSystem.submitText(
             kUiLayer, kUiZ, font, box.text,
-            box.x + 12.f, textY,
+            rect.x + 12.f, textY,
             24u, sf::Color::White, true);
     }
 

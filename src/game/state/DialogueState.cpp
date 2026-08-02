@@ -4,8 +4,8 @@
 #include "game/ui/UISystem.h"
 #include "game/state/MenuInput.h"
 #include "engine/logging/Logger.h"
-#include "engine/events/EventQueue.h"   // needed: services_.events.Push() requires complete EventQueue type
-#include "engine/events/Events.h"       // needed: DialogueFinished lives here
+#include "engine/events/EventQueue.h" // needed: services_.events.Push() requires complete EventQueue type
+#include "engine/events/Events.h"     // needed: DialogueFinished lives here
 
 void DialogueState::OnEnter()
 {
@@ -24,16 +24,17 @@ DialogueState::DialogueState(GameServices services,
     LOG_INFO("Creating state");
     fontPath_ = fontPath.empty() ? std::filesystem::path(Assets::Fonts::PIXFAY) : std::move(fontPath);
 
-    // Advance/dismiss on Enter or E; Escape also dismisses — same "back = pop" intent as menus
     navInput_.bind(Key::Enter, std::make_shared<ConfirmCommand>(), TriggerMode::Press);
     navInput_.bind(Key::E, std::make_shared<ConfirmCommand>(), TriggerMode::Press);
     MenuInput::BindBackKey(navInput_, Key::Escape);
 
     box_.text = text_;
-    box_.x = 100.f;
-    box_.y = 400.f;
-    box_.width = 600.f;
-    box_.height = 150.f;
+    box_.layout = {
+        HorizontalAnchor::Center,
+        VerticalAnchor::Bottom,
+        {.mode = UISizeMode::Fixed, .value = {600.f, 150.f}},
+        {.x = 0.f, .y = -20.f} // 20px margin from the bottom edge
+    };
 }
 
 void DialogueState::Update(float dt)
