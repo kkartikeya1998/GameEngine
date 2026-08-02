@@ -183,7 +183,7 @@ void MapLoader::loadInto(Registry &registry, Map &map, int mapId) const
             if (!result)
             {
                 LOG_ERROR(std::format("MapLoader: skipping map_object in {} — {}", mapPath, result.error().toString()));
-                registry.destroy(id); // unknown archetype: don't leave a dangling empty entity
+                registry.destroy(id);
             }
         }
     }

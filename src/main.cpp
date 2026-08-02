@@ -7,7 +7,7 @@
 
 int main()
 {
-    Logger::AddSink(std::make_unique<ConsoleSink>());
+    // Logger::AddSink(std::make_unique<ConsoleSink>());
     Logger::AddSink(std::make_unique<FileSink>(std::filesystem::path(PROJECT_ROOT) / "game.log"));
     try
     {
