@@ -53,24 +53,11 @@ public:
         for (auto it = states_.rbegin(); it != states_.rend(); ++it)
         {
             toRender.push_back(it->get());
-
             if ((*it)->BlocksRenderBelow())
                 break;
         }
 
-        // toRender is currently top-to-bottom; walk it bottom-to-top to find
-        // the active camera (the state closest to the "world" owns it).
-        Camera camera;
-        for (auto it = toRender.rbegin(); it != toRender.rend(); ++it)
-        {
-            if (auto cam = (*it)->GetCamera())
-            {
-                camera = *cam;
-                break;
-            }
-        }
-
-        renderSystem.beginFrame(camera);
+        renderSystem.beginFrame();
 
         for (auto it = toRender.rbegin(); it != toRender.rend(); ++it)
         {

@@ -21,7 +21,7 @@ public:
     ~SFMLRenderer() override;
 
     void clear() override;
-    void beginWorldView(const Camera &camera) override;
+    void beginWorldView(const CameraView &camera) override;
     void setDefaultView() override;
     void drawEntity(const ResolvedSprite &sprite, RenderAnchor anchor) override;
     void drawDebugRect(float x, float y, float width, float height) override;

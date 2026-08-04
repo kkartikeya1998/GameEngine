@@ -5,7 +5,7 @@ from pathlib import Path
 
 # ---------------- CONFIGURATION ----------------
 
-MAP_JSON_PATH = Path("assets/maps/steam_caves.json")  # adjust to map file
+MAP_JSON_PATH = Path("assets/tmp/apple_woods.json")  # adjust to map file
 
 TILE_SIZE = 48  # map tile size in pixels (must match tileset metadata)
 NUM_OBJECTS_TO_PLACE = 25

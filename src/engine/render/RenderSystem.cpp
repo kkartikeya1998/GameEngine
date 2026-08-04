@@ -20,11 +20,15 @@ RenderSystem::RenderSystem(std::unique_ptr<IRenderer> renderer,
     ENGINE_ASSERT_MSG(renderer_ != nullptr, "RenderSystem constructed with a null renderer");
 }
 
-void RenderSystem::beginFrame(const Camera &camera)
+void RenderSystem::beginFrame()
 {
-    currentCamera_ = camera;
     queue_.clear();
     debugQueue_.clear();
+}
+
+void RenderSystem::SetCameraView(const CameraView &view)
+{
+    currentCamera_ = view;
 }
 
 void RenderSystem::submit(RenderLayer layer, float z, ResolvedSprite sprite, RenderAnchor anchor)
@@ -43,12 +47,12 @@ void RenderSystem::submitRect(RenderLayer layer, float z, float x, float y,
     queue_.push_back(Renderable{layer, z, screenSpace, RectDraw{x, y, width, height, color}});
 }
 
-void RenderSystem::submitTile(int gridX, int gridY, const SpriteAssetComponent &tileAsset, const SpriteFrameComponent &tileFrame)
+void RenderSystem::submitTile(int gridX, int gridY, const TileDrawInfo &tile)
 {
-    Result<SpriteRegion, AssetError> result = tileAtlas_.getTileSprite(tileFrame.name);
+    Result<SpriteRegion, AssetError> result = tileAtlas_.getTileSprite(tile.frameName);
     if (!result)
     {
-        if (warnedMissingTiles_.insert(tileFrame.name).second)
+        if (warnedMissingTiles_.insert(tile.frameName).second)
             LOG_ERROR(std::format("RenderSystem: {} — skipping tile draw", result.error().toString()));
         return;
     }
@@ -59,11 +63,11 @@ void RenderSystem::submitTile(int gridX, int gridY, const SpriteAssetComponent &
     sprite.texturePath = tileTexturePath_;
     sprite.textureRect = sf::IntRect(region.subrect);
     sprite.sourceTileSize = region.sourceTileSize;
-    sprite.renderScale = tileAsset.renderScale;
+    sprite.renderScale = tile.renderScale;
     sprite.x = static_cast<float>(gridX) * GameConstants::TILE_SIZE;
     sprite.y = static_cast<float>(gridY) * GameConstants::TILE_SIZE;
 
-    submit(tileAsset.layer, tileAsset.z, sprite, RenderAnchor::TopLeft);
+    submit(tile.layer, tile.z, sprite, RenderAnchor::TopLeft);
 }
 
 void RenderSystem::submitText(RenderLayer layer, float z,

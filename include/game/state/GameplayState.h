@@ -9,7 +9,7 @@
 #include "game/gameplay/GameController.h"
 #include "game/events/GameplayEventHandler.h"
 #include "game/ecs/interaction/InteractionManager.h"
-#include "engine/render/Camera.h"
+#include "game/ecs/tbd/CameraComponent.h"
 #include "game/state/IGameState.h"
 
 class GameplayState : public IGameState
@@ -23,7 +23,6 @@ public:
     void OnExit() override;
     void Update(float dt) override;
     void Render(RenderSystem &renderSystem, float dt) override;
-    std::optional<Camera> GetCamera() const override { return camera_; }
     Registry *GetRegistry() const override { return controller_ ? &controller_->getWorld()->registry() : nullptr; }
 
 private:
@@ -37,5 +36,5 @@ private:
 
     KeyBindings<PlayerControlComponent> bindings_;
     std::unique_ptr<GameController> controller_;
-    Camera camera_;
+    EntityID cameraEntity_{};
 };

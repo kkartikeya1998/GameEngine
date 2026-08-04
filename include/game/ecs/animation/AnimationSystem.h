@@ -12,6 +12,7 @@
 #include "engine/ecs/Registry.h"
 
 #include "game/ecs/graphics/SpriteFrameComponent.h"
+#include "game/ecs/graphics/SpriteAssetComponent.h"
 #include "game/ecs/movement/DirectionComponent.h"
 #include "game/ecs/animation/AnimationComponent.h"
 

@@ -72,9 +72,14 @@ void GameplayState::OnEnter()
     // rendered frame isn't a flash at world-origin before the first
     // Update() call runs.
     auto &registry = controller_->getWorld()->registry();
+
+    cameraEntity_ = registry.create();
+    auto &cam = registry.add<CameraComponent>(cameraEntity_);
+    cam.followTarget = controller_->getPlayer();
+
     if (auto *pos = registry.get<PositionComponent>(controller_->getPlayer()))
     {
-        CameraSystem::update(*pos, controller_->getActiveMap(), camera_);
+        CameraSystem::update(*pos, controller_->getActiveMap(), cam);
     }
 }
 
@@ -112,8 +117,10 @@ void GameplayState::Update(float dt)
 
     if (auto *pos = registry.get<PositionComponent>(controller_->getPlayer()))
     {
-        CameraSystem::update(*pos, controller_->getActiveMap(), camera_);
+        if (auto *cam = registry.get<CameraComponent>(cameraEntity_))
+            CameraSystem::update(*pos, controller_->getActiveMap(), *cam);
     }
+
     if (eventHandler_)
         eventHandler_->Process();
 
@@ -122,21 +129,27 @@ void GameplayState::Update(float dt)
 
 void GameplayState::Render(RenderSystem &renderSystem, float dt)
 {
-    LOG_INFO("Rendering State");
     World *world = controller_->getWorld();
     if (!world)
         return;
 
-    const Map &map = world->getActiveMap();
     Registry &registry = world->registry();
 
+    if (const auto *cam = registry.get<CameraComponent>(cameraEntity_))
+        renderSystem.SetCameraView(CameraView{cam->centerX, cam->centerY, cam->viewWidth, cam->viewHeight});
+
+    const Map &map = world->getActiveMap();
+
     for (int y = 0; y < map.getHeight(); ++y)
+    {
         for (int x = 0; x < map.getWidth(); ++x)
         {
-            // Tile::getRenderComponent() → getSpriteAsset()/getSpriteFrame(); needs Tile.h.
             const auto &tile = map.tile_at(x, y);
-            renderSystem.submitTile(x, y, tile.getSpriteAsset(), tile.getSpriteFrame());
+            const auto &asset = tile.getSpriteAsset();
+            const auto &frame = tile.getSpriteFrame();
+            renderSystem.submitTile(x, y, TileDrawInfo{frame.name, asset.renderScale, asset.layer, asset.z});
         }
+    }
 
     for (EntityID id : registry.view<SpriteAssetComponent, SpriteFrameComponent, PositionComponent>())
     {

@@ -37,7 +37,7 @@ void SFMLRenderer::clear()
     window_->clear(sf::Color::Black);
 }
 
-void SFMLRenderer::beginWorldView(const Camera &camera)
+void SFMLRenderer::beginWorldView(const CameraView &camera)
 {
     LOG_TRACE("Setting world view");
     window_->setView(sf::View(

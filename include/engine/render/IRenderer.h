@@ -5,7 +5,7 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include "engine/render/ResolvedSprite.h"
-#include "engine/render/Camera.h"
+#include "engine/render/CameraView.h"
 
 enum class RenderAnchor
 {
@@ -19,10 +19,9 @@ public:
     virtual ~IRenderer() = default;
 
     virtual void clear() = 0;
-    virtual void beginWorldView(const Camera &camera) = 0;
+    virtual void beginWorldView(const CameraView &camera) = 0;
     virtual void setDefaultView() = 0;
 
-    // Single draw path for tiles, players, and map objects alike.
     virtual void drawEntity(const ResolvedSprite &sprite, RenderAnchor anchor) = 0;
 
     virtual void drawDebugRect(float x, float y, float width, float height) = 0;

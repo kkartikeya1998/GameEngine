@@ -8,13 +8,11 @@
 #include <SFML/Window/Event.hpp>
 
 #include "engine/render/IRenderer.h"
-#include "engine/render/Camera.h"
 #include "engine/render/RenderLayer.h"
 #include "engine/render/atlases/TileAtlas.h"
 #include "engine/render/ResolvedSprite.h"
-
-#include "game/ecs/graphics/SpriteAssetComponent.h"
-#include "game/ecs/graphics/SpriteFrameComponent.h"
+#include "engine/render/TileDrawInfo.h"
+#include "engine/render/CameraView.h"
 
 // ---------------------------------------------------------------------------
 // RenderSystem.h — owns the frame's renderable queue and the layer/z sort.
@@ -31,7 +29,8 @@ public:
                  const std::filesystem::path &tileSpritesheetPath);
 
     // Call once per real frame, before any state's Render() runs.
-    void beginFrame(const Camera &camera);
+    void beginFrame();
+    void SetCameraView(const CameraView &view);
 
     // Queue a sprite draw. Sorted by (layer, z) at endFrame().
     void submit(RenderLayer layer, float z, ResolvedSprite sprite, RenderAnchor anchor);
@@ -48,7 +47,7 @@ public:
     // Kept here (not GameplayState) since it needs tileAtlas_/tileTexturePath_.
     // If the tile's name doesn't resolve in the atlas, the tile is skipped
     // (not drawn) and logged once — see RenderSystem.cpp.
-    void submitTile(int gridX, int gridY, const SpriteAssetComponent &tileAsset, const SpriteFrameComponent &tileFrame);
+    void submitTile(int gridX, int gridY, const TileDrawInfo &tile);
 
     void submitText(RenderLayer layer, float z, const sf::Font &font, const std::string &text,
                     float x, float y, unsigned int characterSize, sf::Color color, bool screenSpace = false);
@@ -83,13 +82,15 @@ private:
         std::variant<SpriteDraw, RectDraw, TextDraw> payload;
     };
 
-    struct DebugRectDraw { float x, y, width, height; };
-    
+    struct DebugRectDraw
+    {
+        float x, y, width, height;
+    };
+
     std::unique_ptr<IRenderer> renderer_;
     TileAtlas tileAtlas_;
     std::string tileTexturePath_;
-
-    Camera currentCamera_;
+    CameraView currentCamera_;
 
     std::vector<Renderable> queue_;
     std::vector<DebugRectDraw> debugQueue_;
