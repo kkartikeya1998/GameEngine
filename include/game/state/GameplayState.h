@@ -15,9 +15,8 @@
 class GameplayState : public IGameState
 {
 public:
-    GameplayState(
-        GameServices services,
-        InteractionManager& interactions,
+    explicit GameplayState(
+        GameServices<GameEvent> services,
         std::filesystem::path fontPath = Assets::Fonts::PIXFAY);
 
     void OnEnter() override;
@@ -28,8 +27,8 @@ public:
     Registry *GetRegistry() const override { return controller_ ? &controller_->getWorld()->registry() : nullptr; }
 
 private:
-    GameServices services_;
-    InteractionManager& interactions_;
+    GameServices<GameEvent> services_;
+    InteractionManager interactions_;
     AnimationSystem animationSystem_;
     std::unique_ptr<GameplayEventHandler> eventHandler_;
     std::filesystem::path fontPath_;

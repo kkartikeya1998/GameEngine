@@ -8,7 +8,7 @@
 #include "engine/logging/Logger.h"
 
 GameplayEventHandler::GameplayEventHandler(
-    EventQueue& events, AssetDatabase& assets,
+    EventQueue<GameEvent>& events, AssetDatabase& assets,
     Registry& registry, InteractionManager& interactions)
     : events_(events), assets_(assets), registry_(registry), interactions_(interactions)
 {

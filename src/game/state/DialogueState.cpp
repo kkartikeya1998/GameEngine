@@ -1,11 +1,7 @@
 #include "game/state/DialogueState.h"
-#include "engine/input/InputManager.h"
 #include "engine/assets/AssetPaths.h"
 #include "game/ui/UISystem.h"
 #include "game/state/MenuInput.h"
-#include "engine/logging/Logger.h"
-#include "engine/events/EventQueue.h" // needed: services_.events.Push() requires complete EventQueue type
-#include "engine/events/Events.h"     // needed: DialogueFinished lives here
 
 void DialogueState::OnEnter()
 {
@@ -17,7 +13,7 @@ void DialogueState::OnExit()
     LOG_INFO("Exiting state");
 }
 
-DialogueState::DialogueState(GameServices services,
+DialogueState::DialogueState(GameServices<GameEvent> services,
                              std::string text, std::filesystem::path fontPath)
     : services_(services), text_(std::move(text))
 {

@@ -6,22 +6,22 @@
 
 namespace StateFactory
 {
-    std::unique_ptr<IGameState> MakeGameplay(GameServices services, InteractionManager& interactions)
+    std::unique_ptr<IGameState> MakeGameplay(GameServices<GameEvent> services)
     {
-        return std::make_unique<GameplayState>(services, interactions);
+        return std::make_unique<GameplayState>(services);
     }
 
-    std::unique_ptr<IGameState> MakePause(GameServices services)
+    std::unique_ptr<IGameState> MakePause(GameServices<GameEvent> services)
     {
         return std::make_unique<PauseState>(services);
     }
 
-    std::unique_ptr<IGameState> MakeInventory(GameServices services, Registry &registry, EntityID player)
+    std::unique_ptr<IGameState> MakeInventory(GameServices<GameEvent> services, Registry &registry, EntityID player)
     {
         return std::make_unique<InventoryState>(services, registry, player);
     }
 
-    std::unique_ptr<IGameState> MakeDialogue(GameServices services, std::string text)
+    std::unique_ptr<IGameState> MakeDialogue(GameServices<GameEvent> services, std::string text)
     {
         return std::make_unique<DialogueState>(services, std::move(text));
     }

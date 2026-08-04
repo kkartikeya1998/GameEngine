@@ -17,7 +17,7 @@
 #include "game/ecs/collision/CollisionComponent.h"
 #include "game/ecs/movement/MovementStateComponent.h"
 
-GameController::GameController(int startMapId, int playerX, int playerY, const AssetDatabase &assets, EventQueue &events)
+GameController::GameController(int startMapId, int playerX, int playerY, const AssetDatabase &assets, EventQueue<GameEvent> &events)
     : world_(assets), assets_(assets), events_(events)
 {
     world_.loadMap(startMapId);

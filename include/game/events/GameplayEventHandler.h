@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/events/EventQueue.h"
+#include "game/events/GameEvents.h"
 
 class Registry;
 class AssetDatabase;
@@ -13,13 +14,13 @@ class InteractionManager;
 class GameplayEventHandler
 {
 public:
-    GameplayEventHandler(EventQueue& events, AssetDatabase& assets,
+    GameplayEventHandler(EventQueue<GameEvent>& events, AssetDatabase& assets,
                           Registry& registry, InteractionManager& interactions);
 
     void Process();
 
 private:
-    EventQueue& events_;
+    EventQueue<GameEvent>& events_;
     AssetDatabase& assets_;
     Registry& registry_;
     InteractionManager& interactions_;

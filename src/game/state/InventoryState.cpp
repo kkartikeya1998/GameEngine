@@ -1,12 +1,7 @@
 #include "game/state/InventoryState.h"
-#include "engine/input/InputManager.h"
 #include "engine/assets/AssetPaths.h"
 #include "game/ui/UISystem.h"
 #include "game/state/MenuInput.h"
-#include "engine/events/Events.h"
-#include "engine/logging/Logger.h"
-#include "engine/events/EventQueue.h"    // needed: ctx.events.Push() requires complete EventQueue type
-#include "engine/assets/AssetDatabase.h" // needed: services_.assets.findItem() requires complete AssetDatabase type
 
 class UseItemCommand : public ICommand<InventoryActionContext>
 {
@@ -37,7 +32,7 @@ public:
     }
 };
 
-InventoryState::InventoryState(GameServices services,
+InventoryState::InventoryState(GameServices<GameEvent> services,
                                Registry &registry,
                                EntityID player,
                                bool *openFlag,

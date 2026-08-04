@@ -8,6 +8,7 @@
 #include "game/ecs/factories/PlayerFactory.h"
 #include "game/ecs/player/PlayerControlComponent.h"
 #include "engine/events/EventQueue.h"
+#include "game/events/GameEvents.h"
 
 // ---------------------------------------------------------------------------
 // GameController — manages World and Player lifecycle.
@@ -16,7 +17,7 @@
 class GameController
 {
 public:
-    GameController(int startMapId, int playerX, int playerY, const AssetDatabase &assets, EventQueue &events);
+    GameController(int startMapId, int playerX, int playerY, const AssetDatabase &assets, EventQueue<GameEvent> &events);
 
     World *getWorld() { return &world_; }
     EntityID getPlayer() { return playerId_; }
@@ -27,7 +28,7 @@ public:
 
 private:
     const AssetDatabase &assets_;
-    EventQueue &events_;
+    EventQueue<GameEvent> &events_;
     World world_;
     EntityID playerId_;
     bool isPositionBlockedFor(EntityID id, const AABB &box);

@@ -36,7 +36,7 @@ void PauseState::OnExit()
     LOG_INFO("Exiting state");
 }
 
-PauseState::PauseState(GameServices services,
+PauseState::PauseState(GameServices<GameEvent> services,
                        std::filesystem::path fontPath)
     : services_(services)
 {

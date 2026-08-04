@@ -6,7 +6,7 @@
 #include "game/ui/MenuCommands.h"
 #include "game/ui/Panel.h"
 #include "engine/services/GameServices.h"
-
+#include "game/events/GameEvents.h" // TODO: replace by PauseEventHandler
 #include <SFML/Graphics/Font.hpp>
 
 class InputManager;
@@ -27,7 +27,7 @@ struct PauseActionContext
 class PauseState : public IGameState
 {
 public:
-    PauseState(GameServices services,
+    PauseState(GameServices<GameEvent> services,
                std::filesystem::path fontPath = {});
 
     void OnEnter() override;
@@ -36,7 +36,7 @@ public:
     void Render(RenderSystem &renderSystem, float dt) override;
 
 private:
-    GameServices services_;
+    GameServices<GameEvent> services_;
 
     KeyBindings<MenuContext> navInput_;
     Panel<PauseActionContext> panel_;

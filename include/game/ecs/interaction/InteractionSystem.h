@@ -1,7 +1,7 @@
 #pragma once
 #include "engine/ecs/Registry.h"
 #include "engine/events/EventQueue.h"
-#include "engine/events/Events.h"
+#include "game/events/GameEvents.h"
 #include "game/ecs/movement/PositionComponent.h"
 #include "game/ecs/movement/DirectionComponent.h"
 #include "game/ecs/interaction/InteractableComponent.h"
@@ -15,7 +15,7 @@ namespace InteractionSystem
     // Free-movement world: no tile grid, so "interactable" means the
     // player's collision box (inflated by a small margin) overlaps the
     // candidate's collision box — not a facing-direction point check.
-    inline void Update(Registry &registry, EntityID player, EventQueue &events, const PlayerControlComponent &control)
+    inline void Update(Registry &registry, EntityID player, EventQueue<GameEvent> &events, const PlayerControlComponent &control)
     {
         if (!control.interactRequested)
             return;

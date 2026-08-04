@@ -2,9 +2,9 @@
 #include "game/ecs/inventory/InventoryComponent.h"
 #include "game/ecs/interaction/WorldItemComponent.h"
 #include "game/ecs/inventory/InventorySystem.h"
-#include "engine/events/Events.h"
+#include "game/events/GameEvents.h"
 
-void ItemPickupSystem::pickup(Registry& registry, const AssetDatabase& assets, EventQueue& events,
+void ItemPickupSystem::pickup(Registry& registry, const AssetDatabase& assets, EventQueue<GameEvent>& events,
                                EntityID player, EntityID worldItem) {
     auto* item = registry.get<WorldItemComponent>(worldItem);
     auto* inv = registry.get<InventoryComponent>(player);

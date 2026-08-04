@@ -7,11 +7,12 @@
 #include "engine/events/EventQueue.h"
 #include "engine/time/GameClock.h"
 
+template <typename T>
 struct GameServices
 {
     InputManager& input;
     AssetDatabase& assets;
     StateMachine<IGameState>& states;
-    EventQueue& events;
+    EventQueue<T>& events;
     const GameClock& clock;
 };

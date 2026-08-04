@@ -1,11 +1,12 @@
 #pragma once
 #include <vector>
-#include "engine/events/Events.h"
+#include <variant>
 
+template <typename T>
 class EventQueue
 {
 public:
-    void Push(GameEvent event) { pending_.push_back(std::move(event)); }
+    void Push(T event) { pending_.push_back(std::move(event)); }
 
     // Called once per frame by Game, after states_.Update(dt).
     // Caller supplies the dispatch logic (std::visit lambda) so
@@ -22,5 +23,5 @@ public:
     }
 
 private:
-    std::vector<GameEvent> pending_;
+    std::vector<T> pending_;
 };

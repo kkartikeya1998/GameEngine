@@ -12,12 +12,10 @@ Game::Game()
           std::make_unique<SFMLRenderer>(
               GameConstants::GAME_RESOLUTION_W, GameConstants::GAME_RESOLUTION_H),
           assets_.renderRepository(),
-          Assets::Objects::SIMPLE_SUMMER_TILES)),
-      interactions_(GameServices{input_, assets_, states_, events_, clock_})
+          Assets::Objects::SIMPLE_SUMMER_TILES))
 {
     states_.Push(StateFactory::MakeGameplay(
-        GameServices{input_, assets_, states_, events_, clock_},
-        interactions_));
+        GameServices{input_, assets_, states_, events_, clock_}));
 }
 
 Registry *Game::GetRegistry() const
@@ -32,7 +30,6 @@ Registry *Game::GetRegistry() const
 void Game::Update(const GameClock &clock)
 {
     states_.Update(static_cast<float>(clock.DeltaTime()));
-    interactions_.Update();
 }
 
 void Game::Render()

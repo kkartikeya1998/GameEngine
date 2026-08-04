@@ -17,10 +17,10 @@
 #include "game/ecs/movement/VelocityIntegrationSystem.h"
 #include "engine/logging/Logger.h"
 
-GameplayState::GameplayState(GameServices services, InteractionManager& interactions,
-                              std::filesystem::path fontPath)
+GameplayState::GameplayState(GameServices<GameEvent> services,
+                             std::filesystem::path fontPath)
     : services_(services),
-      interactions_(interactions),
+      interactions_(services_),
       animationSystem_(services.assets),
       fontPath_(std::move(fontPath))
 {
@@ -114,9 +114,10 @@ void GameplayState::Update(float dt)
     {
         CameraSystem::update(*pos, controller_->getActiveMap(), camera_);
     }
-
     if (eventHandler_)
         eventHandler_->Process();
+
+    interactions_.Update();
 }
 
 void GameplayState::Render(RenderSystem &renderSystem, float dt)

@@ -1,7 +1,7 @@
 #pragma once
 #include "game/ecs/inventory/InventoryComponent.h"
 #include "engine/assets/AssetDatabase.h"
-#include "engine/events/Events.h"
+#include "game/events/GameEvents.h"
 #include "engine/ecs/Registry.h"
 // Owns inventory mutation rules (stacking/capacity) and the ItemConsumed
 // event handler. Does NOT own item behavior — that's InteractionManager's

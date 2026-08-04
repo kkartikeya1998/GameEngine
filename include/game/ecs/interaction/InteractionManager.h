@@ -3,7 +3,7 @@
 #include "engine/assets/AssetPaths.h"
 #include "game/state/DialogueState.h"
 #include "game/state/StateFactory.h"
-#include "engine/events/Events.h"
+#include "game/events/GameEvents.h"
 #include "engine/input/InputManager.h"
 #include "game/ui/UIFont.h"
 #include "engine/logging/Logger.h"
@@ -12,7 +12,7 @@
 class InteractionManager
 {
 public:
-    explicit InteractionManager(GameServices services)
+    explicit InteractionManager(GameServices<GameEvent> services)
         : services_(services) {}
 
     void HandleRequested(const InteractionRequested &e)
@@ -54,7 +54,7 @@ public:
     }
 
 private:
-    GameServices services_;
+    GameServices<GameEvent> services_;
     EntityID actor_{};
     const InteractionAssetMetadata *active_ = nullptr;
 

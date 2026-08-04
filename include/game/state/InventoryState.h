@@ -1,12 +1,12 @@
 #pragma once
-#include "IGameState.h"
-#include "game/state/StateMachine.h"
+
 #include "engine/input/KeyBindings.h"
 #include "game/ui/MenuCommands.h"
 #include "game/ui/Panel.h"
 #include "engine/ecs/Registry.h"
 #include "game/ecs/inventory/InventoryComponent.h"
 #include "engine/services/GameServices.h"
+#include "game/events/GameEvents.h"
 
 #include <string>
 
@@ -18,13 +18,13 @@ struct InventoryActionContext
     const AssetDatabase &assets;
     EntityID player;
     StateMachine<IGameState> &stateMachine;
-    EventQueue &events;
+    EventQueue<GameEvent> &events;
 };
 
 class InventoryState : public IGameState
 {
 public:
-    InventoryState(GameServices services,
+    InventoryState(GameServices<GameEvent> services,
                    Registry &registry,
                    EntityID player,
                    bool *openFlag = nullptr,
@@ -38,7 +38,7 @@ public:
 private:
     void RefreshOptions();
 
-    GameServices services_;
+    GameServices<GameEvent> services_;
     Registry &registry_;
     EntityID player_;
 

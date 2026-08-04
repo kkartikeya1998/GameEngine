@@ -4,6 +4,7 @@
 #include <string>
 #include "engine/ecs/Registry.h"
 #include "engine/services/GameServices.h"
+#include "game/events/GameEvents.h"
 #include "game/state/IGameState.h"
 
 
@@ -15,8 +16,8 @@ class InteractionManager;   // forward declaration — reference-only usage
 // ---------------------------------------------------------------------------
 namespace StateFactory
 {
-    std::unique_ptr<IGameState> MakeGameplay(GameServices services, InteractionManager &interactions);
-    std::unique_ptr<IGameState> MakePause(GameServices services);
-    std::unique_ptr<IGameState> MakeInventory(GameServices services, Registry &registry, EntityID player);
-    std::unique_ptr<IGameState> MakeDialogue(GameServices services, std::string text);
+    std::unique_ptr<IGameState> MakeGameplay(GameServices<GameEvent> services);
+    std::unique_ptr<IGameState> MakePause(GameServices<GameEvent> services);
+    std::unique_ptr<IGameState> MakeInventory(GameServices<GameEvent> services, Registry &registry, EntityID player);
+    std::unique_ptr<IGameState> MakeDialogue(GameServices<GameEvent> services, std::string text);
 }
